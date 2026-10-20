@@ -1,0 +1,969 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Simulateur Valinches 2027</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,600&family=Nunito+Sans:wght@400;600;700;800&family=Parisienne&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bx:#7a2e3a; --bx-deep:#5b1e2a; --bx-soft:#f5e8ea;
+  --or:#b08d57; --or-light:#e4d1aa; --or-soft:#f8f0e2;
+  --ivoire:#fbf6ee; --papier:#fffdf9; --encre:#2d2326; --gris:#7b6e71; --ligne:#ece2d6;
+  --sauge:#5f8a5a; --sauge-soft:#e5efe2;
+  --ambre:#8a5a00; --ambre-soft:#fcecc9; --violet:#3b3478; --violet-soft:#e7e4f6; --rose-soft:#f8dfe4;
+  --ombre:0 12px 32px rgba(91,30,42,.08), 0 2px 6px rgba(91,30,42,.05);
+  --serif:"Cormorant Garamond",Georgia,serif; --script:"Parisienne","Brush Script MT",cursive;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;color:var(--encre);font-family:"Nunito Sans",Segoe UI,Arial,sans-serif;font-size:15px;line-height:1.45;
+  background:var(--ivoire);
+  background-image:radial-gradient(circle at 10% 6%,rgba(176,141,87,.12),transparent 38%),radial-gradient(circle at 92% 18%,rgba(122,46,58,.07),transparent 36%),radial-gradient(circle at 50% 100%,rgba(95,138,90,.07),transparent 45%);
+  background-attachment:fixed}
+h1,h2,h3,h4,h5{font-family:var(--serif);margin:0}
+button,input,select{font:inherit;color:inherit}
+
+/* ---------- En-tête ---------- */
+.hero{text-align:center;padding:30px 16px 14px}
+.kicker{font-size:12px;letter-spacing:3.5px;text-transform:uppercase;color:var(--or);font-weight:800}
+.hero h1{font-size:clamp(34px,6vw,52px);color:var(--bx);font-weight:700;line-height:1.05;margin:6px 0 2px}
+.couple{font-family:var(--script);font-size:30px;color:var(--or);display:inline-flex;align-items:baseline;gap:8px}
+.couple input{font-family:var(--script);font-size:30px;color:var(--bx);border:0;border-bottom:1.5px dashed transparent;background:transparent;width:min(320px,70vw);text-align:center;padding:0 4px}
+.couple input:hover,.couple input:focus{border-bottom-color:var(--or-light);outline:none}
+.hero p{margin:6px auto 0;max-width:620px;color:var(--gris);font-size:14.5px}
+.orn{display:block;margin:10px auto 0;width:200px;height:18px}
+
+/* ---------- Navigation par étapes ---------- */
+.steps{position:sticky;top:0;z-index:30;background:rgba(251,246,238,.9);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--or-light)}
+.steps .in{max-width:1260px;margin:0 auto;display:flex;gap:6px;overflow-x:auto;padding:9px 16px;scrollbar-width:none}
+.steps .in::-webkit-scrollbar{display:none}
+.steps a{flex:none;text-decoration:none;color:var(--encre);font-weight:700;font-size:13px;padding:7px 13px;border-radius:999px;border:1px solid transparent;transition:.2s}
+.steps a:hover{border-color:var(--or-light);background:#fff}
+.steps a.act{background:var(--bx);color:#fff}
+.steps a:focus-visible{outline:2px solid var(--or);outline-offset:2px}
+
+/* ---------- Mise en page ---------- */
+.wrap{max-width:1260px;margin:0 auto;padding:18px 16px 130px}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) 440px;gap:24px;align-items:start}
+@media (max-width:1020px){.grid{grid-template-columns:minmax(0,1fr)}}
+.grid > *{min-width:0}
+section,#ticket{scroll-margin-top:66px}
+.card{background:var(--papier);border:1px solid var(--ligne);border-radius:20px;box-shadow:var(--ombre);padding:20px 20px 18px;margin-bottom:20px}
+.card-h{display:flex;flex-wrap:wrap;align-items:flex-start;gap:4px 12px;margin-bottom:14px}
+.card-h > div{flex:1;min-width:0}
+.card-h .num{flex:none;width:38px;height:38px;border-radius:50%;border:1.5px solid var(--or);color:var(--bx);display:grid;place-items:center;font-family:var(--serif);font-size:21px;font-weight:700;background:#fff}
+.card-h h2{font-size:28px;color:var(--bx);line-height:1.1}
+.card-h .hint{margin:2px 0 0;color:var(--gris);font-size:13.5px}
+.card-h .sum{margin-left:auto;font-weight:800;color:var(--or);font-size:14px;padding-top:6px;text-align:right}
+@media (max-width:600px){.card-h .sum{flex-basis:100%;margin-left:50px;padding-top:0;text-align:left}}
+.sub-title{font-family:var(--serif);font-size:20px;color:var(--bx);margin:16px 0 8px;display:flex;align-items:center;gap:10px}
+.sub-title::after{content:"";flex:1;height:1px;background:var(--or-light)}
+
+/* ---------- Dates ---------- */
+.dates{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:10px}
+@media (max-width:600px){.dates{grid-template-columns:repeat(3,minmax(0,1fr))}.dcard .d{font-size:24px}.dcard .s{font-size:10px;padding:2px 6px}}
+.dcard{position:relative;cursor:pointer}
+.dcard input{position:absolute;opacity:0;pointer-events:none}
+.dcard .in{display:block;text-align:center;border:1.5px solid var(--ligne);border-radius:16px;padding:12px 8px 10px;background:#fff;transition:.2s}
+.dcard .d{display:block;font-family:var(--serif);font-size:28px;font-weight:700;line-height:1;color:var(--bx)}
+.dcard .m{display:block;font-size:12px;letter-spacing:2px;text-transform:uppercase;font-weight:800;color:var(--gris);margin-top:3px}
+.dcard .s{display:inline-block;margin-top:7px;font-size:11px;font-weight:800;padding:2px 8px;border-radius:999px}
+.s.basse{background:var(--sauge-soft);color:var(--sauge)} .s.haute{background:var(--rose-soft);color:var(--bx)}
+.dcard .rib{position:absolute;top:-8px;right:-6px;background:var(--or);color:#fff;font-size:11px;font-weight:800;padding:2px 8px;border-radius:999px;box-shadow:0 2px 6px rgba(176,141,87,.4)}
+.dcard:hover .in{border-color:var(--or-light);transform:translateY(-2px)}
+.dcard input:checked + .in{background:linear-gradient(160deg,var(--bx),var(--bx-deep));border-color:var(--bx);transform:translateY(-3px);box-shadow:0 10px 22px rgba(122,46,58,.25)}
+.dcard input:checked + .in .d{color:#fff} .dcard input:checked + .in .m{color:var(--or-light)}
+.dcard input:checked + .in .s{background:rgba(255,255,255,.18);color:#fff}
+.dcard input:focus-visible + .in{outline:2px solid var(--or);outline-offset:3px}
+.other{margin-top:12px;font-size:13.5px;color:var(--gris)}
+.other label{display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap}
+input[type=date],input[type=number],input[type=text].f{padding:7px 9px;border:1.5px solid var(--ligne);border-radius:10px;background:#fff;font-size:14px}
+input[type=number]{width:78px}
+input:focus-visible,select:focus-visible{outline:2px solid var(--or);outline-offset:1px}
+.badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.badge{font-size:12px;font-weight:800;padding:4px 11px;border-radius:999px}
+.b-haute{background:var(--rose-soft);color:var(--bx)} .b-basse{background:var(--sauge-soft);color:var(--sauge)}
+.b-remise{background:var(--or);color:#fff} .b-info{background:#fff;border:1px solid var(--ligne);color:var(--encre)}
+.counters{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+@media (max-width:600px){.counters{grid-template-columns:minmax(0,1fr)}}
+.counter{display:flex;align-items:center;gap:12px;border:1.5px solid var(--ligne);border-radius:16px;padding:12px 14px;background:#fff}
+.counter .ci{font-size:24px;width:44px;height:44px;border-radius:14px;background:var(--or-soft);display:grid;place-items:center;flex:none}
+.counter b{display:block} .counter small{color:var(--gris);font-size:12.5px}
+.counter > div:nth-child(2){flex:1}
+.step{display:inline-flex;align-items:center;border:1.5px solid var(--ligne);border-radius:12px;overflow:hidden;background:#fff;flex:none}
+.step button{border:0;background:var(--bx-soft);color:var(--bx);width:34px;height:34px;font-size:19px;font-weight:800;cursor:pointer;transition:.15s}
+.step button:hover{background:var(--bx);color:#fff}
+.step input{border:0!important;width:56px!important;text-align:center;border-radius:0!important;font-weight:800;-moz-appearance:textfield;appearance:textfield;padding:7px 2px}
+.step input::-webkit-outer-spin-button,.step input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+
+/* ---------- Cartes de choix (formules, menus, boissons) ---------- */
+.choices{display:grid;grid-template-columns:repeat(var(--n,2),minmax(0,1fr));gap:12px}
+@media (max-width:640px){.choices{grid-template-columns:minmax(0,1fr)}}
+.choice{position:relative;cursor:pointer;display:block}
+.choice input{position:absolute;opacity:0;pointer-events:none}
+.choice .in{display:block;height:100%;border:1.5px solid var(--ligne);border-radius:18px;padding:16px;background:#fff;transition:.2s}
+.choice:hover .in{border-color:var(--or-light);transform:translateY(-2px)}
+.choice input:checked + .in{border-color:var(--or);background:linear-gradient(180deg,#fff,var(--or-soft));box-shadow:inset 0 0 0 4px #fff,inset 0 0 0 5px var(--or-light),0 10px 24px rgba(176,141,87,.2)}
+.choice input:checked + .in::after{content:"✓ Choisi";position:absolute;top:-9px;right:14px;background:var(--bx);color:#fff;font-size:11px;font-weight:800;padding:3px 10px;border-radius:999px}
+.choice input:focus-visible + .in{outline:2px solid var(--or);outline-offset:3px}
+.choice .ce{font-size:26px;display:block;margin-bottom:4px}
+.choice h3{font-size:28px;color:var(--bx);line-height:1}
+.choice h4{font-size:21px;color:var(--bx);line-height:1.1}
+.choice .fp{font-size:24px;font-weight:800;margin:6px 0 2px}
+.choice .fp s{font-size:15px;color:var(--gris);font-weight:600;margin-right:6px}
+.choice .ds{display:block;font-size:12.5px;color:var(--gris);margin-top:4px}
+.choice .cp{display:block;font-weight:800;color:var(--bx);margin-top:6px;font-size:14px}
+.choice ul{list-style:none;margin:8px 0 0;padding:0;font-size:13px;color:var(--gris)}
+.choice li{padding-left:18px;position:relative;margin:3px 0}
+.choice li::before{content:"✓";position:absolute;left:0;color:var(--or);font-weight:800}
+
+/* ---------- Tuiles d'options ---------- */
+.tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media (max-width:680px){.tiles{grid-template-columns:minmax(0,1fr)}}
+.tile{position:relative;border:1.5px solid var(--ligne);border-radius:18px;background:#fff;transition:border-color .25s,box-shadow .25s,background .25s}
+.tile:hover{border-color:var(--or-light)}
+.tile.on{border-color:var(--or);background:linear-gradient(180deg,#fff,#fbf3e8);box-shadow:0 8px 20px rgba(176,141,87,.18)}
+.tile.locked{background:#faf7f3}
+.tile.locked::after{content:attr(data-lock);position:absolute;top:-9px;right:14px;background:var(--gris);color:#fff;font-size:11px;font-weight:800;padding:2px 9px;border-radius:999px}
+.tile-main{display:grid;grid-template-columns:44px minmax(0,1fr) auto;column-gap:12px;align-items:center;padding:14px}
+label.tile-main{cursor:pointer}
+.tile.locked label.tile-main{cursor:not-allowed}
+.tile-main input[type=checkbox]{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+.ti{width:44px;height:44px;border-radius:14px;background:var(--or-soft);display:grid;place-items:center;font-size:22px;transition:transform .35s cubic-bezier(.3,1.6,.5,1),background .25s}
+.tile.on .ti{background:var(--bx-soft);transform:rotate(-8deg) scale(1.08)}
+.tt b{display:block;font-weight:800;font-size:14.5px;line-height:1.25}
+.tt small{display:block;color:var(--gris);font-size:12.5px;line-height:1.35;margin-top:1px}
+.tp{display:inline-block;margin-top:5px;font-weight:800;color:var(--bx);font-size:14px}
+.tile:not(.on) .tp{color:var(--gris)}
+.sw-vis{position:relative;width:46px;height:27px;border-radius:999px;background:#ddd2d2;transition:.25s;flex:none}
+.sw-vis::before{content:"";position:absolute;top:3px;left:3px;width:21px;height:21px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .3s cubic-bezier(.3,1.5,.5,1);display:grid;place-items:center;font-size:11px;color:var(--bx)}
+.tile-main input:checked ~ .sw-vis{background:var(--bx)}
+.tile-main input:checked ~ .sw-vis::before{transform:translateX(19px);content:"♥"}
+.tile-main input:disabled ~ .sw-vis{opacity:.4}
+.tile-main input:focus-visible ~ .sw-vis{outline:2px solid var(--or);outline-offset:2px}
+.tile-sub{padding:0 14px 14px 70px;display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;font-size:13.5px}
+@media (max-width:680px){.tile-sub{padding-left:14px}}
+.tile-sub label{display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap}
+.tile-sub output{font-weight:800;color:var(--bx);min-width:56px}
+input[type=range]{accent-color:var(--bx);width:170px;max-width:100%}
+.seg{display:inline-flex;flex-wrap:wrap;gap:3px;background:var(--ivoire);border:1px solid var(--ligne);border-radius:12px;padding:3px}
+.seg label{position:relative}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg span{display:block;padding:6px 11px;border-radius:9px;font-size:13px;font-weight:800;color:var(--gris);cursor:pointer;transition:.15s}
+.seg span:hover{color:var(--bx)}
+.seg input:checked + span{background:#fff;color:var(--bx);box-shadow:0 1px 5px rgba(91,30,42,.15)}
+.seg input:focus-visible + span{outline:2px solid var(--or);outline-offset:1px}
+.hide{display:none!important}
+.card-h{cursor:pointer}
+.fold{flex:none;width:36px;height:36px;border-radius:50%;border:1.5px solid var(--ligne);background:#fff;color:var(--bx);display:grid;place-items:center;cursor:pointer;transition:border-color .2s,background .2s;margin-top:2px}
+.fold:hover{border-color:var(--or);background:var(--or-soft)}
+.fold:focus-visible{outline:2px solid var(--or);outline-offset:2px}
+.fold svg{transition:transform .3s ease}
+.card.collapsed .fold svg{transform:rotate(-90deg)}
+.card.collapsed .card-b{display:none}
+.card.collapsed{padding-bottom:12px}
+.card.collapsed .card-h{margin-bottom:0}
+.card.collapsed .card-h .hint{display:none}
+.card-b{animation:deplie .35s ease}
+@keyframes deplie{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+.next-row{display:flex;justify-content:flex-end;margin-top:18px}
+.btn.next{background:var(--bx);color:#fff;box-shadow:0 4px 12px rgba(122,46,58,.25)}
+.btn.next:hover{background:var(--bx-deep)}
+.foldall{flex:none;margin-left:auto;border:1px solid var(--or-light);background:#fff;color:var(--bx);font-weight:800;font-size:13px;padding:7px 13px;border-radius:999px;cursor:pointer;white-space:nowrap}
+.foldall:hover{background:var(--or-soft)}
+.foldall:focus-visible{outline:2px solid var(--or);outline-offset:2px}
+
+/* ---------- Colonne du devis ---------- */
+.side{position:sticky;top:64px;max-height:calc(100vh - 76px);overflow:auto;scrollbar-width:thin;padding:2px 2px 6px;border-radius:18px}
+@media (max-width:1020px){.side{position:static;max-height:none;overflow:visible}}
+.paper{background:var(--papier);border-radius:18px;box-shadow:var(--ombre);padding:9px;border:1px solid var(--ligne)}
+.paper-in{position:relative;border:1.5px solid var(--or-light);border-radius:12px;padding:20px 20px 16px;background:radial-gradient(circle at 50% 0%,#fff 0,transparent 60%)}
+.paper-in::before,.paper-in::after{content:"✦";position:absolute;color:var(--or);font-size:13px;top:6px}
+.paper-in::before{left:9px}.paper-in::after{right:9px}
+.p-top{text-align:center}
+.p-k{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--or);font-weight:800}
+.p-top h2{font-size:44px;color:var(--bx);line-height:1;margin-top:2px}
+.p-for{font-family:var(--script);font-size:25px;color:var(--or);line-height:1.2;min-height:6px}
+.p-meta{font-size:13px;color:var(--gris);margin-top:2px}
+.psec{margin-top:14px}
+.ph{display:flex;justify-content:space-between;align-items:baseline;font-size:11.5px;letter-spacing:2px;text-transform:uppercase;color:var(--or);font-weight:800;border-bottom:1px solid var(--or-light);padding-bottom:4px;margin-bottom:2px}
+.ph b{letter-spacing:0;font-size:13px;color:var(--bx)}
+.ln{padding:5px 0}
+.l1{display:flex;align-items:baseline;gap:6px}
+.nm{font-weight:700;font-size:14px}
+.lead{flex:1;min-width:14px;border-bottom:1.5px dotted #d8c8ab;transform:translateY(-4px)}
+.am{font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap;font-size:14px}
+.am.neg{color:var(--sauge)} .am.zero{color:var(--gris)}
+.dt{display:block;color:var(--gris);font-size:11.5px;margin-top:1px}
+.tag{font-size:9.5px;font-weight:800;padding:1px 7px;border-radius:9px;white-space:nowrap;align-self:center;letter-spacing:.2px}
+.t-pl{background:var(--sauge-soft);color:var(--sauge)} .t-hy{background:var(--ambre-soft);color:var(--ambre)}
+.t-ng{background:var(--violet-soft);color:var(--violet)} .t-q{background:var(--rose-soft);color:var(--bx)}
+.t-of{background:var(--or-soft);color:#7a5a22} .t-inc{background:#efeae6;color:#6a6061}
+.ln.new{animation:arrive .6s ease}
+.ln.chg .am{animation:flash .8s ease}
+@keyframes arrive{from{opacity:0;transform:translateX(14px);background:var(--or-soft)}to{opacity:1;transform:none;background:transparent}}
+@keyframes flash{0%{color:var(--or);transform:scale(1.15)}100%{transform:scale(1)}}
+.p-total{position:relative;margin-top:16px;border-radius:16px;background:linear-gradient(135deg,var(--bx),var(--bx-deep));color:#fff;padding:16px 18px;display:flex;justify-content:space-between;align-items:center;gap:10px;box-shadow:inset 0 0 0 3px var(--bx),inset 0 0 0 4px rgba(228,209,170,.75),0 10px 22px rgba(91,30,42,.25)}
+.p-total .lt span{font-size:12px;letter-spacing:2px;text-transform:uppercase;font-weight:800;color:var(--or-light)}
+.p-total .lt small{display:block;color:#f3e2cc;font-size:12px}
+.p-total .vt{font-family:var(--serif);font-size:44px;font-weight:700;line-height:1;white-space:nowrap}
+.deltas{position:absolute;right:16px;top:-14px;height:0;pointer-events:none}
+.delta{position:absolute;right:0;white-space:nowrap;font-weight:800;font-size:14px;padding:3px 11px;border-radius:999px;animation:rise 1.6s ease forwards;box-shadow:0 3px 10px rgba(0,0,0,.18)}
+.delta.pos{background:var(--or);color:#fff} .delta.neg{background:var(--sauge);color:#fff}
+@keyframes rise{0%{opacity:0;transform:translateY(10px) scale(.85)}15%{opacity:1;transform:translateY(0) scale(1)}75%{opacity:1}100%{opacity:0;transform:translateY(-30px)}}
+.warn{margin-top:12px;padding:10px 12px;border-radius:12px;background:var(--ambre-soft);border-left:4px solid var(--or);color:#6b4600;font-size:13px}
+.warn div+div{margin-top:5px}
+.savebox{display:flex;gap:8px;margin-top:14px}
+.savebox input{flex:1;min-width:0}
+.btn{border:0;border-radius:12px;padding:10px 14px;font-weight:800;cursor:pointer;background:var(--bx-soft);color:var(--bx);transition:.15s;white-space:nowrap}
+.btn:hover{filter:brightness(.96);transform:translateY(-1px)}
+.btn.primary{background:linear-gradient(135deg,#c4a46e,var(--or));color:#fff;box-shadow:0 4px 12px rgba(176,141,87,.35)}
+.btn.armed{background:var(--bx);color:#fff}
+.btn:focus-visible{outline:2px solid var(--or);outline-offset:2px}
+.btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.legend{display:flex;flex-wrap:wrap;gap:5px;margin-top:12px;justify-content:center}
+
+/* ---------- Comparateur ---------- */
+.scroll{overflow-x:auto}
+.cmp{width:100%;border-collapse:separate;border-spacing:4px;font-size:14px}
+.cmp th{font-size:12.5px;color:var(--gris);font-weight:800;padding:6px;text-align:center}
+.cmp th .s{margin-top:3px}
+.cmp td{padding:10px 8px;text-align:center;border-radius:12px}
+.cmp td:first-child{text-align:left;font-family:var(--serif);font-size:20px;font-weight:700;color:var(--bx);white-space:nowrap}
+.cmp td.cell{cursor:pointer;background:#fff;border:1.5px solid var(--ligne);transition:.15s}
+.cmp td.cell:hover{border-color:var(--or);transform:translateY(-2px)}
+.cmp td.cell b{display:block;font-size:15px}
+.cmp td.cell small{display:block;font-size:11.5px;color:var(--gris);font-weight:700}
+.cmp td.best{background:var(--sauge-soft);border-color:#b9d3b3}
+.cmp td.best small{color:var(--sauge)}
+.cmp td.cur{border-color:var(--bx);box-shadow:inset 0 0 0 1.5px var(--bx)}
+.cmp td.cell:focus-visible{outline:2px solid var(--or)}
+
+/* ---------- Scénarios ---------- */
+.scen{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+.sc{position:relative;background:#fff;border:1.5px solid var(--ligne);border-radius:18px;padding:16px;overflow:hidden;animation:arrive .4s ease}
+.sc::before{content:"♥";position:absolute;right:12px;top:4px;color:var(--rose-soft);font-size:44px;line-height:1}
+.sc h5{font-size:23px;color:var(--bx);position:relative;padding-right:30px}
+.sc .m{font-size:12.5px;color:var(--gris)}
+.sc .tt2{font-family:var(--serif);font-size:32px;font-weight:700;margin:6px 0 0;line-height:1}
+.sc .pp{font-size:12px;color:var(--gris)}
+.sc .mini{margin:8px 0;font-size:12.5px}
+.sc .mini div{display:flex;justify-content:space-between;border-bottom:1px dotted var(--ligne);padding:2px 0}
+.sc .a{display:flex;gap:6px;flex-wrap:wrap}
+.sc .a .btn{font-size:12.5px;padding:7px 11px}
+.sc .cmpck{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:800;margin-top:10px;cursor:pointer}
+.sc .cmpck input{accent-color:var(--bx);width:16px;height:16px}
+.empty{color:var(--gris);font-size:14px;padding:12px;border:1.5px dashed var(--ligne);border-radius:14px;text-align:center}
+.sccmp th,.sccmp td{text-align:right}
+.sccmp td:first-child,.sccmp th:first-child{text-align:left;font-family:inherit;font-size:13.5px;color:var(--encre);font-weight:700}
+.sccmp td{background:#fff;border:1px solid var(--ligne)}
+.sccmp td.best{background:var(--sauge-soft);color:var(--sauge)}
+
+/* ---------- Divers ---------- */
+.mobilebar{display:none}
+@media (max-width:1020px){
+  .mobilebar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:40;background:linear-gradient(135deg,var(--bx),var(--bx-deep));color:#fff;padding:10px 16px;justify-content:space-between;align-items:center;box-shadow:0 -6px 20px rgba(0,0,0,.2)}
+  .mobilebar .v{font-family:var(--serif);font-size:30px;font-weight:700;line-height:1}
+  .mobilebar a{color:#fff;font-weight:800;font-size:13px;text-decoration:none;border:1px solid rgba(255,255,255,.5);padding:7px 12px;border-radius:999px}
+  .mobilebar .deltas{position:relative;right:auto;top:auto;height:0}
+  .mobilebar .delta{right:auto;left:0;bottom:6px}
+}
+.toast{position:fixed;left:50%;bottom:92px;transform:translate(-50%,20px);background:var(--encre);color:#fff;padding:10px 18px;border-radius:999px;font-weight:700;font-size:14px;opacity:0;pointer-events:none;transition:.3s;z-index:60;max-width:90vw;text-align:center}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.heart{position:fixed;pointer-events:none;color:var(--bx);font-size:16px;z-index:70;animation:burst .9s ease-out forwards}
+@keyframes burst{to{transform:translate(var(--dx),var(--dy)) scale(.5);opacity:0}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+@media print{
+  body{background:#fff}
+  body *{visibility:hidden}
+  .paper,.paper *{visibility:visible}
+  .paper{position:absolute;left:0;top:0;width:100%;box-shadow:none;border:0}
+  .savebox,.btns,.legend,.deltas{display:none!important}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">Domaine et Château de Valinches · 2027</div>
+  <h1>Notre devis de mariage</h1>
+  <div class="couple">pour <input type="text" data-k="couple" placeholder="vos prénoms" aria-label="Vos prénoms" maxlength="40"></div>
+  <p>Allumez, éteignez, changez de date : le devis se recalcule à chaque clic. Repliez les étapes terminées pour avancer plus vite.</p>
+  <svg class="orn" viewBox="0 0 200 18" aria-hidden="true"><path d="M4 9 C40 9 55 2 82 9 M196 9 C160 9 145 2 118 9" stroke="#b08d57" stroke-width="1.2" fill="none"/><path d="M100 3 l6 6 -6 6 -6 -6z" fill="#b08d57"/><circle cx="88" cy="9" r="1.6" fill="#b08d57"/><circle cx="112" cy="9" r="1.6" fill="#b08d57"/></svg>
+</header>
+
+<nav class="steps" aria-label="Étapes du devis"><div class="in">
+  <a href="#s-date">📅 Date</a><a href="#s-formule">🏰 Formule</a><a href="#s-options">✨ Options</a><a href="#s-traiteur">🍽️ Traiteur</a><a href="#s-autour">🥐 Autour du jour J</a><a href="#s-plus">🍭 Petits plus</a><a href="#s-cmp">⚖️ Comparer</a><a href="#s-scen">♥ Scénarios</a><button type="button" class="foldall" id="foldAll" aria-pressed="false">Tout replier</button>
+</div></nav>
+
+<div class="wrap">
+<div class="grid">
+<main>
+
+  <!-- 1. Date et invités -->
+  <section class="card" id="s-date">
+    <div class="card-h"><span class="num">1</span><div><h2>La date et les invités</h2><p class="hint">Choisissez un week-end : la saison et la remise se calculent toutes seules.</p></div><span class="sum" id="sumDate"></span></div>
+    <div class="dates" id="dateCards"></div>
+    <div class="other"><label>Ou une autre date en 2027 <input type="date" id="dateInput" min="2027-01-01" max="2027-12-31"></label></div>
+    <div class="badges" id="dateBadges"></div>
+    <div class="counters">
+      <div class="counter"><span class="ci">🥂</span><div><b>Adultes</b><small>Repas, vin, brunch</small></div>
+        <div class="step"><button type="button" data-step="adultes" data-d="-5" aria-label="Moins d'adultes">−</button><input type="number" data-k="adultes" min="0" max="400" aria-label="Adultes"><button type="button" data-step="adultes" data-d="5" aria-label="Plus d'adultes">+</button></div></div>
+      <div class="counter"><span class="ci">🧸</span><div><b>Enfants</b><small>Jusqu'à 12 ans</small></div>
+        <div class="step"><button type="button" data-step="enfants" data-d="-1" aria-label="Moins d'enfants">−</button><input type="number" data-k="enfants" min="0" max="100" aria-label="Enfants"><button type="button" data-step="enfants" data-d="1" aria-label="Plus d'enfants">+</button></div></div>
+    </div>
+  </section>
+
+  <!-- 2. Formule -->
+  <section class="card" id="s-formule">
+    <div class="card-h"><span class="num">2</span><div><h2>La formule</h2><p class="hint">Une seule formule à la fois : Sérénité ou Privilège.</p></div><span class="sum" id="sumFormule"></span></div>
+    <div class="choices" style="--n:2">
+      <label class="choice"><input type="radio" name="formule" value="serenite" data-k="formule"><span class="in">
+        <span class="ce">🕊️</span><h3>Sérénité</h3><div class="fp" id="fpSer"></div>
+        <ul><li>Samedi 12h → dimanche 16h</li><li>1 nuit pour les invités (109 couchages)</li><li>Salle, chapiteau, parc, suite nuptiale</li></ul></span></label>
+      <label class="choice"><input type="radio" name="formule" value="privilege" data-k="formule"><span class="in">
+        <span class="ce">👑</span><h3>Privilège</h3><div class="fp" id="fpPri"></div>
+        <ul><li>Vendredi 16h → dimanche 16h</li><li>2 nuits pour les invités, vendredi inclus</li><li>Salle, chapiteau, parc, suite nuptiale</li></ul></span></label>
+    </div>
+    <div class="tiles" style="margin-top:14px">
+      <div class="tile" id="tileRemise" data-tile="remiseOn" data-lock="Pas à cette date">
+        <label class="tile-main"><input type="checkbox" data-k="remiseOn"><span class="ti">🎁</span>
+          <span class="tt"><b>Remise de 10 % du château</b><small>Week-ends des 17-18 et 24-25 avril, sur la formule (hors restauration)</small><span class="tp" id="pRemise"></span></span><span class="sw-vis" aria-hidden="true"></span></label>
+      </div>
+      <div class="tile" data-tile="remiseSupp">
+        <div class="tile-main"><span class="ti">🤝</span><span class="tt"><b>Geste commercial négocié</b><small>Pour tester : une remise en plus sur la formule</small><span class="tp" id="pSupp"></span></span><span></span></div>
+        <div class="tile-sub"><label>Remise <input type="range" min="0" max="20" step="1" data-k="remiseSupp" aria-label="Remise négociée en pourcentage"><output><span data-v="remiseSupp"></span> %</output></label></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Options du château -->
+  <section class="card" id="s-options">
+    <div class="card-h"><span class="num">3</span><div><h2>Les options du château</h2><p class="hint">Touchez une carte pour l'ajouter ou l'enlever.</p></div><span class="sum" id="sumOpt"></span></div>
+    <div class="tiles">
+      <div class="tile" data-tile="veille">
+        <label class="tile-main"><input type="checkbox" data-k="veille"><span class="ti">🗝️</span>
+          <span class="tt"><b>La salle le vendredi</b><small>La veille dès 12h · payante dans les deux formules</small><span class="tp" id="pVeille"></span></span><span class="sw-vis" aria-hidden="true"></span></label>
+        <div class="tile-sub" data-show="veille"><label>Prix négocié <input type="range" min="0" max="3000" step="100" data-k="veillePrix" aria-label="Prix négocié de la salle"><output><span data-v="veillePrix"></span> €</output></label></div>
+      </div>
+      <div class="tile" data-tile="laique">
+        <label class="tile-main"><input type="checkbox" data-k="laique"><span class="ti">💐</span>
+          <span class="tt"><b>Cérémonie laïque</b><small>Dans le parc, face à l'étang · 7 € par convive</small><span class="tp" id="pLaique"></span></span><span class="sw-vis" aria-hidden="true"></span></label>
+      </div>
+      <div class="tile" id="tileNuit" data-tile="nuit" data-lock="Incluse dans Privilège">
+        <label class="tile-main"><input type="checkbox" data-k="nuit"><span class="ti">🌙</span>
+          <span class="tt"><b>Nuit du vendredi</b><small id="nuitInfo">Chambres à -20 % la veille</small><span class="tp" id="pNuit"></span></span><span class="sw-vis" aria-hidden="true"></span></label>
+        <div class="tile-sub" data-show="nuitSer">
+          <label>Chambres <input type="range" min="1" max="30" data-k="chambres" aria-label="Nombre de chambres"><output><span data-v="chambres"></span></output></label>
+          <label>Prix d'une chambre <input type="number" min="0" max="500" data-k="prixChambre" aria-label="Prix d'une chambre"> €</label>
+        </div>
+      </div>
+      <div class="tile" data-tile="chapiteaux">
+        <div class="tile-main"><span class="ti">⛺</span><span class="tt"><b>Plan B pluie</b><small>Chapiteaux 5×5 m à 300 € (le grand chapiteau est déjà inclus)</small><span class="tp" id="pChap"></span></span><span></span></div>
+        <div class="tile-sub"><div class="seg" role="radiogroup" aria-label="Chapiteaux de pluie">
+          <label><input type="radio" name="chapiteaux" value="0" data-k="chapiteaux"><span>Aucun</span></label><label><input type="radio" name="chapiteaux" value="1" data-k="chapiteaux"><span>1</span></label><label><input type="radio" name="chapiteaux" value="2" data-k="chapiteaux"><span>2</span></label></div></div>
+      </div>
+      <div class="tile" data-tile="menage">
+        <label class="tile-main"><input type="checkbox" data-k="menage"><span class="ti">🧹</span>
+          <span class="tt"><b>Ménage complet</b><small>Confettis, ballons et déco évacués par le château</small><span class="tp" id="pMenage"></span></span><span class="sw-vis" aria-hidden="true"></span></label>
+      </div>
+      <div class="tile" data-tile="housses">
+        <label class="tile-main"><input type="checkbox" data-k="housses"><span class="ti">🪑</span>
+          <span class="tt"><b>Housses de chaise</b><small>2,80 € la housse + 150 € d'installation</small><span class="tp" id="pHousses"></span></span><span class="sw-vis" aria-hidden="true"></span></label>
+      </div>
+      <div class="tile" data-tile="personnel">
+        <label class="tile-main"><input type="checkbox" data-k="personnel"><span class="ti">🕐</span>
+          <span class="tt"><b>Personnel après 1h</b><small>50 € par heure et par salarié, jusqu'à 3h</small><span class="tp" id="pPerso"></span></span><span class="sw-vis" aria-hidden="true"></span></label>
+        <div class="tile-sub" data-show="personnel">
+          <div class="seg" role="radiogroup" aria-label="Salariés"><label><input type="radio" name="salaries" value="1" data-k="salaries"><span>1 salarié</span></label><label><input type="radio" name="salaries" value="2" data-k="salaries"><span>2</span></label><label><input type="radio" name="salaries" value="3" data-k="salaries"><span>3</span></label></div>
+          <div class="seg" role="radiogroup" aria-label="Heures"><label><input type="radio" name="heures" value="1" data-k="heures"><span>1 h</span></label><label><input type="radio" name="heures" value="2" data-k="heures"><span>2 h</span></label></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Traiteur -->
+  <section class="card" id="s-traiteur">
+    <div class="card-h"><span class="num">4</span><div><h2>Le traiteur et les boissons</h2><p class="hint">Formule repas à 83 € par adulte, vin d'honneur compris.</p></div><span class="sum" id="sumTraiteur"></span></div>
+    <div class="choices" style="--n:3">
+      <label class="choice"><input type="radio" name="menu" value="traditionnelle" data-k="menu"><span class="in"><span class="ce">🍽️</span><h4>Traditionnelle</h4><span class="ds">8 pièces + 1 animation · entrée, plat, fromage, dessert</span></span></label>
+      <label class="choice"><input type="radio" name="menu" value="inspiration" data-k="menu"><span class="in"><span class="ce">🔥</span><h4>Inspiration</h4><span class="ds">8 pièces + brasero · amuse-bouche, plat, fromage, dessert</span></span></label>
+      <label class="choice"><input type="radio" name="menu" value="rencontre" data-k="menu"><span class="in"><span class="ce">🥂</span><h4>Rencontre</h4><span class="ds">11 pièces + 2 animations · plat, fromage, dessert</span></span></label>
+    </div>
+    <div class="tiles" style="margin-top:14px">
+      <div class="tile" data-tile="prestige">
+        <label class="tile-main"><input type="checkbox" data-k="prestige"><span class="ti">⭐</span>
+          <span class="tt"><b>Menu Prestige</b><small>+35 € par adulte</small><span class="tp" id="pPrestige"></span></span><span class="sw-vis" aria-hidden="true"></span></label>
+      </div>
+      <div class="tile" data-tile="brasero">
+        <div class="tile-main"><span class="ti">🍢</span><span class="tt"><b>Brasero</b><small>Inclus dans Inspiration · sinon +9 € · Prestige +15 €</small><span class="tp" id="pBrasero"></span></span><span></span></div>
+        <div class="tile-sub"><div class="seg" role="radiogroup" aria-label="Brasero"><label><input type="radio" name="brasero" value="aucun" data-k="brasero"><span>Aucun</span></label><label><input type="radio" name="brasero" value="classique" data-k="brasero"><span>Classique</span></label><label><input type="radio" name="brasero" value="prestige" data-k="brasero"><span>Prestige</span></label></div></div>
+      </div>
+      <div class="tile" data-tile="ateliers">
+        <div class="tile-main"><span class="ti">🧑‍🍳</span><span class="tt"><b>Ateliers en plus</b><small>+5 € par adulte et par atelier</small><span class="tp" id="pAteliers"></span></span><span></span></div>
+        <div class="tile-sub"><div class="seg" role="radiogroup" aria-label="Ateliers"><label><input type="radio" name="ateliers" value="0" data-k="ateliers"><span>Aucun</span></label><label><input type="radio" name="ateliers" value="1" data-k="ateliers"><span>1</span></label><label><input type="radio" name="ateliers" value="2" data-k="ateliers"><span>2</span></label></div></div>
+      </div>
+      <div class="tile" data-tile="dessert">
+        <div class="tile-main"><span class="ti">🎂</span><span class="tt"><b>Le gâteau</b><small>Pièce montée : +3,50 € à la place du dessert, +6 € en plus</small><span class="tp" id="pDessert"></span></span><span></span></div>
+        <div class="tile-sub"><div class="seg" role="radiogroup" aria-label="Gâteau"><label><input type="radio" name="dessert" value="inclus" data-k="dessert"><span>Dessert inclus</span></label><label><input type="radio" name="dessert" value="remplacement" data-k="dessert"><span>À la place</span></label><label><input type="radio" name="dessert" value="supplement" data-k="dessert"><span>En plus</span></label></div></div>
+      </div>
+      <div class="tile" data-tile="enfMenu">
+        <div class="tile-main"><span class="ti">🧒</span><span class="tt"><b>Repas des enfants</b><small>Dîner ou lunch-box à 19 €</small><span class="tp" id="pEnf"></span></span><span></span></div>
+        <div class="tile-sub"><div class="seg" role="radiogroup" aria-label="Repas des enfants"><label><input type="radio" name="enfMenu" value="diner" data-k="enfMenu"><span>Dîner</span></label><label><input type="radio" name="enfMenu" value="lunch" data-k="enfMenu"><span>Lunch-box</span></label><label><input type="radio" name="enfMenu" value="aucun" data-k="enfMenu"><span>Aucun</span></label></div></div>
+      </div>
+      <div class="tile" data-tile="enfCocktail">
+        <label class="tile-main"><input type="checkbox" data-k="enfCocktail"><span class="ti">🍡</span>
+          <span class="tt"><b>Cocktail des enfants</b><small>4 pièces · 8 € par enfant</small><span class="tp" id="pCock"></span></span><span class="sw-vis" aria-hidden="true"></span></label>
+      </div>
+    </div>
+    <h3 class="sub-title">Les boissons</h3>
+    <div class="choices" style="--n:3">
+      <label class="choice"><input type="radio" name="boissons" value="A" data-k="boissons"><span class="in"><span class="ce">🍷</span><h4>A · vin du château</h4><span class="ds">Vin du repas + droit de bouchon pour votre champagne</span><span class="cp" id="pBA"></span></span></label>
+      <label class="choice"><input type="radio" name="boissons" value="B" data-k="boissons"><span class="in"><span class="ce">🍾</span><h4>B · tout apporté</h4><span class="ds">Toutes vos boissons, avec le droit de bouchon complet</span><span class="cp" id="pBB"></span></span></label>
+      <label class="choice"><input type="radio" name="boissons" value="C" data-k="boissons"><span class="in"><span class="ce">📜</span><h4>À la carte</h4><span class="ds">Choisies sur la carte du château, non chiffrées ici</span><span class="cp">—</span></span></label>
+    </div>
+    <div class="tile-sub" data-show="boissonsA" style="padding-left:0;margin-top:12px">
+      <div class="seg" role="radiogroup" aria-label="Formule vin"><label><input type="radio" name="vin" value="classique" data-k="vin"><span>Classique 12 €</span></label><label><input type="radio" name="vin" value="superieure" data-k="vin"><span>Supérieure 16 €</span></label><label><input type="radio" name="vin" value="prestige" data-k="vin"><span>Prestige 22 €</span></label></div>
+      <div class="seg" role="radiogroup" aria-label="Prix du vin compté"><label><input type="radio" name="vinUnite" value="personne" data-k="vinUnite"><span>Par adulte</span></label><label><input type="radio" name="vinUnite" value="bouteille" data-k="vinUnite"><span>Par bouteille (1 pour 2)</span></label></div>
+    </div>
+    <div class="tiles" style="margin-top:14px">
+      <div class="tile" data-tile="prestataires">
+        <div class="tile-main"><span class="ti">📸</span><span class="tt"><b>Repas des prestataires</b><small>DJ, photographe… 35 € par personne</small><span class="tp" id="pPresta"></span></span><span></span></div>
+        <div class="tile-sub"><span>Nombre de prestataires</span>
+          <div class="step"><button type="button" data-step="prestataires" data-d="-1" aria-label="Moins de prestataires">−</button><input type="number" data-k="prestataires" min="0" max="20" aria-label="Prestataires"><button type="button" data-step="prestataires" data-d="1" aria-label="Plus de prestataires">+</button></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Autour du jour J -->
+  <section class="card" id="s-autour">
+    <div class="card-h"><span class="num">5</span><div><h2>Autour du jour J</h2><p class="hint">Les repas du vendredi et du samedi sont à voir avec le chef : leurs prix sont des hypothèses.</p></div><span class="sum" id="sumAutour"></span></div>
+    <div class="tiles">
+      <div class="tile" data-tile="vendrediSoir">
+        <label class="tile-main"><input type="checkbox" data-k="vendrediSoir"><span class="ti">🍕</span>
+          <span class="tt"><b>Vendredi soir · soirée pizza</b><small>Prix non donné par la plaquette</small><span class="tp" id="pVS"></span></span><span class="sw-vis" aria-hidden="true"></span></label>
+        <div class="tile-sub" data-show="vendrediSoir"><label>Personnes <input type="number" data-k="vsPers" min="0" max="300"></label><label>Par personne <input type="number" data-k="vsPrix" min="0" max="200"> €</label></div>
+      </div>
+      <div class="tile" data-tile="samMatin">
+        <label class="tile-main"><input type="checkbox" data-k="samMatin"><span class="ti">☕</span>
+          <span class="tt"><b>Samedi matin · petit-déjeuner</b><small>Repère plaquette : 18 € par personne</small><span class="tp" id="pSM"></span></span><span class="sw-vis" aria-hidden="true"></span></label>
+        <div class="tile-sub" data-show="samMatin"><label>Personnes <input type="number" data-k="smPers" min="0" max="300"></label><label>Par personne <input type="number" data-k="smPrix" min="0" max="200"> €</label></div>
+      </div>
+      <div class="tile" data-tile="samMidi">
+        <label class="tile-main"><input type="checkbox" data-k="samMidi"><span class="ti">🥗</span>
+          <span class="tt"><b>Samedi midi · déjeuner</b><small>Repère : le brunch à 39 €</small><span class="tp" id="pMD"></span></span><span class="sw-vis" aria-hidden="true"></span></label>
+        <div class="tile-sub" data-show="samMidi"><label>Personnes <input type="number" data-k="mdPers" min="0" max="300"></label><label>Par personne <input type="number" data-k="mdPrix" min="0" max="200"> €</label></div>
+      </div>
+      <div class="tile" data-tile="lendemain">
+        <div class="tile-main"><span class="ti">🥐</span><span class="tt"><b>Le dimanche matin</b><small>Brunch 39 € (enfant 19 €) ou petit-déjeuner 18 € (enfant 9 €)</small><span class="tp" id="pLend"></span></span><span></span></div>
+        <div class="tile-sub"><div class="seg" role="radiogroup" aria-label="Le lendemain"><label><input type="radio" name="lendemain" value="aucun" data-k="lendemain"><span>Rien</span></label><label><input type="radio" name="lendemain" value="petitdej" data-k="lendemain"><span>Petit-déjeuner</span></label><label><input type="radio" name="lendemain" value="brunch" data-k="lendemain"><span>Brunch</span></label></div></div>
+      </div>
+      <div class="tile" data-tile="taxe">
+        <div class="tile-main"><span class="ti">🧾</span><span class="tt"><b>Taxe de séjour</b><small>Montant inconnu : à demander au château</small><span class="tp" id="pTaxe"></span></span><span></span></div>
+        <div class="tile-sub"><label><input type="number" data-k="taxe" min="0" max="10" step="0.05" aria-label="Taxe par nuitée"> € par nuitée</label><label>× <input type="number" data-k="nuitees" min="0" max="1000" aria-label="Nombre de nuitées"> nuitées</label></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. Petits plus -->
+  <section class="card" id="s-plus">
+    <div class="card-h"><span class="num">6</span><div><h2>Les petits plus</h2><p class="hint">Pour le plaisir des yeux et des papilles.</p></div><span class="sum" id="sumPlus"></span></div>
+    <div class="tiles">
+      <div class="tile" data-tile="candy"><label class="tile-main"><input type="checkbox" data-k="candy"><span class="ti">🍭</span><span class="tt"><b>Candy bar</b><small>8 bonbonnes gourmandes</small><span class="tp">300 €</span></span><span class="sw-vis" aria-hidden="true"></span></label></div>
+      <div class="tile" data-tile="chocolat"><label class="tile-main"><input type="checkbox" data-k="chocolat"><span class="ti">🍫</span><span class="tt"><b>Fontaine à chocolat</b><small>105 € + 3 € par convive</small><span class="tp" id="pChoco"></span></span><span class="sw-vis" aria-hidden="true"></span></label></div>
+      <div class="tile" data-tile="popcorn"><label class="tile-main"><input type="checkbox" data-k="popcorn"><span class="ti">🍿</span><span class="tt"><b>Machine à pop-corn</b><small>200 cornets</small><span class="tp">158 €</span></span><span class="sw-vis" aria-hidden="true"></span></label></div>
+      <div class="tile" data-tile="fontaine"><label class="tile-main"><input type="checkbox" data-k="fontaine"><span class="ti">🥂</span><span class="tt"><b>Fontaine à champagne</b><small>Hors champagne</small><span class="tp">80 €</span></span><span class="sw-vis" aria-hidden="true"></span></label></div>
+    </div>
+  </section>
+</main>
+
+<!-- Colonne de droite : décor + devis -->
+<aside class="side">
+
+  <div class="paper" id="ticket">
+    <div class="paper-in">
+      <div class="p-top">
+        <div class="p-k">Château de Valinches</div>
+        <h2>Devis</h2>
+        <div class="p-for" id="tFor"></div>
+        <div class="p-meta" id="tMeta"></div>
+        <svg class="orn" viewBox="0 0 200 18" aria-hidden="true" style="margin-top:6px"><path d="M10 9 C45 9 60 3 85 9 M190 9 C155 9 140 3 115 9" stroke="#d6bf92" stroke-width="1" fill="none"/><path d="M100 4 l5 5 -5 5 -5 -5z" fill="#d6bf92"/></svg>
+      </div>
+      <div id="tLines"></div>
+      <div class="p-total">
+        <div class="lt"><span>Total estimé</span><small id="tSave"></small><small id="tPer"></small></div>
+        <div class="vt" id="tTotal">0 €</div>
+        <div class="deltas" id="deltas"></div>
+      </div>
+      <div class="warn hide" id="tWarn"></div>
+      <div class="savebox"><input type="text" class="f" id="scenName" maxlength="60" placeholder="Nom du scénario (facultatif)" aria-label="Nom du scénario"><button class="btn primary" id="btnSave" type="button">♥ Enregistrer</button></div>
+      <div class="btns"><button class="btn" id="btnReset" type="button">↺ Devis de base</button><button class="btn" id="btnPrint" type="button">🖨 Imprimer</button></div>
+      <div class="legend"><span class="tag t-pl">Plaquette</span><span class="tag t-of">Offre château</span><span class="tag t-hy">Hypothèse</span><span class="tag t-ng">Négocié</span><span class="tag t-q">À demander</span><span class="tag t-inc">Inclus</span></div>
+    </div>
+  </div>
+</aside>
+</div>
+
+<!-- Comparateur -->
+<section class="card" id="s-cmp">
+  <div class="card-h"><span class="num">⚖</span><div><h2>Comparer les dates et les formules</h2><p class="hint">Avec <b>vos options du moment</b>, le total de chaque combinaison. En vert : la plus douce pour le budget. Touchez un montant pour l'essayer.</p></div></div>
+  <div class="scroll"><table class="cmp" id="cmpTable"></table></div>
+</section>
+
+<!-- Scénarios -->
+<section class="card" id="s-scen">
+  <div class="card-h"><span class="num">♥</span><div><h2>Nos scénarios</h2><p class="hint">Enregistrez un devis depuis le panneau « Devis », puis cochez-en plusieurs pour les comparer. Ils restent dans ce navigateur ; « Exporter » en garde une copie.</p></div></div>
+  <div class="btns" style="margin:0 0 14px">
+    <button class="btn" id="btnExport" type="button">⬇ Exporter</button>
+    <label class="btn" style="display:inline-flex;align-items:center;cursor:pointer">⬆ Importer<input type="file" id="fileImport" accept="application/json,.json" style="display:none"></label>
+  </div>
+  <div class="scen" id="scenList"></div>
+  <div class="scroll" id="scenCmpWrap" style="margin-top:16px"></div>
+</section>
+</div>
+
+<div class="mobilebar"><div><div style="font-size:12px;opacity:.85" id="mbMeta"></div><div style="display:flex;align-items:center;gap:8px"><div class="v" id="mbTotal">0 €</div><div class="deltas" id="mbDelta"></div></div></div><a href="#ticket">Voir le devis</a></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+"use strict";
+/* ---------- Données (plaquette V3) ---------- */
+const P = {
+  forfait: { serenite: { basse: 6900, haute: 10900 }, privilege: { basse: 10900, haute: 14500 } },
+  veille: 3000, laique: 7, housse: 2.8, housseInstall: 150, chapiteau: 300, menage: 165, personnel: 50,
+  repas: 83, repasMin: 8300, prestige: 35, enfRepas: 19, enfCocktail: 8,
+  dessert: { inclus: 0, remplacement: 3.5, supplement: 6 }, brasero: { aucun: 0, classique: 9, prestige: 15 }, atelier: 5,
+  vins: { classique: 12, superieure: 16, prestige: 22 },
+  bouchonTout: [500, 600, 750], bouchonChamp: [250, 300, 350],
+  brunch: [39, 19], petitdej: [18, 9], prestataire: 35,
+  candy: 300, chocolat: [105, 3], popcorn: 158, fontaine: 80,
+  remiseChambre: 0.2, couchages: 109, places: 200
+};
+const DATES = [
+  { d: "2027-03-06", l: "6-7 mars", n: "6–7", m: "mars" }, { d: "2027-03-13", l: "13-14 mars", n: "13–14", m: "mars" },
+  { d: "2027-03-20", l: "20-21 mars", n: "20–21", m: "mars" }, { d: "2027-04-17", l: "17-18 avril", n: "17–18", m: "avril" },
+  { d: "2027-04-24", l: "24-25 avril", n: "24–25", m: "avril" }
+];
+const REMISE_DATES = ["2027-04-17", "2027-04-18", "2027-04-24", "2027-04-25"];
+const MENUS = { traditionnelle: "Traditionnelle", inspiration: "Inspiration", rencontre: "Rencontre" };
+const FORMULES = { serenite: "Sérénité", privilege: "Privilège" };
+const TAGS = { pl: "Plaquette", of: "Offre château", hy: "Hypothèse", ng: "Négocié", q: "À demander", inc: "Inclus" };
+const SECS = ["Château", "Traiteur", "Autour du jour J", "Petits plus"];
+const NUM = new Set(["adultes", "enfants", "remiseSupp", "veillePrix", "chambres", "prixChambre", "chapiteaux", "salaries", "heures", "ateliers", "prestataires", "vsPers", "vsPrix", "smPers", "smPrix", "mdPers", "mdPrix", "taxe", "nuitees"]);
+
+/* Devis de base = celui du PDF (Privilège 17 avril, traiteur A, sans brunch) */
+const BASE = {
+  couple: "",
+  date: "2027-04-17", formule: "privilege", adultes: 100, enfants: 20,
+  remiseOn: true, remiseSupp: 0,
+  veille: true, veillePrix: 3000, laique: true, nuit: true, chambres: 30, prixChambre: 129,
+  chapiteaux: 0, menage: false, housses: false, personnel: false, salaries: 2, heures: 2,
+  menu: "traditionnelle", prestige: false, brasero: "aucun", ateliers: 0, dessert: "inclus",
+  enfMenu: "diner", enfCocktail: true, boissons: "A", vin: "classique", vinUnite: "personne", prestataires: 0,
+  lendemain: "aucun", vendrediSoir: false, vsPers: 100, vsPrix: 20, samMatin: false, smPers: 100, smPrix: 18,
+  samMidi: false, mdPers: 100, mdPrix: 39, taxe: 0, nuitees: 0,
+  candy: false, chocolat: false, popcorn: false, fontaine: false
+};
+const STORE_STATE = "valinches.etat.v1", STORE_SCEN = "valinches.scenarios.v1";
+function load(k, def) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : def; } catch (e) { return def; } }
+function save(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; } }
+let S = Object.assign({}, BASE, load(STORE_STATE, {}));
+let scenarios = load(STORE_SCEN, []);
+if (!Array.isArray(scenarios)) scenarios = [];
+
+/* ---------- Outils ---------- */
+const eur = n => new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", minimumFractionDigits: 0, maximumFractionDigits: Number.isInteger(Math.round(n * 100) / 100) ? 0 : 2 }).format(n);
+const $ = id => document.getElementById(id);
+function parseDate(s) { const [y, m, d] = s.split("-").map(Number); return new Date(y, m - 1, d); }
+function fmtDate(s) { return parseDate(s).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long", year: "numeric" }); }
+function dateLabel(s) { const x = DATES.find(d => d.d === s); return x ? x.l : parseDate(s).toLocaleDateString("fr-FR", { day: "numeric", month: "long" }); }
+function seasonOf(s) { // haute : 17 avril → 17 octobre 2027 (juin compris)
+  const d = parseDate(s), a = new Date(2027, 3, 17), b = new Date(2027, 9, 17);
+  return d >= a && d <= b ? "haute" : "basse";
+}
+function dateInfo(s) {
+  const d = parseDate(s), wd = d.getDay(), weekend = wd === 6 || wd === 0, saison = seasonOf(s);
+  return { saison, weekend, tarif: weekend ? saison : "basse", remise: REMISE_DATES.includes(s), annee: d.getFullYear(), mois: d.getMonth() };
+}
+function bouchonIdx(n) { return n < 100 ? 0 : n <= 150 ? 1 : 2; }
+function escapeHtml(s) { return String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
+
+/* ---------- Calcul du devis ---------- */
+function compute(s) {
+  const L = [], W = [];
+  const add = (sec, t, d, a, tag) => L.push({ sec, t, d, a, tag });
+  const conv = s.adultes + s.enfants, di = dateInfo(s.date);
+  const f = P.forfait[s.formule][di.tarif];
+  add("Château", "Formule " + FORMULES[s.formule], (di.tarif === "haute" ? "Haute saison" : "Basse saison") + (di.weekend ? "" : " · tarif semaine"), f, "pl");
+  if (di.remise && s.remiseOn) add("Château", "Remise 10 % (offre avril)", "Sur la formule hébergements + espaces réceptifs", -f * 0.1, "of");
+  if (s.remiseSupp > 0) add("Château", "Geste commercial", s.remiseSupp + " % sur la formule", -f * s.remiseSupp / 100, "ng");
+  if (s.veille) add("Château", "Salle le vendredi (dès 12h)", s.veillePrix < P.veille ? "Négociée · prix plaquette 3 000 €" : "Prix plaquette", s.veillePrix, s.veillePrix < P.veille ? "ng" : "pl");
+  if (s.laique) add("Château", "Cérémonie laïque", conv + " convives × 7 €", conv * P.laique, "pl");
+  if (s.formule === "privilege") add("Château", "Nuit du vendredi", "Incluse dans Privilège", 0, "inc");
+  else if (s.nuit) { const px = s.prixChambre * (1 - P.remiseChambre); add("Château", "Nuit du vendredi", s.chambres + " chambres × " + eur(px) + " (" + eur(s.prixChambre) + " − 20 %)", s.chambres * px, "hy"); }
+  if (s.chapiteaux > 0) add("Château", "Plan B pluie", s.chapiteaux + " chapiteau" + (s.chapiteaux > 1 ? "x" : "") + " × 300 €", s.chapiteaux * P.chapiteau, "pl");
+  if (s.menage) add("Château", "Ménage complet", "", P.menage, "pl");
+  if (s.housses) add("Château", "Housses de chaise", conv + " × 2,80 € + 150 €", conv * P.housse + P.housseInstall, "pl");
+  if (s.personnel) add("Château", "Personnel après 1h", s.salaries + " salarié(s) × " + s.heures + " h × 50 €", s.salaries * s.heures * P.personnel, "pl");
+
+  let repas = s.adultes * (P.repas + (s.prestige ? P.prestige : 0));
+  if (s.adultes < 100) { const m = Math.max(repas, P.repasMin); if (m > repas) W.push("Moins de 100 adultes : la plaquette indique un forfait minimum de 8 300 € pour le repas."); repas = m; }
+  add("Traiteur", "Repas " + MENUS[s.menu] + (s.prestige ? " · Prestige" : ""), s.adultes + " adultes × " + (P.repas + (s.prestige ? P.prestige : 0)) + " €", repas, "pl");
+  if (s.brasero !== "aucun") {
+    if (s.brasero === "classique" && s.menu === "inspiration") add("Traiteur", "Brasero", "Inclus dans Inspiration", 0, "inc");
+    else add("Traiteur", "Brasero " + s.brasero, s.adultes + " × " + P.brasero[s.brasero] + " €", s.adultes * P.brasero[s.brasero], "pl");
+  }
+  if (s.ateliers > 0) add("Traiteur", "Ateliers en plus", s.ateliers + " × " + s.adultes + " × 5 €", s.ateliers * s.adultes * P.atelier, "pl");
+  if (s.dessert !== "inclus") add("Traiteur", "Pièce montée", (s.dessert === "remplacement" ? "À la place du dessert" : "En plus du dessert") + " · " + s.adultes + " × " + String(P.dessert[s.dessert]).replace(".", ",") + " €", s.adultes * P.dessert[s.dessert], "pl");
+  if (s.enfMenu !== "aucun" && s.enfants > 0) add("Traiteur", s.enfMenu === "diner" ? "Dîner des enfants" : "Lunch-box des enfants", s.enfants + " × 19 €", s.enfants * P.enfRepas, "pl");
+  if (s.enfCocktail && s.enfants > 0) add("Traiteur", "Cocktail des enfants", s.enfants + " × 8 €", s.enfants * P.enfCocktail, "pl");
+  const bi = bouchonIdx(conv);
+  if (s.boissons === "A") {
+    const q = s.vinUnite === "personne" ? s.adultes : Math.ceil(s.adultes / 2);
+    add("Traiteur", "Vin " + s.vin + (s.vinUnite === "personne" ? " (par adulte)" : " (par bouteille)"), q + " × " + P.vins[s.vin] + " €" + (s.vinUnite === "bouteille" ? " · 1 bouteille pour 2" : ""), q * P.vins[s.vin], s.vinUnite === "personne" ? "pl" : "hy");
+    add("Traiteur", "Droit de bouchon champagne", "Fin de soirée · " + conv + " convives", P.bouchonChamp[bi], "pl");
+  } else if (s.boissons === "B") add("Traiteur", "Droit de bouchon complet", "Toutes boissons apportées · " + conv + " convives", P.bouchonTout[bi], "pl");
+  else add("Traiteur", "Boissons à la carte", "Non chiffrées ici", 0, "q");
+  if (s.prestataires > 0) add("Traiteur", "Repas des prestataires", s.prestataires + " × 35 €", s.prestataires * P.prestataire, "pl");
+
+  if (s.vendrediSoir) add("Autour du jour J", "Vendredi soir · pizza", s.vsPers + " × " + eur(s.vsPrix), s.vsPers * s.vsPrix, "hy");
+  if (s.samMatin) add("Autour du jour J", "Samedi matin · petit-déjeuner", s.smPers + " × " + eur(s.smPrix), s.smPers * s.smPrix, "hy");
+  if (s.samMidi) add("Autour du jour J", "Samedi midi · déjeuner", s.mdPers + " × " + eur(s.mdPrix), s.mdPers * s.mdPrix, "hy");
+  if (s.lendemain === "brunch") add("Autour du jour J", "Brunch du dimanche", s.adultes + " × 39 € + " + s.enfants + " × 19 €", s.adultes * P.brunch[0] + s.enfants * P.brunch[1], "pl");
+  if (s.lendemain === "petitdej") add("Autour du jour J", "Petit-déjeuner du dimanche", s.adultes + " × 18 € + " + s.enfants + " × 9 €", s.adultes * P.petitdej[0] + s.enfants * P.petitdej[1], "pl");
+  if (s.taxe > 0 && s.nuitees > 0) add("Autour du jour J", "Taxe de séjour", s.nuitees + " nuitées × " + eur(s.taxe), s.taxe * s.nuitees, "q");
+
+  if (s.candy) add("Petits plus", "Candy bar", "", P.candy, "pl");
+  if (s.chocolat) add("Petits plus", "Fontaine à chocolat", "105 € + " + conv + " × 3 €", P.chocolat[0] + conv * P.chocolat[1], "pl");
+  if (s.popcorn) add("Petits plus", "Machine à pop-corn", "", P.popcorn, "pl");
+  if (s.fontaine) add("Petits plus", "Fontaine à champagne", "", P.fontaine, "pl");
+
+  if (di.annee !== 2027) W.push("Les prix de la plaquette valent pour 2027 seulement.");
+  if (!di.weekend) W.push("Ce n'est pas un week-end : la plaquette applique le tarif « basse saison et semaine ».");
+  if (conv > P.couchages) W.push((conv - P.couchages) + " invité(s) sans couchage sur place (109 couchages au domaine).");
+  if (conv > P.places) W.push("Plus de 200 convives : la salle accueille 200 personnes assises.");
+  if (s.formule === "privilege" && di.remise && s.date.startsWith("2027-04-1")) W.push("Privilège le 17 avril : la formule commence le vendredi 16, encore en basse saison. Tarif à confirmer.");
+  if (s.boissons === "A" && s.vinUnite === "bouteille") W.push("Vin compté par bouteille : lecture non confirmée par le château.");
+
+  const total = L.reduce((t, l) => t + l.a, 0);
+  const remise = L.filter(l => l.a < 0).reduce((t, l) => t - l.a, 0);
+  const sec = {}; SECS.forEach(x => sec[x] = L.filter(l => l.sec === x).reduce((t, l) => t + l.a, 0));
+  return { L, W, total, remise, di, f, conv, sec, bi };
+}
+
+/* ---------- Affichage ---------- */
+function buildDates() {
+  $("dateCards").innerHTML = DATES.map(x => {
+    const i = dateInfo(x.d);
+    return `<label class="dcard"><input type="radio" name="dchip" value="${x.d}"><span class="in"><span class="d">${x.n}</span><span class="m">${x.m}</span><span class="s ${i.saison}">${i.saison === "haute" ? "haute saison" : "basse saison"}</span>${i.remise ? '<span class="rib">−10 %</span>' : ""}</span></label>`;
+  }).join("");
+}
+function bindInputs() {
+  document.querySelectorAll("[data-k]").forEach(el => {
+    const v = S[el.dataset.k];
+    if (el.type === "checkbox") el.checked = !!v;
+    else if (el.type === "radio") el.checked = el.value === String(v);
+    else el.value = v;
+  });
+}
+function setVis() {
+  document.querySelectorAll("[data-show]").forEach(el => {
+    const c = el.dataset.show;
+    const on = c === "nuitSer" ? (S.formule === "serenite" && S.nuit) : c === "boissonsA" ? S.boissons === "A" : !!S[c];
+    el.classList.toggle("hide", !on);
+  });
+  document.querySelectorAll("[data-v]").forEach(el => el.textContent = S[el.dataset.v]);
+}
+let shownTotal = 0, anim = 0, prevTotal = null, prevAmounts = new Map(), pendingDelta = 0, deltaTimer = 0;
+const reduceMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+function animateTotal(to) {
+  cancelAnimationFrame(anim);
+  const from = shownTotal, t0 = performance.now(), dur = 500;
+  const step = now => {
+    const p = reduceMotion() ? 1 : Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - p, 3);
+    shownTotal = from + (to - from) * e;
+    $("tTotal").textContent = eur(Math.round(shownTotal)); $("mbTotal").textContent = eur(Math.round(shownTotal));
+    if (p < 1) anim = requestAnimationFrame(step); else shownTotal = to;
+  };
+  anim = requestAnimationFrame(step);
+  // filet de sécurité : si l'onglet est en arrière-plan, l'animation ne tourne pas
+  setTimeout(() => { if (Math.abs(shownTotal - to) > 0.5 && prevTotal === to) { cancelAnimationFrame(anim); shownTotal = to; $("tTotal").textContent = eur(Math.round(to)); $("mbTotal").textContent = eur(Math.round(to)); } }, dur + 150);
+}
+function queueDelta(d) {
+  pendingDelta += d; clearTimeout(deltaTimer);
+  deltaTimer = setTimeout(() => {
+    const v = Math.round(pendingDelta); pendingDelta = 0; if (!v) return;
+    ["deltas", "mbDelta"].forEach(id => {
+      const box = $(id); if (!box) return;
+      const el = document.createElement("span");
+      el.className = "delta " + (v > 0 ? "pos" : "neg");
+      el.textContent = (v > 0 ? "+ " : "− ") + eur(Math.abs(v));
+      box.appendChild(el); setTimeout(() => el.remove(), 1700);
+    });
+  }, 180);
+}
+function render() {
+  const r = compute(S), di = r.di, conv = r.conv;
+  // date
+  document.querySelectorAll('input[name="dchip"]').forEach(i => i.checked = i.value === S.date);
+  $("dateInput").value = S.date;
+  $("dateBadges").innerHTML = `<span class="badge b-info">${fmtDate(S.date)}</span><span class="badge ${di.tarif === "haute" ? "b-haute" : "b-basse"}">${di.tarif === "haute" ? "Haute saison" : "Basse saison"}${di.weekend ? "" : " · tarif semaine"}</span>${di.remise ? '<span class="badge b-remise">🎁 Remise 10 % sur la formule</span>' : ""}`;
+  $("sumDate").textContent = dateLabel(S.date) + " · " + conv + " convives";
+  // formules
+  ["serenite", "privilege"].forEach(fm => {
+    const f = P.forfait[fm][di.tarif], net = di.remise && S.remiseOn ? f * 0.9 : f;
+    $(fm === "serenite" ? "fpSer" : "fpPri").innerHTML = net !== f ? `<s>${eur(f)}</s>${eur(net)}` : eur(f);
+  });
+  $("sumFormule").textContent = FORMULES[S.formule];
+  $("pRemise").textContent = di.remise ? "− " + eur(r.f * 0.1) : "Seulement les 17-18 et 24-25 avril";
+  document.querySelector('[data-k="remiseOn"]').disabled = !di.remise;
+  $("pSupp").textContent = S.remiseSupp > 0 ? "− " + eur(r.f * S.remiseSupp / 100) : "0 €";
+  // options et prix affichés
+  const priv = S.formule === "privilege";
+  document.querySelector('[data-k="nuit"]').disabled = priv;
+  $("nuitInfo").textContent = priv ? "Déjà comprise dans la formule Privilège" : "Chambres à -20 % la veille (prix de la chambre : notre hypothèse)";
+  $("pVeille").textContent = eur(S.veillePrix) + (S.veillePrix < P.veille ? " · négocié" : "");
+  $("pLaique").textContent = eur(conv * P.laique);
+  $("pNuit").textContent = priv ? "Incluse" : eur(S.chambres * S.prixChambre * (1 - P.remiseChambre));
+  $("pChap").textContent = S.chapiteaux ? eur(S.chapiteaux * P.chapiteau) : "Aucun";
+  $("pMenage").textContent = eur(P.menage);
+  $("pHousses").textContent = eur(conv * P.housse + P.housseInstall);
+  $("pPerso").textContent = eur(S.salaries * S.heures * P.personnel);
+  $("pPrestige").textContent = "+ " + eur(S.adultes * P.prestige);
+  $("pBrasero").textContent = S.brasero === "aucun" ? "Aucun" : (S.brasero === "classique" && S.menu === "inspiration") ? "Inclus" : eur(S.adultes * P.brasero[S.brasero]);
+  $("pAteliers").textContent = S.ateliers ? eur(S.ateliers * S.adultes * P.atelier) : "Aucun";
+  $("pDessert").textContent = S.dessert === "inclus" ? "Inclus" : "+ " + eur(S.adultes * P.dessert[S.dessert]);
+  $("pEnf").textContent = S.enfMenu === "aucun" ? "Aucun" : eur(S.enfants * P.enfRepas);
+  $("pCock").textContent = eur(S.enfants * P.enfCocktail);
+  $("pPresta").textContent = S.prestataires ? eur(S.prestataires * P.prestataire) : "0 €";
+  const qv = S.vinUnite === "personne" ? S.adultes : Math.ceil(S.adultes / 2);
+  $("pBA").textContent = eur(qv * P.vins[S.vin] + P.bouchonChamp[r.bi]);
+  $("pBB").textContent = eur(P.bouchonTout[r.bi]);
+  $("pVS").textContent = eur(S.vsPers * S.vsPrix);
+  $("pSM").textContent = eur(S.smPers * S.smPrix);
+  $("pMD").textContent = eur(S.mdPers * S.mdPrix);
+  $("pLend").textContent = S.lendemain === "brunch" ? eur(S.adultes * P.brunch[0] + S.enfants * P.brunch[1]) : S.lendemain === "petitdej" ? eur(S.adultes * P.petitdej[0] + S.enfants * P.petitdej[1]) : "Rien";
+  $("pTaxe").textContent = S.taxe > 0 && S.nuitees > 0 ? eur(S.taxe * S.nuitees) : "À demander";
+  $("pChoco").textContent = eur(P.chocolat[0] + conv * P.chocolat[1]);
+  // tuiles allumées
+  const ON = { chapiteaux: S.chapiteaux > 0, brasero: S.brasero !== "aucun", ateliers: S.ateliers > 0, dessert: S.dessert !== "inclus", enfMenu: S.enfMenu !== "aucun" && S.enfants > 0, lendemain: S.lendemain !== "aucun", prestataires: S.prestataires > 0, taxe: S.taxe > 0 && S.nuitees > 0, nuit: !priv && S.nuit, remiseOn: di.remise && S.remiseOn, remiseSupp: S.remiseSupp > 0 };
+  document.querySelectorAll("[data-tile]").forEach(t => { const k = t.dataset.tile; t.classList.toggle("on", k in ON ? !!ON[k] : !!S[k]); });
+  $("tileNuit").classList.toggle("locked", priv);
+  $("tileRemise").classList.toggle("locked", !di.remise);
+  $("sumOpt").textContent = eur(r.sec["Château"]);
+  $("sumTraiteur").textContent = eur(r.sec["Traiteur"]);
+  $("sumAutour").textContent = eur(r.sec["Autour du jour J"]);
+  $("sumPlus").textContent = eur(r.sec["Petits plus"]);
+  // devis
+  $("tFor").textContent = S.couple ? "pour " + S.couple : "";
+  $("tMeta").textContent = FORMULES[S.formule] + " · " + fmtDate(S.date) + " · " + S.adultes + " adultes + " + S.enfants + " enfants";
+  const amounts = new Map();
+  $("tLines").innerHTML = SECS.map(sec => {
+    const ls = r.L.filter(l => l.sec === sec); if (!ls.length) return "";
+    return `<div class="psec"><div class="ph"><span>${sec}</span><b>${eur(r.sec[sec])}</b></div>` + ls.map(l => {
+      const key = l.sec + "|" + l.t; amounts.set(key, l.a);
+      const cls = prevTotal === null ? "" : !prevAmounts.has(key) ? " new" : prevAmounts.get(key) !== l.a ? " chg" : "";
+      const am = l.a < 0 ? "− " + eur(-l.a) : eur(l.a);
+      return `<div class="ln${cls}"><div class="l1"><span class="nm">${l.t}</span><span class="tag t-${l.tag}">${TAGS[l.tag]}</span><span class="lead"></span><span class="am${l.a < 0 ? " neg" : l.a === 0 ? " zero" : ""}">${am}</span></div>${l.d ? `<small class="dt">${l.d}</small>` : ""}</div>`;
+    }).join("") + "</div>";
+  }).join("");
+  if (prevTotal !== null && Math.abs(r.total - prevTotal) >= 0.5) queueDelta(r.total - prevTotal);
+  prevTotal = r.total; prevAmounts = amounts;
+  animateTotal(r.total);
+  $("tSave").textContent = r.remise > 0 ? "dont " + eur(r.remise) + " de remises" : "";
+  $("tPer").textContent = conv > 0 ? "soit " + eur(Math.round(r.total / conv)) + " par convive" : "";
+  $("mbMeta").textContent = FORMULES[S.formule] + " · " + dateLabel(S.date);
+  $("tWarn").innerHTML = r.W.map(w => `<div>⚠️ ${w}</div>`).join("");
+  $("tWarn").classList.toggle("hide", !r.W.length);
+  setVis();
+  renderCompare(r.total);
+  renderScenarios();
+  save(STORE_STATE, S);
+}
+function renderCompare(cur) {
+  const cols = DATES.slice();
+  if (!cols.find(x => x.d === S.date)) cols.push({ d: S.date, l: dateLabel(S.date) });
+  const vals = {}; let min = Infinity;
+  ["serenite", "privilege"].forEach(fm => cols.forEach(c => { const t = compute(Object.assign({}, S, { formule: fm, date: c.d })).total; vals[fm + c.d] = t; min = Math.min(min, t); }));
+  $("cmpTable").innerHTML = `<tr><th></th>${cols.map(c => { const s = seasonOf(c.d); return `<th>${c.l}<br><span class="s ${s}" style="display:inline-block;font-size:10.5px;padding:1px 7px;border-radius:999px">${s === "haute" ? "haute" : "basse"}${REMISE_DATES.includes(c.d) ? " · −10 %" : ""}</span></th>`; }).join("")}</tr>` +
+    ["serenite", "privilege"].map(fm => `<tr><td>${FORMULES[fm]}</td>${cols.map(c => {
+      const v = vals[fm + c.d], diff = v - cur, isCur = S.formule === fm && S.date === c.d;
+      const sub = isCur ? "votre choix" : Math.abs(diff) < 0.5 ? "identique" : (diff > 0 ? "+ " : "− ") + eur(Math.abs(diff));
+      return `<td class="cell${v === min ? " best" : ""}${isCur ? " cur" : ""}" data-fm="${fm}" data-d="${c.d}" tabindex="0" role="button" aria-label="Essayer ${FORMULES[fm]}, ${c.l}"><b>${v === min ? "🏆 " : ""}${eur(v)}</b><small>${sub}</small></td>`;
+    }).join("")}</tr>`).join("");
+}
+function renderScenarios() {
+  const list = $("scenList");
+  if (!scenarios.length) { list.innerHTML = '<div class="empty">Aucun scénario pour l\'instant. Composez un devis, puis touchez « ♥ Enregistrer » dans le panneau Devis.</div>'; $("scenCmpWrap").innerHTML = ""; return; }
+  list.innerHTML = scenarios.map((sc, i) => {
+    const r = compute(Object.assign({}, BASE, sc.s));
+    return `<div class="sc"><h5>${escapeHtml(sc.name)}</h5><div class="m">${FORMULES[sc.s.formule]} · ${dateLabel(sc.s.date)} · ${r.conv} convives</div>
+      <div class="tt2">${eur(r.total)}</div><div class="pp">soit ${eur(Math.round(r.total / Math.max(1, r.conv)))} par convive</div>
+      <div class="mini">${SECS.filter(x => r.sec[x]).map(x => `<div><span>${x}</span><b>${eur(r.sec[x])}</b></div>`).join("")}</div>
+      <div class="a"><button class="btn" data-load="${i}" type="button">Ouvrir</button><button class="btn" data-del="${i}" type="button">Supprimer</button></div>
+      <label class="cmpck"><input type="checkbox" data-cmp="${i}" ${sc.cmp ? "checked" : ""}> Comparer</label></div>`;
+  }).join("");
+  const sel = scenarios.filter(x => x.cmp);
+  if (sel.length < 2) { $("scenCmpWrap").innerHTML = sel.length ? '<div class="empty">Cochez au moins deux scénarios pour les comparer.</div>' : ""; return; }
+  const rs = sel.map(x => compute(Object.assign({}, BASE, x.s))), mn = Math.min(...rs.map(r => r.total));
+  $("scenCmpWrap").innerHTML = `<table class="cmp sccmp"><tr><th></th>${sel.map(x => `<th>${escapeHtml(x.name)}</th>`).join("")}</tr>
+    <tr><td>Date</td>${sel.map(x => `<td>${dateLabel(x.s.date)}</td>`).join("")}</tr>
+    <tr><td>Formule</td>${sel.map(x => `<td>${FORMULES[x.s.formule]}</td>`).join("")}</tr>
+    ${SECS.map(sec => `<tr><td>${sec}</td>${rs.map(r => `<td>${eur(r.sec[sec])}</td>`).join("")}</tr>`).join("")}
+    <tr><td>Total</td>${rs.map(r => `<td class="${r.total === mn ? "best" : ""}"><b>${r.total === mn ? "🏆 " : ""}${eur(r.total)}</b></td>`).join("")}</tr>
+    <tr><td>Écart avec le moins cher</td>${rs.map(r => `<td>${r.total === mn ? "—" : "+ " + eur(r.total - mn)}</td>`).join("")}</tr></table>`;
+}
+
+/* ---------- Petites joies ---------- */
+let toastT = 0;
+function toast(msg) { const t = $("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove("show"), 2600); }
+function burst(el) {
+  if (reduceMotion()) return;
+  const b = el.getBoundingClientRect(), cx = b.left + b.width / 2, cy = b.top + b.height / 2;
+  for (let i = 0; i < 12; i++) {
+    const h = document.createElement("span"); h.className = "heart"; h.textContent = i % 3 ? "♥" : "✦";
+    const a = Math.PI * 2 * i / 12, d = 40 + Math.random() * 40;
+    h.style.left = cx + "px"; h.style.top = cy + "px";
+    h.style.setProperty("--dx", Math.cos(a) * d + "px"); h.style.setProperty("--dy", Math.sin(a) * d - 20 + "px");
+    if (i % 3 === 0) h.style.color = "#b08d57";
+    document.body.appendChild(h); setTimeout(() => h.remove(), 950);
+  }
+}
+function confirmTwice(btn, label, action) {
+  if (btn.dataset.armed) { action(); return; }
+  const old = btn.textContent; btn.dataset.armed = "1"; btn.textContent = label; btn.classList.add("armed");
+  setTimeout(() => { if (!btn.isConnected) return; delete btn.dataset.armed; btn.textContent = old; btn.classList.remove("armed"); }, 3000);
+}
+
+/* ---------- Événements ---------- */
+document.addEventListener("input", e => handle(e.target));
+document.addEventListener("change", e => handle(e.target));
+function handle(el) {
+  if (!el || !el.dataset) return;
+  if (el.name === "dchip") { if (el.checked && S.date !== el.value) { S.date = el.value; render(); } return; }
+  if (el.id === "dateInput") { if (el.value && el.value !== S.date) { S.date = el.value; render(); } return; }
+  if (el.dataset.cmp !== undefined) { scenarios[+el.dataset.cmp].cmp = el.checked; save(STORE_SCEN, scenarios); renderScenarios(); return; }
+  const k = el.dataset.k; if (!k) return;
+  let v;
+  if (el.type === "checkbox") v = el.checked;
+  else if (el.type === "radio") { if (!el.checked) return; v = NUM.has(k) ? Number(el.value) : el.value; }
+  else if (NUM.has(k)) { v = Number(el.value); if (!Number.isFinite(v) || v < 0) v = 0; }
+  else v = el.value;
+  if (S[k] === v) return;
+  S[k] = v; render();
+}
+document.addEventListener("click", e => {
+  const t = e.target.closest("button, td.cell"); if (!t) return;
+  if (t.dataset.fold) { toggleFold(t.dataset.fold); return; }
+  if (t.dataset.next) { goNext(t.dataset.next); return; }
+  if (t.id === "foldAll") { const all = ORDER.every(id => folded.has(id)); ORDER.forEach(id => toggleFold(id, !all)); return; }
+  if (t.dataset.step) { const k = t.dataset.step; S[k] = Math.max(0, (Number(S[k]) || 0) + Number(t.dataset.d)); bindInputs(); render(); return; }
+  if (t.classList.contains("cell")) { S.formule = t.dataset.fm; S.date = t.dataset.d; bindInputs(); render(); toast(FORMULES[S.formule] + " · " + dateLabel(S.date)); return; }
+  if (t.dataset.load !== undefined) { const sc = scenarios[+t.dataset.load]; S = Object.assign({}, BASE, sc.s, { couple: S.couple }); bindInputs(); render(); toast("Scénario « " + sc.name + " » ouvert"); window.scrollTo({ top: 0, behavior: reduceMotion() ? "auto" : "smooth" }); return; }
+  if (t.dataset.del !== undefined) { const i = +t.dataset.del; confirmTwice(t, "Vraiment ?", () => { const n = scenarios[i].name; scenarios.splice(i, 1); save(STORE_SCEN, scenarios); renderScenarios(); toast("« " + n + " » supprimé"); }); return; }
+  if (t.id === "btnSave") {
+    const name = ($("scenName").value.trim() || FORMULES[S.formule] + " · " + dateLabel(S.date)).slice(0, 60);
+    scenarios.push({ name, s: Object.assign({}, S), cmp: true, at: new Date().toISOString() });
+    const ok = save(STORE_SCEN, scenarios); $("scenName").value = ""; renderScenarios(); burst(t);
+    toast(ok ? "♥ « " + name + " » enregistré" : "Enregistré pour cette visite seulement : pensez à « Exporter »");
+    return;
+  }
+  if (t.id === "btnReset") { confirmTwice(t, "Confirmer ?", () => { S = Object.assign({}, BASE, { couple: S.couple }); bindInputs(); render(); toast("Retour au devis de base (celui du PDF)"); }); return; }
+  if (t.id === "btnPrint") { window.print(); return; }
+  if (t.id === "btnExport") {
+    if (!scenarios.length) { toast("Aucun scénario à exporter pour l'instant"); return; }
+    const blob = new Blob([JSON.stringify(scenarios, null, 2)], { type: "application/json" });
+    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "scenarios-valinches.json"; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000); toast("Fichier « scenarios-valinches.json » créé");
+  }
+});
+document.addEventListener("keydown", e => { if ((e.key === "Enter" || e.key === " ") && e.target.classList && e.target.classList.contains("cell")) { e.preventDefault(); e.target.click(); } });
+$("fileImport").addEventListener("change", e => {
+  const f = e.target.files[0]; if (!f) return;
+  f.text().then(txt => {
+    try {
+      const arr = JSON.parse(txt); if (!Array.isArray(arr)) throw new Error("format");
+      const ok = arr.filter(x => x && typeof x.name === "string" && x.s && x.s.formule in FORMULES && typeof x.s.date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(x.s.date))
+        .map(x => ({ name: x.name.slice(0, 60), s: Object.assign({}, BASE, x.s), cmp: !!x.cmp, at: x.at || "" }));
+      scenarios = scenarios.concat(ok); save(STORE_SCEN, scenarios); renderScenarios();
+      toast(ok.length + " scénario(s) importé(s)");
+    } catch (err) { toast("Ce fichier n'est pas un export de scénarios"); }
+    e.target.value = "";
+  });
+});
+// étape active dans la barre de navigation
+const links = Array.from(document.querySelectorAll(".steps a"));
+if ("IntersectionObserver" in window) {
+  const obs = new IntersectionObserver(entries => entries.forEach(en => {
+    if (en.isIntersecting) links.forEach(a => a.classList.toggle("act", a.getAttribute("href") === "#" + en.target.id));
+  }), { rootMargin: "-35% 0px -60% 0px" });
+  document.querySelectorAll("section[id]").forEach(s => obs.observe(s));
+}
+
+/* ---------- Sections repliables ---------- */
+const ORDER = ["s-date", "s-formule", "s-options", "s-traiteur", "s-autour", "s-plus", "s-cmp", "s-scen"];
+const STORE_FOLD = "valinches.replis.v1";
+let folded = new Set((load(STORE_FOLD, []) || []).filter(id => ORDER.includes(id)));
+function setupFolds() {
+  ORDER.forEach((id, idx) => {
+    const sec = $(id); if (!sec) return;
+    const head = sec.querySelector(".card-h");
+    const body = document.createElement("div"); body.className = "card-b"; body.id = id + "-b";
+    while (head.nextSibling) body.appendChild(head.nextSibling);
+    sec.appendChild(body);
+    const title = head.querySelector("h2").textContent;
+    const btn = document.createElement("button");
+    btn.type = "button"; btn.className = "fold"; btn.dataset.fold = id; btn.dataset.title = title;
+    btn.setAttribute("aria-controls", body.id);
+    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 5l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    head.appendChild(btn);
+    head.addEventListener("click", e => { if (e.target.closest("button, a, input, label, select")) return; toggleFold(id); });
+    if (idx < ORDER.length - 1) {
+      const nextTitle = $(ORDER[idx + 1]).querySelector("h2").textContent;
+      const row = document.createElement("div"); row.className = "next-row";
+      row.innerHTML = '<button type="button" class="btn next" data-next="' + id + '">Étape suivante : ' + escapeHtml(nextTitle) + ' →</button>';
+      body.appendChild(row);
+    }
+    applyFold(id);
+  });
+  updateFoldAll();
+}
+function applyFold(id) {
+  const sec = $(id), on = folded.has(id), btn = sec.querySelector(".fold");
+  sec.classList.toggle("collapsed", on);
+  btn.setAttribute("aria-expanded", String(!on));
+  btn.setAttribute("aria-label", (on ? "Déplier la section « " : "Replier la section « ") + btn.dataset.title + " »");
+}
+function toggleFold(id, force) {
+  const fold = force === undefined ? !folded.has(id) : force;
+  if (fold) folded.add(id); else folded.delete(id);
+  applyFold(id); save(STORE_FOLD, Array.from(folded)); updateFoldAll();
+}
+function updateFoldAll() {
+  const b = $("foldAll"), all = ORDER.every(id => folded.has(id));
+  b.textContent = all ? "Tout déplier" : "Tout replier"; b.setAttribute("aria-pressed", String(all));
+}
+function goNext(id) {
+  const n = ORDER[ORDER.indexOf(id) + 1]; if (!n) return;
+  toggleFold(id, true); toggleFold(n, false);
+  $(n).scrollIntoView({ behavior: reduceMotion() ? "auto" : "smooth", block: "start" });
+  const f = $(n).querySelector(".fold"); if (f) f.focus({ preventScroll: true });
+}
+// liens internes (barre d'étapes, « Voir le devis ») : ouvrir la section visée puis y défiler
+document.addEventListener("click", e => {
+  const a = e.target.closest("a[href^='#']"); if (!a) return;
+  const id = a.getAttribute("href").slice(1), el = $(id); if (!el) return;
+  e.preventDefault();
+  if (folded.has(id)) toggleFold(id, false);
+  el.scrollIntoView({ behavior: reduceMotion() ? "auto" : "smooth", block: "start" });
+});
+
+setupFolds();
+buildDates();
+bindInputs();
+render();
+</script>
+</body>
+</html>
