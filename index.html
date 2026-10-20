@@ -303,7 +303,7 @@ body{font-size:14px}
 .choice .fp{font-size:20px;margin:2px 0 0}
 .choice ul{margin-top:4px;font-size:12.5px}
 .choice li{margin:1px 0}
-.tiles{grid-template-columns:repeat(auto-fill,minmax(205px,1fr));gap:8px;align-items:start}
+.tiles{grid-template-columns:repeat(auto-fit,minmax(205px,1fr));gap:8px;align-items:start}
 .tile{border-radius:14px}
 .tile-main{grid-template-columns:34px minmax(0,1fr) auto;column-gap:10px;padding:9px 10px}
 .ti{width:34px;height:34px;font-size:18px;border-radius:10px}
@@ -340,11 +340,9 @@ body{font-size:14px}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .empty{grid-column:1/-1}
 @media (min-width:1340px){
-  main{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0 12px;align-items:start}
-  .next-row{display:none}
   .below{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:0 12px;align-items:start}
 }
-@media (max-width:1339px){main{display:flex;flex-direction:column}.col{display:contents}#s-plus{order:1}}
+main{display:flex;flex-direction:column}.col{display:contents}#s-plus{order:1}
 @media (max-width:1020px){.p-foot{position:static;box-shadow:none;margin:10px 0 0;padding:0}}
 @media (max-width:680px){
   .tile-sub{padding-left:10px}
