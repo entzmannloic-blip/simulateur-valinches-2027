@@ -549,7 +549,7 @@ main{display:flex;flex-direction:column}.col{display:contents}#s-plus{order:1}
     <div class="tiles">
       <div class="tile" data-tile="vendrediSoir">
         <label class="tile-main"><input type="checkbox" data-k="vendrediSoir"><span class="ti">🍕</span>
-          <span class="tt"><b>Vendredi soir · soirée pizza</b><small>Prix non donné par la plaquette</small><span class="tp" id="pVS"></span></span><span class="sw-vis" aria-hidden="true"></span></label>
+          <span class="tt"><b>Vendredi soir · soirée pizza</b><small>Prix à demander au chef : à saisir ci-dessous</small><span class="tp" id="pVS"></span></span><span class="sw-vis" aria-hidden="true"></span></label>
         <div class="tile-sub" data-show="vendrediSoir"><label>Personnes <input type="number" data-k="vsPers" min="0" max="300"></label><label>Par personne <input type="number" data-k="vsPrix" min="0" max="200"> €</label></div>
       </div>
       <div class="tile" data-tile="samMatin">
@@ -667,12 +667,12 @@ const BASE = {
   chapiteaux: 0, menage: false, fermeture: false, housses: false, personnel: false, salaries: 2, heures: 2,
   menu: "traditionnelle", prestige: false, brasero: "aucun", ateliers: 0, dessert: "inclus",
   enfMenu: "diner", enfCocktail: false, vhSeuls: 0, boissons: "A", vin: "classique", vinUnite: "personne", alcool: 0, prestataires: 0,
-  lendemain: "aucun", vendrediSoir: false, vsPers: 100, vsPrix: 20, samMatin: false, smPers: 100, smPrix: 18,
+  lendemain: "aucun", vendrediSoir: false, vsPers: 100, vsPrix: 0, samMatin: false, smPers: 100, smPrix: 18,
   samMidi: false, mdPers: 100, mdPrix: 39, taxe: 0, nuitees: 0,
   candy: false, chocolat: false, popcorn: false, fontaine: false
 };
 const PROJET = { veille: true, laique: true, nuit: true, chambres: 30, prixChambre: 129, enfCocktail: true };
-const STORE_STATE = "valinches.etat.v2", STORE_SCEN = "valinches.scenarios.v1";
+const STORE_STATE = "valinches.etat.v3", STORE_SCEN = "valinches.scenarios.v1";
 function load(k, def) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : def; } catch (e) { return def; } }
 function save(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; } }
 const ENUMS = { formule: FORMULES, menu: MENUS, boissons: { A: 1, B: 1, C: 1 }, vin: { classique: 1, superieure: 1, prestige: 1 }, vinUnite: { personne: 1, bouteille: 1 },
@@ -754,7 +754,7 @@ function compute(s) {
   if (s.alcool > 0) add("Traiteur", "Alcool acheté par nos soins", "Notre budget estimé", s.alcool, "hy");
   if (s.prestataires > 0) add("Traiteur", "Repas des prestataires", s.prestataires + " × 35 €", s.prestataires * P.prestataire, "pl");
 
-  if (s.vendrediSoir) add("Autour du jour J", "Vendredi soir · pizza", s.vsPers + " × " + eur(s.vsPrix), s.vsPers * s.vsPrix, "hy");
+  if (s.vendrediSoir) add("Autour du jour J", "Vendredi soir · pizza", s.vsPrix > 0 ? s.vsPers + " × " + eur(s.vsPrix) : "Prix à ajouter quand le chef l'aura donné", s.vsPers * s.vsPrix, s.vsPrix > 0 ? "hy" : "q");
   if (s.samMatin) add("Autour du jour J", "Samedi matin · petit-déjeuner", s.smPers + " × " + eur(s.smPrix), s.smPers * s.smPrix, "hy");
   if (s.samMidi) add("Autour du jour J", "Samedi midi · déjeuner", s.mdPers + " × " + eur(s.mdPrix), s.mdPers * s.mdPrix, "hy");
   if (s.lendemain === "brunch") add("Autour du jour J", "Brunch du dimanche", s.adultes + " × 39 € + " + s.enfants + " × 19 €", s.adultes * P.brunch[0] + s.enfants * P.brunch[1], "pl");
@@ -870,7 +870,7 @@ function render() {
   const qv = S.vinUnite === "personne" ? S.adultes : Math.ceil(S.adultes / 2);
   $("pBA").textContent = eur(qv * P.vins[S.vin] + P.bouchonChamp[r.bi]);
   $("pBB").textContent = eur(P.bouchonTout[r.bi]);
-  $("pVS").textContent = eur(S.vsPers * S.vsPrix);
+  $("pVS").textContent = S.vsPrix > 0 ? eur(S.vsPers * S.vsPrix) : "Prix à ajouter";
   $("pSM").textContent = eur(S.smPers * S.smPrix);
   $("pMD").textContent = eur(S.mdPers * S.mdPrix);
   $("pLend").textContent = S.lendemain === "brunch" ? eur(S.adultes * P.brunch[0] + S.enfants * P.brunch[1]) : S.lendemain === "petitdej" ? eur(S.adultes * P.petitdej[0] + S.enfants * P.petitdej[1]) : "Rien";
