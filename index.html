@@ -453,7 +453,15 @@ main{display:flex;flex-direction:column}.col{display:contents}#s-plus{order:1}
       </div>
       <div class="tile" data-tile="fermeture">
         <label class="tile-main"><input type="checkbox" data-k="fermeture"><span class="ti">🔒</span>
-          <span class="tt"><b>Fermeture du restaurant</b><small>Option de la plaquette</small><span class="tp">2 000 €</span></span><span class="sw-vis" aria-hidden="true"></span></label>
+          <span class="tt"><b>Fermeture du restaurant</b><small>Déjà comprise le samedi soir : à quoi sert cette option ? À demander</small><span class="tp">2 000 €</span></span><span class="sw-vis" aria-hidden="true"></span></label>
+      </div>
+      <div class="tile" data-tile="chaisesLoc">
+        <label class="tile-main"><input type="checkbox" data-k="chaisesLoc"><span class="ti">🪵</span>
+          <span class="tt"><b>Autres chaises (Napoléon ou bois)</b><small>Location à la place des chaises rouges du domaine</small><span class="tp">Sur devis</span></span><span class="sw-vis" aria-hidden="true"></span></label>
+      </div>
+      <div class="tile" data-tile="vaisselle">
+        <label class="tile-main"><input type="checkbox" data-k="vaisselle"><span class="ti">🍽️</span>
+          <span class="tt"><b>Vaisselle collection prestige</b><small>Proposée par le château</small><span class="tp">Sur devis</span></span><span class="sw-vis" aria-hidden="true"></span></label>
       </div>
       <div class="tile" data-tile="housses">
         <label class="tile-main"><input type="checkbox" data-k="housses"><span class="ti">🪑</span>
@@ -478,6 +486,14 @@ main{display:flex;flex-direction:column}.col{display:contents}#s-plus{order:1}
       <div class="tile" data-tile="chocolat"><label class="tile-main"><input type="checkbox" data-k="chocolat"><span class="ti">🍫</span><span class="tt"><b>Fontaine à chocolat</b><small>105 € + 3 € par convive</small><span class="tp" id="pChoco"></span></span><span class="sw-vis" aria-hidden="true"></span></label></div>
       <div class="tile" data-tile="popcorn"><label class="tile-main"><input type="checkbox" data-k="popcorn"><span class="ti">🍿</span><span class="tt"><b>Machine à pop-corn</b><small>200 cornets</small><span class="tp">158 €</span></span><span class="sw-vis" aria-hidden="true"></span></label></div>
       <div class="tile" data-tile="fontaine"><label class="tile-main"><input type="checkbox" data-k="fontaine"><span class="ti">🥂</span><span class="tt"><b>Fontaine à champagne</b><small>Hors champagne</small><span class="tp">80 €</span></span><span class="sw-vis" aria-hidden="true"></span></label></div>
+      <div class="tile" data-tile="massage">
+        <label class="tile-main"><input type="checkbox" data-k="massage"><span class="ti">💆</span>
+          <span class="tt"><b>Massage, réflexologie</b><small>Pour prolonger le week-end</small><span class="tp">Sur devis</span></span><span class="sw-vis" aria-hidden="true"></span></label>
+      </div>
+      <div class="tile" data-tile="escape">
+        <label class="tile-main"><input type="checkbox" data-k="escape"><span class="ti">🗝️</span>
+          <span class="tt"><b>Escape game</b><small>Activité sur place</small><span class="tp">Sur devis</span></span><span class="sw-vis" aria-hidden="true"></span></label>
+      </div>
     </div>
   </section>
 </div><div class="col">
@@ -505,6 +521,10 @@ main{display:flex;flex-direction:column}.col{display:contents}#s-plus{order:1}
       <div class="tile" data-tile="dessert">
         <div class="tile-main"><span class="ti">🎂</span><span class="tt"><b>Le gâteau</b><small>Pièce montée : +3,50 € à la place du dessert, +6 € en plus</small><span class="tp" id="pDessert"></span></span><span></span></div>
         <div class="tile-sub"><div class="seg" role="radiogroup" aria-label="Gâteau"><label><input type="radio" name="dessert" value="inclus" data-k="dessert"><span>Dessert inclus</span></label><label><input type="radio" name="dessert" value="remplacement" data-k="dessert"><span>À la place</span></label><label><input type="radio" name="dessert" value="supplement" data-k="dessert"><span>En plus</span></label></div></div>
+      </div>
+      <div class="tile" data-tile="weddingCake">
+        <label class="tile-main"><input type="checkbox" data-k="weddingCake"><span class="ti">💒</span>
+          <span class="tt"><b>Wedding cake</b><small>Possible à la place du dessert</small><span class="tp">Sur devis</span></span><span class="sw-vis" aria-hidden="true"></span></label>
       </div>
       <div class="tile" data-tile="enfMenu">
         <div class="tile-main"><span class="ti">🧒</span><span class="tt"><b>Repas des enfants</b><small>Dîner ou lunch-box à 19 €</small><span class="tp" id="pEnf"></span></span><span></span></div>
@@ -668,7 +688,8 @@ const BASE = {
   enfMenu: "diner", enfCocktail: false, vhSeuls: 0, boissons: "A", vin: "classique", vinUnite: "personne", alcool: 0, prestataires: 0,
   lendemain: "aucun", vendrediSoir: false, vsPers: 100, vsPrix: 0, samMatin: false, smPers: 100, smPrix: 18,
   samMidi: false, mdPers: 100, mdPrix: 39, taxe: 0, nuitees: 0,
-  candy: false, chocolat: false, popcorn: false, fontaine: false
+  candy: false, chocolat: false, popcorn: false, fontaine: false,
+  chaisesLoc: false, vaisselle: false, weddingCake: false, massage: false, escape: false
 };
 const PROJET = { veille: true, laique: true, nuit: true, chambres: 30, prixChambre: 129, enfCocktail: true };
 const STORE_STATE = "valinches.etat.v3", STORE_SCEN = "valinches.scenarios.v1";
@@ -727,7 +748,9 @@ function compute(s) {
   else if (s.nuit) { const px = s.prixChambre * (1 - P.remiseChambre); add("Château", "Nuit du vendredi", s.chambres + " chambres × " + eur(px) + " (" + eur(s.prixChambre) + " − 20 %)", s.chambres * px, "hy"); }
   if (s.chapiteaux > 0) add("Château", "Plan B pluie", s.chapiteaux + " chapiteau" + (s.chapiteaux > 1 ? "x" : "") + " × 300 €", s.chapiteaux * P.chapiteau, "pl");
   if (s.menage) add("Château", "Ménage complet", "", P.menage, "pl");
-  if (s.fermeture) add("Château", "Fermeture du restaurant", "Option plaquette", P.fermeture, "pl");
+  if (s.fermeture) add("Château", "Fermeture du restaurant", "Option plaquette · déjà comprise le samedi soir : à faire préciser", P.fermeture, "q");
+  if (s.chaisesLoc) add("Château", "Autres chaises (Napoléon ou bois)", "Sur devis : prix à demander au château", 0, "q");
+  if (s.vaisselle) add("Château", "Vaisselle collection prestige", "Sur devis : prix à demander au château", 0, "q");
   if (s.housses) add("Château", "Housses de chaise", conv + " × 2,80 € + 150 €", conv * P.housse + P.housseInstall, "pl");
   if (s.personnel) add("Château", "Personnel après 1h", s.salaries + " salarié(s) × " + s.heures + " h × 50 €", s.salaries * s.heures * P.personnel, "pl");
 
@@ -740,6 +763,7 @@ function compute(s) {
   }
   if (s.ateliers > 0) add("Traiteur", "Ateliers en plus", s.ateliers + " × " + s.adultes + " × 5 €", s.ateliers * s.adultes * P.atelier, "pl");
   if (s.dessert !== "inclus") add("Traiteur", "Pièce montée", (s.dessert === "remplacement" ? "À la place du dessert" : "En plus du dessert") + " · " + s.adultes + " × " + String(P.dessert[s.dessert]).replace(".", ",") + " €", s.adultes * P.dessert[s.dessert], "pl");
+  if (s.weddingCake) add("Traiteur", "Wedding cake", "Sur devis : prix à demander au château", 0, "q");
   if (s.enfMenu !== "aucun" && s.enfants > 0) add("Traiteur", s.enfMenu === "diner" ? "Dîner des enfants" : "Lunch-box des enfants", s.enfants + " × 19 €", s.enfants * P.enfRepas, "pl");
   if (s.enfCocktail && s.enfants > 0) add("Traiteur", "Cocktail des enfants", s.enfants + " × 8 €", s.enfants * P.enfCocktail, "pl");
   if (s.vhSeuls > 0) add("Traiteur", "Invités au vin d'honneur seulement", s.vhSeuls + " × " + P.vh[s.menu] + " € (menu " + MENUS[s.menu] + ")", s.vhSeuls * P.vh[s.menu], "pl");
@@ -764,6 +788,8 @@ function compute(s) {
   if (s.chocolat) add("Petits plus", "Fontaine à chocolat", "105 € + " + conv + " × 3 €", P.chocolat[0] + conv * P.chocolat[1], "pl");
   if (s.popcorn) add("Petits plus", "Machine à pop-corn", "", P.popcorn, "pl");
   if (s.fontaine) add("Petits plus", "Fontaine à champagne", "", P.fontaine, "pl");
+  if (s.massage) add("Petits plus", "Massage, réflexologie", "Sur devis : prix à demander au château", 0, "q");
+  if (s.escape) add("Petits plus", "Escape game", "Sur devis : prix à demander au château", 0, "q");
 
   if (di.annee !== 2027) W.push("Les prix de la plaquette valent pour 2027 seulement.");
   if (!di.weekend) W.push("Ce n'est pas un week-end : la plaquette applique le tarif « basse saison et semaine ».");
@@ -773,6 +799,8 @@ function compute(s) {
   if (s.boissons === "A") W.push("Prix du vin : par adulte ou par bouteille ? Lecture à confirmer par le château.");
   if (s.formule === "serenite" && s.nuit) W.push("Nuit du vendredi en Sérénité : " + s.chambres + " chambres comptées, pas tout le domaine (Privilège couvre les 109 couchages).");
 
+  const nq = L.filter(l => l.tag === "q" && l.a === 0).length;
+  if (nq) W.push(nq + " poste(s) sans prix dans le total (sur devis ou à ajouter) : demandez un chiffrage au château.");
   const total = L.reduce((t, l) => t + l.a, 0);
   const remise = L.filter(l => l.a < 0).reduce((t, l) => t - l.a, 0);
   const sec = {}; SECS.forEach(x => sec[x] = L.filter(l => l.sec === x).reduce((t, l) => t + l.a, 0));
