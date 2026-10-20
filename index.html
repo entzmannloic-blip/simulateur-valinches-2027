@@ -286,7 +286,7 @@ body{font-size:14px}
 .card-h .sum{padding-top:0;font-size:13.5px;color:var(--or-txt)}
 .fold{width:32px;height:32px;margin-top:0}
 .sub-title{font-size:18px;margin:12px 0 6px}
-.dates{grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.dates{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
 .dcard .in{padding:8px 4px 7px;border-radius:12px}
 .dcard .d{font-size:22px}
 .dcard .s{margin-top:4px;font-size:10.5px}
@@ -386,7 +386,7 @@ main{display:flex;flex-direction:column}.col{display:contents}#s-plus{order:1}
 <div class="col">
   <!-- 1. Date et invités -->
   <section class="card" id="s-date">
-    <div class="card-h"><span class="num">1</span><div><h2>La date et les invités</h2><p class="hint">Choisissez un week-end : la saison et la remise se calculent toutes seules.</p></div><span class="sum" id="sumDate"></span></div>
+    <div class="card-h"><span class="num">1</span><div><h2>La date et les invités</h2><p class="hint">Choisissez un week-end de mars : la saison se calcule toute seule.</p></div><span class="sum" id="sumDate"></span></div>
     <div class="dates" id="dateCards"></div>
     <div class="other"><label>Ou une autre date en 2027 <input type="date" id="dateInput" min="2027-01-01" max="2027-12-31"></label></div>
     <div class="badges" id="dateBadges"></div>
@@ -410,10 +410,6 @@ main{display:flex;flex-direction:column}.col{display:contents}#s-plus{order:1}
         <ul><li>Vendredi 16h → dimanche 16h</li><li>2 nuits pour les invités, vendredi inclus</li><li>Salle, chapiteau, parc, suite nuptiale</li></ul></span></label>
     </div>
     <div class="tiles" style="margin-top:14px">
-      <div class="tile" id="tileRemise" data-tile="remiseOn" data-lock="Pas à cette date">
-        <label class="tile-main"><input type="checkbox" data-k="remiseOn"><span class="ti">🎁</span>
-          <span class="tt"><b>Remise de 10 % du château</b><small>Week-ends des 17-18 et 24-25 avril, sur la formule (hors restauration)</small><span class="tp" id="pRemise"></span></span><span class="sw-vis" aria-hidden="true"></span></label>
-      </div>
       <div class="tile" data-tile="remiseSupp">
         <div class="tile-main"><span class="ti">🤝</span><span class="tt"><b>Geste commercial négocié</b><small>Pour tester : une remise en plus sur la formule</small><span class="tp" id="pSupp"></span></span><span></span></div>
         <div class="tile-sub"><label>Remise <input type="range" min="0" max="20" step="1" data-k="remiseSupp" aria-label="Remise négociée en pourcentage"><output><span data-v="remiseSupp"></span> %</output></label></div>
@@ -667,10 +663,9 @@ const P = {
 };
 const DATES = [
   { d: "2027-03-06", l: "6-7 mars", n: "6–7", m: "mars" }, { d: "2027-03-13", l: "13-14 mars", n: "13–14", m: "mars" },
-  { d: "2027-03-20", l: "20-21 mars", n: "20–21", m: "mars" }, { d: "2027-04-17", l: "17-18 avril", n: "17–18", m: "avril" },
-  { d: "2027-04-24", l: "24-25 avril", n: "24–25", m: "avril" }
+  { d: "2027-03-20", l: "20-21 mars", n: "20–21", m: "mars" }
 ];
-const REMISE_DATES = ["2027-04-17", "2027-04-18", "2027-04-24", "2027-04-25"];
+const REMISE_DATES = []; // offre d'avril abandonnée : dates de mars seulement
 const MENUS = { traditionnelle: "Traditionnelle", inspiration: "Inspiration", rencontre: "Rencontre" };
 const FORMULES = { serenite: "Sérénité", privilege: "Privilège" };
 const TAGS = { pl: "Plaquette", of: "Offre château", hy: "Hypothèse", ng: "Négocié", q: "À demander", inc: "Inclus" };
@@ -680,7 +675,7 @@ const NUM = new Set(["adultes", "enfants", "remiseSupp", "veillePrix", "chambres
 /* Point de départ = la formule seule (rien d'ajouté). « Notre projet » = les ajouts du devis PDF */
 const BASE = {
   couple: "",
-  date: "2027-04-17", formule: "privilege", adultes: 100, enfants: 20,
+  date: "2027-03-06", formule: "privilege", adultes: 100, enfants: 20,
   remiseOn: true, remiseSupp: 0,
   veille: false, veillePrix: 3000, laique: false, nuit: false, chambres: 30, prixChambre: 129,
   chapiteaux: 0, menage: false, fermeture: false, housses: false, personnel: false, salaries: 2, heures: 2,
@@ -692,7 +687,7 @@ const BASE = {
   chaisesLoc: false, vaisselle: false, weddingCake: false, massage: false, escape: false
 };
 const PROJET = { veille: true, laique: true, nuit: true, chambres: 30, prixChambre: 129, enfCocktail: true };
-const STORE_STATE = "valinches.etat.v3", STORE_SCEN = "valinches.scenarios.v1";
+const STORE_STATE = "valinches.etat.v4", STORE_SCEN = "valinches.scenarios.v1";
 function load(k, def) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : def; } catch (e) { return def; } }
 function save(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; } }
 const ENUMS = { formule: FORMULES, menu: MENUS, boissons: { A: 1, B: 1, C: 1 }, vin: { classique: 1, superieure: 1, prestige: 1 }, vinUnite: { personne: 1, bouteille: 1 },
@@ -710,11 +705,14 @@ function clean(o) { // ne garde que les réglages connus, du bon type et avec un
 }
 let S = Object.assign({}, BASE, clean(load(STORE_STATE, {})));
 const SEED = [
-  { name: "Notre projet · Privilège 17 avril", s: Object.assign({}, BASE, PROJET, { formule: "privilege" }), cmp: true, at: "" },
-  { name: "Notre projet · Sérénité 17 avril", s: Object.assign({}, BASE, PROJET, { formule: "serenite" }), cmp: true, at: "" }
+  { name: "Notre projet · Privilège 6 mars", s: Object.assign({}, BASE, PROJET, { formule: "privilege" }), cmp: true, at: "" },
+  { name: "Notre projet · Sérénité 6 mars", s: Object.assign({}, BASE, PROJET, { formule: "serenite" }), cmp: true, at: "" }
 ];
 let scenarios = load(STORE_SCEN, null);
-if (!Array.isArray(scenarios)) scenarios = SEED.map(x => Object.assign({}, x, { s: Object.assign({}, x.s) }));
+if (!Array.isArray(scenarios)) scenarios = [];
+const hadOldSeed = scenarios.some(x => x.at === "" && /^Notre projet .* 17 avril$/.test(x.name));
+scenarios = scenarios.filter(x => !(x.at === "" && /^Notre projet .* 17 avril$/.test(x.name)));
+if (!scenarios.length || hadOldSeed) scenarios = SEED.map(x => Object.assign({}, x, { s: Object.assign({}, x.s) })).concat(scenarios);
 
 /* ---------- Outils ---------- */
 const eur = n => new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", minimumFractionDigits: Number.isInteger(Math.round(n * 100) / 100) ? 0 : 2, maximumFractionDigits: Number.isInteger(Math.round(n * 100) / 100) ? 0 : 2 }).format(n);
@@ -740,7 +738,6 @@ function compute(s) {
   const conv = s.adultes + s.enfants, di = dateInfo(s.date);
   const f = P.forfait[s.formule][di.tarif];
   add("Château", "Formule " + FORMULES[s.formule], (di.tarif === "haute" ? "Haute saison" : "Basse saison") + (di.weekend ? "" : " · tarif semaine"), f, "pl");
-  if (di.remise && s.remiseOn) add("Château", "Remise 10 % (offre avril)", "Sur la formule hébergements + espaces réceptifs", -f * 0.1, "of");
   if (s.remiseSupp > 0) add("Château", "Geste commercial", s.remiseSupp + " % sur la formule", -f * s.remiseSupp / 100, "ng");
   if (s.veille) add("Château", "Salle le vendredi (dès 12h)", s.veillePrix < P.veille ? "Négociée · prix plaquette 3 000 €" : "Prix plaquette", s.veillePrix, s.veillePrix < P.veille ? "ng" : "pl");
   if (s.laique) add("Château", "Cérémonie laïque", conv + " convives × 7 €", conv * P.laique, "pl");
@@ -795,7 +792,6 @@ function compute(s) {
   if (!di.weekend) W.push("Ce n'est pas un week-end : la plaquette applique le tarif « basse saison et semaine ».");
   if (conv > P.couchages) W.push((conv - P.couchages) + " invité(s) sans couchage sur place (109 couchages au domaine).");
   if (conv > P.places) W.push("Plus de 200 convives : la salle accueille 200 personnes assises.");
-  if (s.formule === "privilege" && di.remise && s.date.startsWith("2027-04-1")) W.push("Privilège le 17 avril : la formule commence le vendredi 16, encore en basse saison. Tarif à confirmer.");
   if (s.boissons === "A") W.push("Prix du vin : par adulte ou par bouteille ? Lecture à confirmer par le château.");
   if (s.formule === "serenite" && s.nuit) W.push("Nuit du vendredi en Sérénité : " + s.chambres + " chambres comptées, pas tout le domaine (Privilège couvre les 109 couchages).");
 
@@ -804,7 +800,7 @@ function compute(s) {
   const total = L.reduce((t, l) => t + l.a, 0);
   const remise = L.filter(l => l.a < 0).reduce((t, l) => t - l.a, 0);
   const sec = {}; SECS.forEach(x => sec[x] = L.filter(l => l.sec === x).reduce((t, l) => t + l.a, 0));
-  const formNet = f * (1 - (di.remise && s.remiseOn ? 0.1 : 0) - s.remiseSupp / 100);
+  const formNet = f * (1 - s.remiseSupp / 100);
   return { L, W, total, remise, di, f, conv, sec, bi, formNet };
 }
 
@@ -869,12 +865,10 @@ function render() {
   $("sumDate").textContent = dateLabel(S.date) + " · " + conv + " convives";
   // formules
   ["serenite", "privilege"].forEach(fm => {
-    const f = P.forfait[fm][di.tarif], net = di.remise && S.remiseOn ? f * 0.9 : f;
+    const f = P.forfait[fm][di.tarif], net = f;
     $(fm === "serenite" ? "fpSer" : "fpPri").innerHTML = net !== f ? `<s>${eur(f)}</s>${eur(net)}` : eur(f);
   });
   $("sumFormule").textContent = FORMULES[S.formule] + " · " + eur(r.formNet);
-  $("pRemise").textContent = di.remise ? "− " + eur(r.f * 0.1) : "Seulement les 17-18 et 24-25 avril";
-  const rk = document.querySelector('[data-k="remiseOn"]'); rk.disabled = !di.remise; rk.checked = di.remise && S.remiseOn;
   $("pSupp").textContent = S.remiseSupp > 0 ? "− " + eur(r.f * S.remiseSupp / 100) : "0 €";
   // options et prix affichés
   const priv = S.formule === "privilege";
@@ -909,7 +903,6 @@ function render() {
   const ON = { chapiteaux: S.chapiteaux > 0, brasero: S.brasero !== "aucun", ateliers: S.ateliers > 0, dessert: S.dessert !== "inclus", enfMenu: S.enfMenu !== "aucun" && S.enfants > 0, lendemain: S.lendemain !== "aucun", prestataires: S.prestataires > 0, taxe: S.taxe > 0 && S.nuitees > 0, nuit: !priv && S.nuit, remiseOn: di.remise && S.remiseOn, remiseSupp: S.remiseSupp > 0, vhSeuls: S.vhSeuls > 0, alcool: S.alcool > 0, enfCocktail: S.enfCocktail && S.enfants > 0 };
   document.querySelectorAll("[data-tile]").forEach(t => { const k = t.dataset.tile; t.classList.toggle("on", k in ON ? !!ON[k] : !!S[k]); });
   $("tileNuit").classList.toggle("locked", priv);
-  $("tileRemise").classList.toggle("locked", !di.remise);
   $("sumOpt").textContent = eur(r.sec["Château"] - r.formNet);
   $("sumTraiteur").textContent = eur(r.sec["Traiteur"]);
   $("sumAutour").textContent = eur(r.sec["Autour du jour J"]);
