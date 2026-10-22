@@ -104,6 +104,7 @@ input:focus-visible,select:focus-visible{outline:2px solid var(--or);outline-off
 .qui .qn b{display:block;line-height:1.2;color:var(--encre)}
 .qui .qn small{display:block;color:var(--gris);font-size:12px;line-height:1.3}
 .qui .qam{display:block;font-weight:800;color:var(--or-txt);font-size:13px;margin-top:4px}
+.qui .qam small{display:block;font-weight:700;color:var(--gris);font-size:11.5px}
 .qui select{padding:5px 8px;border:1.5px solid var(--ligne);border-radius:10px;background:#fff;font-size:13px;font-weight:700;cursor:pointer}
 .qui .qeur{display:inline-flex;align-items:center;gap:3px;white-space:nowrap}
 .qui .qfix{display:block;color:var(--bx);font-weight:800}
@@ -121,7 +122,7 @@ input:focus-visible,select:focus-visible{outline:2px solid var(--or);outline-off
   .qui tbody th,.qui td,.qui td:last-child{display:block;border:0;border-radius:0;padding:0;background:none;min-width:0}
   .qui tr.off th,.qui tr.off td{background:none}
   .qui tbody th{grid-column:1/-1;display:flex;align-items:flex-start;justify-content:space-between;gap:10px;box-shadow:none!important}
-  .qui tbody th .qam{margin-top:0;white-space:nowrap}
+  .qui tbody th .qam{margin-top:0;white-space:nowrap;text-align:right}
   .qui td{display:flex;flex-direction:column;justify-content:space-between;text-align:left}
   .qui td::before{content:attr(data-l);display:block;font-size:11.5px;font-weight:800;color:var(--gris);margin-bottom:3px}
   .qui input[type=number]{width:100%;min-width:0}
@@ -987,7 +988,8 @@ function render() {
     const on = rowOn(S, q);
     $("q-" + q.id).classList.toggle("off", !on);
     $("q-" + q.id).querySelectorAll("td input").forEach(i => i.disabled = !on);
-    $("qa-" + q.id).textContent = on ? eur(r.qa[q.id]) : "Pas retenu";
+    const nb = S[q.id + "B"], n = S[q.id + "A"] + S[q.id + "E"] + nb; // présents : adultes + enfants + bébés
+    $("qa-" + q.id).innerHTML = (on ? eur(r.qa[q.id]) : "Pas retenu") + "<small>" + n + (n > 1 ? " présents" : " présent") + (nb ? " dont " + nb + (nb > 1 ? " bébés" : " bébé") : "") + "</small>";
   });
   const lend = S.lendemain === "brunch" ? P.brunch : S.lendemain === "petitdej" ? P.petitdej : null;
   const fix = (id, v, sub) => { $("qp-" + id).textContent = v; $("qs-" + id).textContent = sub; };
