@@ -89,12 +89,13 @@ input:focus-visible,select:focus-visible{outline:2px solid var(--or);outline-off
 .b-remise{background:var(--or);color:#fff} .b-info{background:#fff;border:1px solid var(--ligne);color:var(--encre)}
 /* ---------- Tableau « Qui est là ? » (une ligne par moment, une carte sur téléphone) ---------- */
 .qhint{margin:0 0 6px;color:var(--gris);font-size:13px}
-.qui{width:100%;border-collapse:separate;border-spacing:0 6px;font-size:14px}
+.qui{width:100%;border-collapse:separate;border-spacing:0 6px;font-size:14px;table-layout:fixed}
+.qui col.c-m{width:22%} .qui col.c-n{width:8.5%} .qui col.c-p{width:11%} .qui col.c-t{width:30.5%}
 .qui thead th{font-size:12px;color:var(--gris);font-weight:800;text-align:center;padding:0 4px;vertical-align:bottom;line-height:1.25}
 .qui thead th:first-child{text-align:left;padding-left:12px}
 .qui thead small{display:block;font-weight:700;font-size:11px}
 .qui tbody th,.qui td{background:#fff;border-top:1.5px solid var(--ligne);border-bottom:1.5px solid var(--ligne);padding:8px 5px;text-align:center;vertical-align:middle}
-.qui tbody th{border-left:1.5px solid var(--ligne);border-radius:14px 0 0 14px;text-align:left;font-weight:400;padding-left:12px;min-width:170px}
+.qui tbody th{border-left:1.5px solid var(--ligne);border-radius:14px 0 0 14px;text-align:left;font-weight:400;padding-left:12px}
 .qui td:last-child{border-right:1.5px solid var(--ligne);border-radius:0 14px 14px 0;padding-right:10px}
 .qui tr.always th{box-shadow:inset 4px 0 0 var(--or-light)}
 .qui input[type=number]{width:62px;text-align:center;padding:6px 3px}
@@ -103,18 +104,24 @@ input:focus-visible,select:focus-visible{outline:2px solid var(--or);outline-off
 .qui .qck input{width:18px;height:18px;margin:1px 0 0;accent-color:var(--bx);flex:none;cursor:pointer}
 .qui .qn b{display:block;line-height:1.2;color:var(--encre)}
 .qui .qn small{display:block;color:var(--gris);font-size:12px;line-height:1.3}
-.qui .qam{display:block;font-weight:800;color:var(--or-txt);font-size:13px;margin-top:4px}
-.qui .qam small{display:block;font-weight:700;color:var(--gris);font-size:11.5px}
+.qui .qcount{display:block;font-size:11.5px;font-weight:700;color:var(--or-txt);margin-top:3px}
+.qui thead th:last-child,.qui td.qt{text-align:right;padding-right:14px}
+.qui td.qt small{font-size:11.5px;margin:0 0 2px}
+.qui td.qt b{display:block;font-weight:800;color:var(--or-txt);font-size:15px}
+.qui tfoot th,.qui tfoot td.qt{background:none;border:0;border-top:2px solid var(--or-light);border-radius:0;padding:10px 14px 4px 5px}
+.qui tfoot th{text-align:left;padding-left:12px;color:var(--bx);font-weight:800}
+.qui tfoot th small{display:block;color:var(--gris);font-weight:600;font-size:11.5px}
+.qui tfoot td.qt b{font-size:18px;color:var(--bx)}
 .qui select{padding:5px 8px;border:1.5px solid var(--ligne);border-radius:10px;background:#fff;font-size:13px;font-weight:700;cursor:pointer}
 .qui .qeur{display:inline-flex;align-items:center;gap:3px;white-space:nowrap}
 .qui .qfix{display:block;color:var(--bx);font-weight:800}
 .qui td small{display:block;color:var(--gris);font-size:11px;line-height:1.2;margin-top:2px}
 .qui tr.off th,.qui tr.off td{background:var(--ivoire)}
-.qui tr.off td > *,.qui tr.off .qam{opacity:.45}
+.qui tr.off td > *,.qui tr.off .qcount{opacity:.45}
 .qfoot{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin-top:4px}
 .qfoot small{color:var(--gris);font-size:12.5px;flex:1;min-width:200px}
-@media (max-width:720px){
-  .qui,.qui tbody{display:block}
+@media (max-width:820px){
+  .qui,.qui tbody,.qui tfoot{display:block}
   .qui thead{display:none}
   .qui tr{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px 8px;background:#fff;border:1.5px solid var(--ligne);border-radius:16px;padding:12px;margin-bottom:10px}
   .qui tr.always{box-shadow:inset 4px 0 0 var(--or-light)}
@@ -122,8 +129,12 @@ input:focus-visible,select:focus-visible{outline:2px solid var(--or);outline-off
   .qui tbody th,.qui td,.qui td:last-child{display:block;border:0;border-radius:0;padding:0;background:none;min-width:0}
   .qui tr.off th,.qui tr.off td{background:none}
   .qui tbody th{grid-column:1/-1;display:flex;align-items:flex-start;justify-content:space-between;gap:10px;box-shadow:none!important}
-  .qui tbody th .qam{margin-top:0;white-space:nowrap;text-align:right}
+  .qui tbody th .qcount{margin-top:0;white-space:nowrap;text-align:right}
   .qui td{display:flex;flex-direction:column;justify-content:space-between;text-align:left}
+  .qui td.qt{text-align:right;padding-right:0}
+  .qui tfoot tr.qtot{display:flex;justify-content:space-between;align-items:center;gap:10px;background:var(--or-soft);border-color:var(--or-light)}
+  .qui tfoot th,.qui tfoot td.qt{border:0;padding:0;background:none}
+  .qui tfoot td::before{display:none}
   .qui td::before{content:attr(data-l);display:block;font-size:11.5px;font-weight:800;color:var(--gris);margin-bottom:3px}
   .qui input[type=number]{width:100%;min-width:0}
   .qui .qeur{width:100%}
@@ -427,8 +438,10 @@ main{display:flex;flex-direction:column}.col{display:contents}#s-plus{order:1}
     <h3 class="sub-title">Qui est là ?</h3>
     <p class="qhint">Une ligne par moment du week-end. Cochez les repas en plus ; le vin d'honneur et le dîner sont toujours là. Les bébés de moins de 2 ans sont comptés partout mais jamais facturés : offert (à confirmer avec le château).</p>
     <table class="qui">
-      <thead><tr><th scope="col">Moment</th><th scope="col">Adultes</th><th scope="col">Enfants<small>2-12 ans</small></th><th scope="col">Bébés<small>moins de 2 ans · offert (à confirmer)</small></th><th scope="col">Prix adulte</th><th scope="col">Prix enfant</th></tr></thead>
+      <colgroup><col class="c-m"><col class="c-n"><col class="c-n"><col class="c-n"><col class="c-p"><col class="c-p"><col class="c-t"></colgroup>
+      <thead><tr><th scope="col">Moment</th><th scope="col">Adultes</th><th scope="col">Enfants<small>2-12 ans</small></th><th scope="col">Bébés<small>moins de 2 ans · offert</small></th><th scope="col">Prix adulte</th><th scope="col">Prix enfant</th><th scope="col">Total de la ligne</th></tr></thead>
       <tbody id="quiBody"></tbody>
+      <tfoot><tr class="qtot"><th scope="row" colspan="6">Total du tableau<small>lignes retenues · le vin, les options et le château sont dans le devis</small></th><td class="qt"><b id="qa-tot"></b></td></tr></tfoot>
     </table>
     <div class="qfoot"><button type="button" class="btn" id="btnCopy">Recopier le dîner partout</button><small>Met les nombres du dîner sur toutes les lignes (les prix ne bougent pas).</small></div>
   </section>
@@ -873,7 +886,12 @@ function compute(s) {
   const remise = L.filter(l => l.a < 0).reduce((t, l) => t - l.a, 0);
   const sec = {}; SECS.forEach(x => sec[x] = L.filter(l => l.sec === x).reduce((t, l) => t + l.a, 0));
   const formNet = f * (1 - s.remiseSupp / 100);
-  return { L, W, total, remise, di, f, conv, sec, bi, formNet, qa, vhPlus };
+  const fois = (n, p) => n + " × " + eur(p), duo = (a, pa, e, pe) => fois(a, pa) + (e > 0 ? " + " + fois(e, pe) : "");
+  const qc = { vs: duo(s.vsA, s.vsPA, s.vsE, s.vsPE), sm: duo(s.smA, s.smPA, s.smE, s.smPE), md: duo(s.mdA, s.mdPA, s.mdE, s.mdPE),
+    vh: [s.laique ? "laïque " + fois(s.vhA + s.vhE, P.laique) : "", s.enfCocktail && s.vhE > 0 ? "cocktail " + fois(s.vhE, P.enfCocktail) : "", vhPlus > 0 ? "en plus " + fois(vhPlus, P.vh[s.menu]) : ""].filter(Boolean).join(" + ") || "vin d'honneur compris",
+    di: (s.diA < 100 && s.diA * (P.repas + (s.prestige ? P.prestige : 0)) < P.repasMin ? "forfait min. " + eur(P.repasMin) : fois(s.diA, P.repas + (s.prestige ? P.prestige : 0))) + (s.enfMenu !== "aucun" && s.diE > 0 ? " + " + fois(s.diE, P.enfRepas) : ""),
+    br: lend ? duo(s.brA, lend[0], s.brE, lend[1]) : "rien de prévu" }; // calcul affiché dans le tableau
+  return { L, W, total, remise, di, f, conv, sec, bi, formNet, qa, qc, vhPlus };
 }
 
 /* ---------- Affichage ---------- */
@@ -890,9 +908,9 @@ function buildQui() { // lignes du tableau « Qui est là ? »
     const head = q.on === "lendemain" ? `<div class="qh">${name}<select data-k="lendemain" aria-label="Dimanche : repas"><option value="aucun">Rien</option><option value="petitdej">Petit-déjeuner</option><option value="brunch">Brunch</option></select></div>`
       : q.on ? `<label class="qh qck"><input type="checkbox" data-k="${q.on}">${name}</label>` : `<div class="qh">${name}</div>`;
     const price = c => q.prix ? `<span class="qeur">${num(q.id + "P" + c, 200, q.t + " : prix par " + (c === "A" ? "adulte" : "enfant"), true)} €</span>` : `<b class="qfix" id="qp-${q.id}${c}"></b><small id="qs-${q.id}${c}"></small>`;
-    return `<tr id="q-${q.id}"${q.on ? "" : ' class="always"'}><th scope="row">${head}<span class="qam" id="qa-${q.id}"></span></th>` +
+    return `<tr id="q-${q.id}"${q.on ? "" : ' class="always"'}><th scope="row">${head}<span class="qcount" id="qn-${q.id}"></span></th>` +
       `<td data-l="Adultes">${num(q.id + "A", 400, q.t + " : adultes")}</td><td data-l="Enfants 2-12 ans">${num(q.id + "E", 100, q.t + " : enfants")}</td><td data-l="Bébés · offerts">${num(q.id + "B", 50, q.t + " : bébés (offerts)")}</td>` +
-      `<td data-l="Prix adulte">${price("A")}</td><td data-l="Prix enfant">${price("E")}</td></tr>`;
+      `<td data-l="Prix adulte">${price("A")}</td><td data-l="Prix enfant">${price("E")}</td><td class="qt" data-l="Total"><small id="qc-${q.id}"></small><b id="qa-${q.id}"></b></td></tr>`;
   }).join("");
 }
 function bindInputs(only, skip) { // only : une seule clé (ex. la case du tableau et sa carte) ; skip : le champ en cours de saisie
@@ -989,8 +1007,11 @@ function render() {
     $("q-" + q.id).classList.toggle("off", !on);
     $("q-" + q.id).querySelectorAll("td input").forEach(i => i.disabled = !on);
     const nb = S[q.id + "B"], n = S[q.id + "A"] + S[q.id + "E"] + nb; // présents : adultes + enfants + bébés
-    $("qa-" + q.id).innerHTML = (on ? eur(r.qa[q.id]) : "Pas retenu") + "<small>" + n + (n > 1 ? " présents" : " présent") + (nb ? " dont " + nb + (nb > 1 ? " bébés" : " bébé") : "") + "</small>";
+    $("qn-" + q.id).textContent = n + (n > 1 ? " présents" : " présent") + (nb ? " dont " + nb + (nb > 1 ? " bébés" : " bébé") : "");
+    $("qc-" + q.id).textContent = r.qc[q.id];
+    $("qa-" + q.id).textContent = on ? eur(r.qa[q.id]) : "Pas retenu";
   });
+  $("qa-tot").textContent = eur(QUI.filter(q => rowOn(S, q)).reduce((t, q) => t + r.qa[q.id], 0));
   const lend = S.lendemain === "brunch" ? P.brunch : S.lendemain === "petitdej" ? P.petitdej : null;
   const fix = (id, v, sub) => { $("qp-" + id).textContent = v; $("qs-" + id).textContent = sub; };
   fix("vhA", eur(P.vh[S.menu]), "seulement au-delà du dîner");
@@ -999,7 +1020,7 @@ function render() {
   fix("diE", S.enfMenu === "aucun" ? "—" : eur(P.enfRepas), S.enfMenu === "aucun" ? "sans repas" : S.enfMenu === "lunch" ? "lunch-box" : "menu enfant");
   fix("brA", lend ? eur(lend[0]) : "—", lend ? (S.lendemain === "brunch" ? "brunch" : "petit-déjeuner") : "");
   fix("brE", lend ? eur(lend[1]) : "—", lend ? (S.lendemain === "brunch" ? "brunch" : "petit-déjeuner") : "");
-  $("qd-vh").textContent = (r.vhPlus > 0 ? "+ " + r.vhPlus + " adulte" + (r.vhPlus > 1 ? "s" : "") + " au vin d'honneur seul" : "Vin d'honneur compris") + (S.laique ? " · laïque" : "") + (S.enfCocktail && S.vhE > 0 ? " · cocktail enfants" : "");
+  $("qd-vh").textContent = "Toujours là · " + (r.vhPlus > 0 ? r.vhPlus + " adulte" + (r.vhPlus > 1 ? "s" : "") + " en plus du dîner" : "compris dans le dîner");
   $("qd-di").textContent = "Toujours là · repas sans le vin";
   $("pAlc").textContent = S.alcool ? eur(S.alcool) : "0 €";
   $("pChoco").textContent = eur(P.chocolat[0] + conv * P.chocolat[1]);
