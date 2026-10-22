@@ -391,9 +391,9 @@ main{display:flex;flex-direction:column}.col{display:contents}#s-plus{order:1}
     <div class="other"><label>Ou une autre date en 2027 <input type="date" id="dateInput" min="2027-01-01" max="2027-12-31"></label></div>
     <div class="badges" id="dateBadges"></div>
     <div class="counters">
-      <div class="counter"><span class="ci">🥂</span><div><b>Adultes</b><small>Repas, vin, brunch</small></div>
+      <div class="counter"><span class="ci">🥂</span><div><b>Adultes</b><small>Dîner du samedi soir et vin</small></div>
         <div class="step"><button type="button" data-step="adultes" data-d="-5" aria-label="Moins d'adultes">−</button><input type="number" data-k="adultes" min="0" max="400" aria-label="Adultes"><button type="button" data-step="adultes" data-d="5" aria-label="Plus d'adultes">+</button></div></div>
-      <div class="counter"><span class="ci">🧸</span><div><b>Enfants</b><small>Jusqu'à 12 ans</small></div>
+      <div class="counter"><span class="ci">🧸</span><div><b>Enfants</b><small>Dîner du samedi soir (moins de 12 ans)</small></div>
         <div class="step"><button type="button" data-step="enfants" data-d="-1" aria-label="Moins d'enfants">−</button><input type="number" data-k="enfants" min="0" max="100" aria-label="Enfants"><button type="button" data-step="enfants" data-d="1" aria-label="Plus d'enfants">+</button></div></div>
     </div>
   </section>
@@ -429,6 +429,7 @@ main{display:flex;flex-direction:column}.col{display:contents}#s-plus{order:1}
       <div class="tile" data-tile="laique">
         <label class="tile-main"><input type="checkbox" data-k="laique"><span class="ti">💐</span>
           <span class="tt"><b>Cérémonie laïque</b><small>Chaises Napoléon · 6 € par convive (devis)</small><span class="tp" id="pLaique"></span></span><span class="sw-vis" aria-hidden="true"></span></label>
+        <div class="tile-sub" data-show="laique"><label>Personnes à la cérémonie <input type="number" data-k="laiquePers" min="0" max="300"></label></div>
       </div>
       <div class="tile" id="tileNuit" data-tile="nuit" data-lock="Incluse dans Privilège">
         <label class="tile-main"><input type="checkbox" data-k="nuit"><span class="ti">🌙</span>
@@ -564,21 +565,22 @@ main{display:flex;flex-direction:column}.col{display:contents}#s-plus{order:1}
       <div class="tile" data-tile="vendrediSoir">
         <label class="tile-main"><input type="checkbox" data-k="vendrediSoir"><span class="ti">🍕</span>
           <span class="tt"><b>Vendredi soir · bar à pizzas</b><small>25 € par personne, eau incluse (devis)</small><span class="tp" id="pVS"></span></span><span class="sw-vis" aria-hidden="true"></span></label>
-        <div class="tile-sub" data-show="vendrediSoir"><label>Personnes <input type="number" data-k="vsPers" min="0" max="300"></label><label>Par personne <input type="number" data-k="vsPrix" min="0" max="200"> €</label></div>
+        <div class="tile-sub" data-show="vendrediSoir"><label>Adultes <input type="number" data-k="vsPers" min="0" max="300" aria-label="Vendredi soir : adultes"></label><label>à <input type="number" data-k="vsPrix" min="0" max="200" step="0.5" aria-label="Vendredi soir : prix par adulte"> €</label><label>Enfants <input type="number" data-k="vsEnf" min="0" max="100" aria-label="Vendredi soir : enfants"></label><label>à <input type="number" data-k="vsPrixEnf" min="0" max="200" step="0.5" aria-label="Vendredi soir : prix par enfant"> €</label></div>
       </div>
       <div class="tile" data-tile="samMatin">
         <label class="tile-main"><input type="checkbox" data-k="samMatin"><span class="ti">☕</span>
           <span class="tt"><b>Samedi matin · petit-déjeuner</b><small>Buffet continental · 18 € par personne (devis)</small><span class="tp" id="pSM"></span></span><span class="sw-vis" aria-hidden="true"></span></label>
-        <div class="tile-sub" data-show="samMatin"><label>Personnes <input type="number" data-k="smPers" min="0" max="300"></label><label>Par personne <input type="number" data-k="smPrix" min="0" max="200"> €</label></div>
+        <div class="tile-sub" data-show="samMatin"><label>Adultes <input type="number" data-k="smPers" min="0" max="300" aria-label="Samedi matin : adultes"></label><label>à <input type="number" data-k="smPrix" min="0" max="200" step="0.5" aria-label="Samedi matin : prix par adulte"> €</label><label>Enfants <input type="number" data-k="smEnf" min="0" max="100" aria-label="Samedi matin : enfants"></label><label>à <input type="number" data-k="smPrixEnf" min="0" max="200" step="0.5" aria-label="Samedi matin : prix par enfant"> €</label></div>
       </div>
       <div class="tile" data-tile="samMidi">
         <label class="tile-main"><input type="checkbox" data-k="samMidi"><span class="ti">🥗</span>
           <span class="tt"><b>Samedi midi · buffet froid</b><small>Salades, cakes, charcuterie, fromages · 35 € par personne (devis)</small><span class="tp" id="pMD"></span></span><span class="sw-vis" aria-hidden="true"></span></label>
-        <div class="tile-sub" data-show="samMidi"><label>Personnes <input type="number" data-k="mdPers" min="0" max="300"></label><label>Par personne <input type="number" data-k="mdPrix" min="0" max="200"> €</label></div>
+        <div class="tile-sub" data-show="samMidi"><label>Adultes <input type="number" data-k="mdPers" min="0" max="300" aria-label="Samedi midi : adultes"></label><label>à <input type="number" data-k="mdPrix" min="0" max="200" step="0.5" aria-label="Samedi midi : prix par adulte"> €</label><label>Enfants <input type="number" data-k="mdEnf" min="0" max="100" aria-label="Samedi midi : enfants"></label><label>à <input type="number" data-k="mdPrixEnf" min="0" max="200" step="0.5" aria-label="Samedi midi : prix par enfant"> €</label></div>
       </div>
       <div class="tile" data-tile="lendemain">
         <div class="tile-main"><span class="ti">🥐</span><span class="tt"><b>Le dimanche matin</b><small>Brunch 39 € par adulte, 19 € par enfant · petit-déjeuner 18 € / 9 €</small><span class="tp" id="pLend"></span></span><span></span></div>
         <div class="tile-sub"><div class="seg" role="radiogroup" aria-label="Le lendemain"><label><input type="radio" name="lendemain" value="aucun" data-k="lendemain"><span>Rien</span></label><label><input type="radio" name="lendemain" value="petitdej" data-k="lendemain"><span>Petit-déjeuner</span></label><label><input type="radio" name="lendemain" value="brunch" data-k="lendemain"><span>Brunch</span></label></div></div>
+        <div class="tile-sub" data-show="lendemainOn"><label>Adultes <input type="number" data-k="brPers" min="0" max="300" aria-label="Dimanche : adultes"></label><label>Enfants <input type="number" data-k="brEnf" min="0" max="100" aria-label="Dimanche : enfants"></label></div>
       </div>
       <div class="tile" data-tile="taxe">
         <div class="tile-main"><span class="ti">🧾</span><span class="tt"><b>Taxe de séjour</b><small>1,87 € par adulte et par nuit (mail de Laurie) · nuitées = adultes logés × 2 nuits</small><span class="tp" id="pTaxe"></span></span><span></span></div>
@@ -669,7 +671,7 @@ const MENUS = { traditionnelle: "Traditionnelle", inspiration: "Inspiration", re
 const FORMULES = { serenite: "Sérénité", privilege: "Privilège" };
 const TAGS = { pl: "Plaquette", of: "Devis château", hy: "Hypothèse", ng: "Négocié", q: "À demander", inc: "Inclus" };
 const SECS = ["Château", "Traiteur", "Autour du jour J", "Petits plus"];
-const NUM = new Set(["adultes", "enfants", "remiseSupp", "veillePrix", "chambres", "prixChambre", "chapiteaux", "salaries", "heures", "ateliers", "prestataires", "vsPers", "vsPrix", "smPers", "smPrix", "mdPers", "mdPrix", "taxe", "nuitees", "vhSeuls", "alcool"]);
+const NUM = new Set(["adultes", "enfants", "remiseSupp", "veillePrix", "chambres", "prixChambre", "chapiteaux", "salaries", "heures", "ateliers", "prestataires", "vsPers", "vsPrix", "smPers", "smPrix", "mdPers", "mdPrix", "vsEnf", "vsPrixEnf", "smEnf", "smPrixEnf", "mdEnf", "mdPrixEnf", "brPers", "brEnf", "laiquePers", "taxe", "nuitees", "vhSeuls", "alcool"]);
 
 /* Point de départ = la formule seule (rien d'ajouté). « Notre projet » = les ajouts du devis PDF */
 const BASE = {
@@ -682,14 +684,15 @@ const BASE = {
   enfMenu: "diner", enfCocktail: false, vhSeuls: 0, boissons: "A", vin: "classique", vinUnite: "personne", alcool: 0, prestataires: 0,
   lendemain: "aucun", vendrediSoir: false, vsPers: 80, vsPrix: 25, samMatin: false, smPers: 80, smPrix: 18,
   samMidi: false, mdPers: 100, mdPrix: 35, taxe: 1.87, nuitees: 0,
+  vsEnf: 0, vsPrixEnf: 25, smEnf: 0, smPrixEnf: 9, mdEnf: 0, mdPrixEnf: 35, brPers: 100, brEnf: 15, laiquePers: 115,
   candy: false, chocolat: false, popcorn: false, fontaine: false,
   chaisesLoc: false, vaisselle: false, weddingCake: false, massage: false, escape: false
 };
 // « Notre version » = devis de Laurie corrigé : 100 adultes, 15 enfants, buffet froid pour 100, brunch, taxe de séjour
 const PROJET = { laique: true, enfCocktail: true, vendrediSoir: true, samMatin: true, samMidi: true, lendemain: "brunch", nuitees: 190 };
 // « Devis reçu » = la proposition BY-2135920 telle quelle (32 930 €)
-const RECU = { adultes: 135, enfants: 15, laique: true, enfCocktail: true, vendrediSoir: true, samMatin: true, samMidi: true, mdPers: 150 };
-const STORE_STATE = "valinches.etat.v5", STORE_SCEN = "valinches.scenarios.v1";
+const RECU = { adultes: 135, enfants: 15, laique: true, enfCocktail: true, vendrediSoir: true, samMatin: true, samMidi: true, mdPers: 150, laiquePers: 150 };
+const STORE_STATE = "valinches.etat.v6", STORE_SCEN = "valinches.scenarios.v1";
 function load(k, def) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : def; } catch (e) { return def; } }
 function save(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; } }
 const ENUMS = { formule: FORMULES, menu: MENUS, boissons: { A: 1, B: 1, C: 1 }, vin: { classique: 1, superieure: 1, prestige: 1 }, vinUnite: { personne: 1, bouteille: 1 },
@@ -735,6 +738,9 @@ function bouchonIdx(n) { return n < 100 ? 0 : n <= 150 ? 1 : 2; }
 function escapeHtml(s) { return String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
 
 /* ---------- Calcul du devis ---------- */
+function repasDet(na, pa, ne, pe) { // « 80 adultes × 25 € + 5 enfants × 12 € »
+  return na + (na > 1 ? " adultes" : " adulte") + " × " + eur(pa) + (ne > 0 ? " + " + ne + (ne > 1 ? " enfants" : " enfant") + " × " + eur(pe) : "");
+}
 function compute(s) {
   const L = [], W = [];
   const add = (sec, t, d, a, tag) => L.push({ sec, t, d, a, tag });
@@ -743,7 +749,7 @@ function compute(s) {
   add("Château", "Formule " + FORMULES[s.formule], (di.tarif === "haute" ? "Haute saison" : "Basse saison") + (di.weekend ? "" : " · tarif semaine"), f, "pl");
   if (s.remiseSupp > 0) add("Château", "Remise sur la formule", s.remiseSupp + " %" + (s.remiseSupp === 10 ? " · accordée dans le devis" : ""), -f * s.remiseSupp / 100, s.remiseSupp === 10 ? "of" : "ng");
   if (s.veille) add("Château", "Salle le vendredi (dès 12h)", s.veillePrix < P.veille ? "Négociée · prix plaquette 3 000 €" : "Prix plaquette", s.veillePrix, s.veillePrix < P.veille ? "ng" : "pl");
-  if (s.laique) add("Château", "Cérémonie laïque", conv + " convives × 6 € (chaises Napoléon)", conv * P.laique, "of");
+  if (s.laique) add("Château", "Cérémonie laïque", s.laiquePers + " personnes × 6 € (chaises Napoléon)", s.laiquePers * P.laique, "of");
   if (s.formule === "privilege") add("Château", "Nuit du vendredi", "Incluse dans Privilège", 0, "inc");
   else if (s.nuit) { const px = s.prixChambre * (1 - P.remiseChambre); add("Château", "Nuit du vendredi", s.chambres + " chambres × " + eur(px) + " (" + eur(s.prixChambre) + " − 20 %)", s.chambres * px, "hy"); }
   if (s.chapiteaux > 0) add("Château", "Plan B pluie", s.chapiteaux + " chapiteau" + (s.chapiteaux > 1 ? "x" : "") + " × 300 €", s.chapiteaux * P.chapiteau, "pl");
@@ -777,11 +783,11 @@ function compute(s) {
   if (s.alcool > 0) add("Traiteur", "Alcool acheté par nos soins", "Notre budget estimé", s.alcool, "hy");
   if (s.prestataires > 0) add("Traiteur", "Repas des prestataires", s.prestataires + " × 35 €", s.prestataires * P.prestataire, "pl");
 
-  if (s.vendrediSoir) add("Autour du jour J", "Vendredi soir · bar à pizzas", s.vsPers + " × " + eur(s.vsPrix), s.vsPers * s.vsPrix, s.vsPrix === 25 ? "of" : "hy");
-  if (s.samMatin) add("Autour du jour J", "Samedi matin · petit-déjeuner", s.smPers + " × " + eur(s.smPrix), s.smPers * s.smPrix, s.smPrix === 18 ? "of" : "hy");
-  if (s.samMidi) add("Autour du jour J", "Samedi midi · buffet froid", s.mdPers + " × " + eur(s.mdPrix), s.mdPers * s.mdPrix, s.mdPrix === 35 ? "of" : "hy");
-  if (s.lendemain === "brunch") add("Autour du jour J", "Brunch du dimanche", s.adultes + " × 39 € + " + s.enfants + " × 19 €", s.adultes * P.brunch[0] + s.enfants * P.brunch[1], "pl");
-  if (s.lendemain === "petitdej") add("Autour du jour J", "Petit-déjeuner du dimanche", s.adultes + " × 18 € + " + s.enfants + " × 9 €", s.adultes * P.petitdej[0] + s.enfants * P.petitdej[1], "pl");
+  if (s.vendrediSoir) add("Autour du jour J", "Vendredi soir · bar à pizzas", repasDet(s.vsPers, s.vsPrix, s.vsEnf, s.vsPrixEnf), s.vsPers * s.vsPrix + s.vsEnf * s.vsPrixEnf, s.vsPrix === 25 ? "of" : "hy");
+  if (s.samMatin) add("Autour du jour J", "Samedi matin · petit-déjeuner", repasDet(s.smPers, s.smPrix, s.smEnf, s.smPrixEnf), s.smPers * s.smPrix + s.smEnf * s.smPrixEnf, s.smPrix === 18 ? "of" : "hy");
+  if (s.samMidi) add("Autour du jour J", "Samedi midi · buffet froid", repasDet(s.mdPers, s.mdPrix, s.mdEnf, s.mdPrixEnf), s.mdPers * s.mdPrix + s.mdEnf * s.mdPrixEnf, s.mdPrix === 35 ? "of" : "hy");
+  if (s.lendemain === "brunch") add("Autour du jour J", "Brunch du dimanche", repasDet(s.brPers, P.brunch[0], s.brEnf, P.brunch[1]), s.brPers * P.brunch[0] + s.brEnf * P.brunch[1], "pl");
+  if (s.lendemain === "petitdej") add("Autour du jour J", "Petit-déjeuner du dimanche", repasDet(s.brPers, P.petitdej[0], s.brEnf, P.petitdej[1]), s.brPers * P.petitdej[0] + s.brEnf * P.petitdej[1], "pl");
   if (s.taxe > 0 && s.nuitees > 0) add("Autour du jour J", "Taxe de séjour", s.nuitees + " nuitées × " + eur(s.taxe) + " · nombre de nuitées estimé", s.taxe * s.nuitees, "hy");
 
   if (s.candy) add("Petits plus", "Candy bar", "", P.candy, "pl");
@@ -824,7 +830,7 @@ function bindInputs() {
 function setVis() {
   document.querySelectorAll("[data-show]").forEach(el => {
     const c = el.dataset.show;
-    const on = c === "nuitSer" ? (S.formule === "serenite" && S.nuit) : c === "boissonsA" ? S.boissons === "A" : !!S[c];
+    const on = c === "lendemainOn" ? S.lendemain !== "aucun" : c === "nuitSer" ? (S.formule === "serenite" && S.nuit) : c === "boissonsA" ? S.boissons === "A" : !!S[c];
     el.classList.toggle("hide", !on);
   });
   document.querySelectorAll("[data-v]").forEach(el => el.textContent = S[el.dataset.v]);
@@ -877,7 +883,7 @@ function render() {
   const nk = document.querySelector('[data-k="nuit"]'); nk.disabled = priv; nk.checked = priv || S.nuit;
   $("nuitInfo").textContent = priv ? "Déjà comprise dans la formule Privilège" : "Chambres à -20 % la veille (prix de la chambre : notre hypothèse)";
   $("pVeille").textContent = eur(S.veillePrix) + (S.veillePrix < P.veille ? " · négocié" : "");
-  $("pLaique").textContent = eur(conv * P.laique);
+  $("pLaique").textContent = eur(S.laiquePers * P.laique);
   $("pChaises").textContent = eur(conv * P.chaise + P.chaiseLivr);
   $("pNuit").textContent = priv ? "Incluse" : eur(S.chambres * S.prixChambre * (1 - P.remiseChambre));
   $("pChap").textContent = S.chapiteaux ? eur(S.chapiteaux * P.chapiteau) : "Aucun";
@@ -894,10 +900,10 @@ function render() {
   const qv = S.adultes;
   $("pBA").textContent = eur(qv * P.vins[S.vin] + P.bouchonChamp[r.bi]);
   $("pBB").textContent = eur(P.bouchonTout[r.bi]);
-  $("pVS").textContent = S.vsPrix > 0 ? eur(S.vsPers * S.vsPrix) : "Prix à ajouter";
-  $("pSM").textContent = eur(S.smPers * S.smPrix);
-  $("pMD").textContent = eur(S.mdPers * S.mdPrix);
-  $("pLend").textContent = S.lendemain === "brunch" ? eur(S.adultes * P.brunch[0] + S.enfants * P.brunch[1]) : S.lendemain === "petitdej" ? eur(S.adultes * P.petitdej[0] + S.enfants * P.petitdej[1]) : "Rien";
+  $("pVS").textContent = eur(S.vsPers * S.vsPrix + S.vsEnf * S.vsPrixEnf);
+  $("pSM").textContent = eur(S.smPers * S.smPrix + S.smEnf * S.smPrixEnf);
+  $("pMD").textContent = eur(S.mdPers * S.mdPrix + S.mdEnf * S.mdPrixEnf);
+  $("pLend").textContent = S.lendemain === "brunch" ? eur(S.brPers * P.brunch[0] + S.brEnf * P.brunch[1]) : S.lendemain === "petitdej" ? eur(S.brPers * P.petitdej[0] + S.brEnf * P.petitdej[1]) : "Rien";
   $("pTaxe").textContent = S.taxe > 0 && S.nuitees > 0 ? eur(S.taxe * S.nuitees) : "À demander";
   $("pVh").textContent = S.vhSeuls ? eur(S.vhSeuls * P.vh[S.menu]) : P.vh[S.menu] + " € par invité";
   $("pAlc").textContent = S.alcool ? eur(S.alcool) : "0 €";
