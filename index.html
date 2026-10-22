@@ -425,9 +425,9 @@ main{display:flex;flex-direction:column}.col{display:contents}#s-plus{order:1}
     <div class="other"><label>Ou une autre date en 2027 <input type="date" id="dateInput" min="2027-01-01" max="2027-12-31"></label></div>
     <div class="badges" id="dateBadges"></div>
     <h3 class="sub-title">Qui est là ?</h3>
-    <p class="qhint">Une ligne par moment du week-end. Cochez les repas en plus ; le vin d'honneur et le dîner sont toujours là. Les bébés de moins de 3 ans sont comptés partout mais jamais facturés : offert (à confirmer avec le château).</p>
+    <p class="qhint">Une ligne par moment du week-end. Cochez les repas en plus ; le vin d'honneur et le dîner sont toujours là. Les bébés de moins de 2 ans sont comptés partout mais jamais facturés : offert (à confirmer avec le château).</p>
     <table class="qui">
-      <thead><tr><th scope="col">Moment</th><th scope="col">Adultes</th><th scope="col">Enfants<small>3-12 ans</small></th><th scope="col">Bébés<small>moins de 3 ans · offert (à confirmer)</small></th><th scope="col">Prix adulte</th><th scope="col">Prix enfant</th></tr></thead>
+      <thead><tr><th scope="col">Moment</th><th scope="col">Adultes</th><th scope="col">Enfants<small>2-12 ans</small></th><th scope="col">Bébés<small>moins de 2 ans · offert (à confirmer)</small></th><th scope="col">Prix adulte</th><th scope="col">Prix enfant</th></tr></thead>
       <tbody id="quiBody"></tbody>
     </table>
     <div class="qfoot"><button type="button" class="btn" id="btnCopy">Recopier le dîner partout</button><small>Met les nombres du dîner sur toutes les lignes (les prix ne bougent pas).</small></div>
@@ -700,7 +700,7 @@ const MENUS = { traditionnelle: "Traditionnelle", inspiration: "Inspiration", re
 const FORMULES = { serenite: "Sérénité", privilege: "Privilège" };
 const TAGS = { pl: "Plaquette", of: "Devis château", hy: "Hypothèse", ng: "Négocié", q: "À demander", inc: "Inclus" };
 const SECS = ["Château", "Traiteur", "Autour du jour J", "Petits plus"];
-// « Qui est là ? » : une ligne par moment ; clés <ligne>A / E / B = adultes, enfants (3-12 ans), bébés (moins de 3 ans, offerts) ; <ligne>PA / PE = prix modifiables
+// « Qui est là ? » : une ligne par moment ; clés <ligne>A / E / B = adultes, enfants (2-12 ans), bébés (moins de 2 ans, offerts) ; <ligne>PA / PE = prix modifiables
 const QUI = [
   { id: "vs", on: "vendrediSoir", t: "Vendredi soir", d: "Bar à pizzas · facultatif", prix: true },
   { id: "sm", on: "samMatin", t: "Samedi matin", d: "Petit-déjeuner · facultatif", prix: true },
@@ -833,7 +833,7 @@ function compute(s) {
   if (s.dessert !== "inclus") add("Traiteur", "Pièce montée", (s.dessert === "remplacement" ? "À la place du dessert" : "En plus du dessert") + " · " + s.diA + " × " + String(P.dessert[s.dessert]).replace(".", ",") + " €", s.diA * P.dessert[s.dessert], "pl");
   if (s.weddingCake) add("Traiteur", "Wedding cake", "Sur devis : prix à demander au château", 0, "q");
   if (s.enfMenu !== "aucun" && s.diE > 0) { qa.di += s.diE * P.enfRepas; add("Traiteur", s.enfMenu === "diner" ? "Dîner des enfants" : "Lunch-box des enfants", s.diE + " × 19 €", s.diE * P.enfRepas, "pl"); }
-  if (s.diB > 0) add("Traiteur", "Bébés (moins de 3 ans)", s.diB + " au dîner · repas offert, à confirmer", 0, "hy");
+  if (s.diB > 0) add("Traiteur", "Bébés (moins de 2 ans)", s.diB + " au dîner · repas offert, à confirmer", 0, "hy");
   if (s.enfCocktail && s.vhE > 0) { qa.vh += s.vhE * P.enfCocktail; add("Traiteur", "Cocktail des enfants", s.vhE + " × 8 €", s.vhE * P.enfCocktail, "pl"); }
   if (vhPlus > 0) { qa.vh += vhPlus * P.vh[s.menu]; add("Traiteur", "Invités au vin d'honneur seulement", vhPlus + " adulte" + (vhPlus > 1 ? "s" : "") + " en plus du dîner × " + P.vh[s.menu] + " € (menu " + MENUS[s.menu] + ")", vhPlus * P.vh[s.menu], "pl"); }
   const bi = bouchonIdx(conv);
@@ -862,7 +862,7 @@ function compute(s) {
   if (di.annee !== 2027) W.push("Les prix de la plaquette valent pour 2027 seulement.");
   if (!di.weekend) W.push("Ce n'est pas un week-end : la plaquette applique le tarif « basse saison et semaine ».");
   const bbs = QUI.filter(q => rowOn(s, q)).map(q => s[q.id + "B"]), bbMax = Math.max(0, ...bbs);
-  if (bbMax > 0) W.push(bbMax + " bébé(s) de moins de 3 ans comptés gratuits " + (bbs.every(n => n === bbMax) ? "à tous les repas" : "(au plus, selon le repas)") + " : à confirmer avec le château. Prévoir lits parapluie et chaises hautes.");
+  if (bbMax > 0) W.push(bbMax + " bébé(s) de moins de 2 ans comptés gratuits " + (bbs.every(n => n === bbMax) ? "à tous les repas" : "(au plus, selon le repas)") + " : à confirmer avec le château. Prévoir lits parapluie et chaises hautes.");
   if (conv > P.couchages) W.push((conv - P.couchages) + " invité(s) sans couchage sur place (109 couchages au domaine).");
   if (conv > P.places) W.push("Plus de 200 convives : la salle accueille 200 personnes assises.");
   if (s.formule === "serenite" && s.nuit) W.push("Nuit du vendredi en Sérénité : " + s.chambres + " chambres comptées, pas tout le domaine (Privilège couvre les 109 couchages).");
@@ -891,7 +891,7 @@ function buildQui() { // lignes du tableau « Qui est là ? »
       : q.on ? `<label class="qh qck"><input type="checkbox" data-k="${q.on}">${name}</label>` : `<div class="qh">${name}</div>`;
     const price = c => q.prix ? `<span class="qeur">${num(q.id + "P" + c, 200, q.t + " : prix par " + (c === "A" ? "adulte" : "enfant"), true)} €</span>` : `<b class="qfix" id="qp-${q.id}${c}"></b><small id="qs-${q.id}${c}"></small>`;
     return `<tr id="q-${q.id}"${q.on ? "" : ' class="always"'}><th scope="row">${head}<span class="qam" id="qa-${q.id}"></span></th>` +
-      `<td data-l="Adultes">${num(q.id + "A", 400, q.t + " : adultes")}</td><td data-l="Enfants 3-12 ans">${num(q.id + "E", 100, q.t + " : enfants")}</td><td data-l="Bébés · offerts">${num(q.id + "B", 50, q.t + " : bébés (offerts)")}</td>` +
+      `<td data-l="Adultes">${num(q.id + "A", 400, q.t + " : adultes")}</td><td data-l="Enfants 2-12 ans">${num(q.id + "E", 100, q.t + " : enfants")}</td><td data-l="Bébés · offerts">${num(q.id + "B", 50, q.t + " : bébés (offerts)")}</td>` +
       `<td data-l="Prix adulte">${price("A")}</td><td data-l="Prix enfant">${price("E")}</td></tr>`;
   }).join("");
 }
