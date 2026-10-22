@@ -87,12 +87,47 @@ input:focus-visible,select:focus-visible{outline:2px solid var(--or);outline-off
 .badge{font-size:12px;font-weight:800;padding:4px 11px;border-radius:999px}
 .b-haute{background:var(--rose-soft);color:var(--bx)} .b-basse{background:var(--sauge-soft);color:var(--sauge)}
 .b-remise{background:var(--or);color:#fff} .b-info{background:#fff;border:1px solid var(--ligne);color:var(--encre)}
-.counters{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
-@media (max-width:600px){.counters{grid-template-columns:minmax(0,1fr)}}
-.counter{display:flex;align-items:center;gap:12px;border:1.5px solid var(--ligne);border-radius:16px;padding:12px 14px;background:#fff}
-.counter .ci{font-size:24px;width:44px;height:44px;border-radius:14px;background:var(--or-soft);display:grid;place-items:center;flex:none}
-.counter b{display:block} .counter small{color:var(--gris);font-size:12.5px}
-.counter > div:nth-child(2){flex:1}
+/* ---------- Tableau « Qui est là ? » (une ligne par moment, une carte sur téléphone) ---------- */
+.qhint{margin:0 0 6px;color:var(--gris);font-size:13px}
+.qui{width:100%;border-collapse:separate;border-spacing:0 6px;font-size:14px}
+.qui thead th{font-size:12px;color:var(--gris);font-weight:800;text-align:center;padding:0 4px;vertical-align:bottom;line-height:1.25}
+.qui thead th:first-child{text-align:left;padding-left:12px}
+.qui thead small{display:block;font-weight:700;font-size:11px}
+.qui tbody th,.qui td{background:#fff;border-top:1.5px solid var(--ligne);border-bottom:1.5px solid var(--ligne);padding:8px 5px;text-align:center;vertical-align:middle}
+.qui tbody th{border-left:1.5px solid var(--ligne);border-radius:14px 0 0 14px;text-align:left;font-weight:400;padding-left:12px;min-width:170px}
+.qui td:last-child{border-right:1.5px solid var(--ligne);border-radius:0 14px 14px 0;padding-right:10px}
+.qui tr.always th{box-shadow:inset 4px 0 0 var(--or-light)}
+.qui input[type=number]{width:62px;text-align:center;padding:6px 3px}
+.qui .qh{display:flex;flex-direction:column;align-items:flex-start;gap:5px}
+.qui .qck{flex-direction:row;gap:9px;cursor:pointer}
+.qui .qck input{width:18px;height:18px;margin:1px 0 0;accent-color:var(--bx);flex:none;cursor:pointer}
+.qui .qn b{display:block;line-height:1.2;color:var(--encre)}
+.qui .qn small{display:block;color:var(--gris);font-size:12px;line-height:1.3}
+.qui .qam{display:block;font-weight:800;color:var(--or-txt);font-size:13px;margin-top:4px}
+.qui select{padding:5px 8px;border:1.5px solid var(--ligne);border-radius:10px;background:#fff;font-size:13px;font-weight:700;cursor:pointer}
+.qui .qeur{display:inline-flex;align-items:center;gap:3px;white-space:nowrap}
+.qui .qfix{display:block;color:var(--bx);font-weight:800}
+.qui td small{display:block;color:var(--gris);font-size:11px;line-height:1.2;margin-top:2px}
+.qui tr.off th,.qui tr.off td{background:var(--ivoire)}
+.qui tr.off td > *,.qui tr.off .qam{opacity:.45}
+.qfoot{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin-top:4px}
+.qfoot small{color:var(--gris);font-size:12.5px;flex:1;min-width:200px}
+@media (max-width:720px){
+  .qui,.qui tbody{display:block}
+  .qui thead{display:none}
+  .qui tr{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px 8px;background:#fff;border:1.5px solid var(--ligne);border-radius:16px;padding:12px;margin-bottom:10px}
+  .qui tr.always{box-shadow:inset 4px 0 0 var(--or-light)}
+  .qui tr.off{background:var(--ivoire)}
+  .qui tbody th,.qui td,.qui td:last-child{display:block;border:0;border-radius:0;padding:0;background:none;min-width:0}
+  .qui tr.off th,.qui tr.off td{background:none}
+  .qui tbody th{grid-column:1/-1;display:flex;align-items:flex-start;justify-content:space-between;gap:10px;box-shadow:none!important}
+  .qui tbody th .qam{margin-top:0;white-space:nowrap}
+  .qui td{display:flex;flex-direction:column;justify-content:space-between;text-align:left}
+  .qui td::before{content:attr(data-l);display:block;font-size:11.5px;font-weight:800;color:var(--gris);margin-bottom:3px}
+  .qui input[type=number]{width:100%;min-width:0}
+  .qui .qeur{width:100%}
+  .qui select{font-size:16px}
+}
 .step{display:inline-flex;align-items:center;border:1.5px solid var(--ligne);border-radius:12px;overflow:hidden;background:#fff;flex:none}
 .step button{border:0;background:var(--bx-soft);color:var(--bx);width:34px;height:34px;font-size:19px;font-weight:800;cursor:pointer;transition:.15s}
 .step button:hover{background:var(--bx);color:#fff}
@@ -157,11 +192,6 @@ input[type=range]{accent-color:var(--bx);width:170px;max-width:100%}
 .seg input:checked + span{background:#fff;color:var(--bx);box-shadow:0 1px 5px rgba(91,30,42,.15)}
 .seg input:focus-visible + span{outline:2px solid var(--or);outline-offset:1px}
 .hide{display:none!important}
-.tile-sub .free{font-size:12px;color:var(--gris);font-style:italic}
-.tile-sub .pair{display:flex;align-items:center;gap:6px;flex-wrap:nowrap;width:100%}
-.tile-sub .pair label{flex-wrap:nowrap;gap:5px}
-.tile-sub .pair label:first-child{min-width:108px;justify-content:space-between}
-.tile-sub .pair input{width:54px;padding:6px 4px;text-align:center}
 .card-h{cursor:pointer}
 .fold{flex:none;width:36px;height:36px;border-radius:50%;border:1.5px solid var(--ligne);background:#fff;color:var(--bx);display:grid;place-items:center;cursor:pointer;transition:border-color .2s,background .2s;margin-top:2px}
 .fold:hover{border-color:var(--or);background:var(--or-soft)}
@@ -296,9 +326,7 @@ body{font-size:14px}
 .dcard .d{font-size:22px}
 .dcard .s{margin-top:4px;font-size:10.5px}
 .other,.badges{margin-top:8px}
-.counters{margin-top:10px;gap:8px}
-.counter{padding:7px 10px;gap:10px;border-radius:12px}
-.counters{grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}.counter .ci{display:none}.counter > div:nth-child(2){min-width:0}.choices[style*="--n:3"] .ce{display:none}.choices[style*="--n:3"] h4{padding-right:0}.counter small{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.choices[style*="--n:3"] .ce{display:none}.choices[style*="--n:3"] h4{padding-right:0}
 .choices{gap:8px}
 .choice .in{padding:10px 12px;border-radius:14px}
 .choice .ce{position:absolute;top:8px;right:12px;font-size:20px;margin:0}
@@ -391,18 +419,17 @@ main{display:flex;flex-direction:column}.col{display:contents}#s-plus{order:1}
 <div class="col">
   <!-- 1. Date et invités -->
   <section class="card" id="s-date">
-    <div class="card-h"><span class="num">1</span><div><h2>La date et les invités</h2><p class="hint">Choisissez un week-end de mars : la saison se calcule toute seule.</p></div><span class="sum" id="sumDate"></span></div>
+    <div class="card-h"><span class="num">1</span><div><h2>La date et les invités</h2><p class="hint">Choisissez un week-end de mars (la saison se calcule toute seule), puis qui vient à chaque moment.</p></div><span class="sum" id="sumDate"></span></div>
     <div class="dates" id="dateCards"></div>
     <div class="other"><label>Ou une autre date en 2027 <input type="date" id="dateInput" min="2027-01-01" max="2027-12-31"></label></div>
     <div class="badges" id="dateBadges"></div>
-    <div class="counters">
-      <div class="counter"><span class="ci">🥂</span><div><b>Adultes</b><small>Dîner du samedi et vin</small></div>
-        <div class="step"><button type="button" data-step="adultes" data-d="-5" aria-label="Moins d'adultes">−</button><input type="number" data-k="adultes" min="0" max="400" aria-label="Adultes"><button type="button" data-step="adultes" data-d="5" aria-label="Plus d'adultes">+</button></div></div>
-      <div class="counter"><span class="ci">🧸</span><div><b>Enfants</b><small>Dîner · 3 à 12 ans</small></div>
-        <div class="step"><button type="button" data-step="enfants" data-d="-1" aria-label="Moins d'enfants">−</button><input type="number" data-k="enfants" min="0" max="100" aria-label="Enfants"><button type="button" data-step="enfants" data-d="1" aria-label="Plus d'enfants">+</button></div></div>
-      <div class="counter"><span class="ci">👶</span><div><b>Bébés</b><small>Moins de 3 ans · offert</small></div>
-        <div class="step"><button type="button" data-step="bebes" data-d="-1" aria-label="Moins de bébés">−</button><input type="number" data-k="bebes" min="0" max="50" aria-label="Bébés de moins de 3 ans"><button type="button" data-step="bebes" data-d="1" aria-label="Plus de bébés">+</button></div></div>
-    </div>
+    <h3 class="sub-title">Qui est là ?</h3>
+    <p class="qhint">Une ligne par moment du week-end. Cochez les repas en plus ; le vin d'honneur et le dîner sont toujours là. Les bébés de moins de 3 ans sont comptés partout mais jamais facturés : offert (à confirmer avec le château).</p>
+    <table class="qui">
+      <thead><tr><th scope="col">Moment</th><th scope="col">Adultes</th><th scope="col">Enfants<small>3-12 ans</small></th><th scope="col">Bébés<small>moins de 3 ans · offert (à confirmer)</small></th><th scope="col">Prix adulte</th><th scope="col">Prix enfant</th></tr></thead>
+      <tbody id="quiBody"></tbody>
+    </table>
+    <div class="qfoot"><button type="button" class="btn" id="btnCopy">Recopier le dîner partout</button><small>Met les nombres du dîner sur toutes les lignes (les prix ne bougent pas).</small></div>
   </section>
 
   <!-- 2. Formule -->
@@ -435,8 +462,7 @@ main{display:flex;flex-direction:column}.col{display:contents}#s-plus{order:1}
       </div>
       <div class="tile" data-tile="laique">
         <label class="tile-main"><input type="checkbox" data-k="laique"><span class="ti">💐</span>
-          <span class="tt"><b>Cérémonie laïque</b><small>Chaises Napoléon · 6 € par convive (devis)</small><span class="tp" id="pLaique"></span></span><span class="sw-vis" aria-hidden="true"></span></label>
-        <div class="tile-sub" data-show="laique"><label>Personnes à la cérémonie <input type="number" data-k="laiquePers" min="0" max="300"></label></div>
+          <span class="tt"><b>Cérémonie laïque</b><small>Chaises Napoléon · 6 € par personne de la ligne « Cérémonie » (étape 1)</small><span class="tp" id="pLaique"></span></span><span class="sw-vis" aria-hidden="true"></span></label>
       </div>
       <div class="tile" id="tileNuit" data-tile="nuit" data-lock="Incluse dans Privilège">
         <label class="tile-main"><input type="checkbox" data-k="nuit"><span class="ti">🌙</span>
@@ -536,11 +562,10 @@ main{display:flex;flex-direction:column}.col{display:contents}#s-plus{order:1}
       </div>
       <div class="tile" data-tile="enfCocktail">
         <label class="tile-main"><input type="checkbox" data-k="enfCocktail"><span class="ti">🍡</span>
-          <span class="tt"><b>Cocktail des enfants</b><small>4 pièces · 8 € par enfant</small><span class="tp" id="pCock"></span></span><span class="sw-vis" aria-hidden="true"></span></label>
+          <span class="tt"><b>Cocktail des enfants</b><small>4 pièces · 8 € par enfant du vin d'honneur</small><span class="tp" id="pCock"></span></span><span class="sw-vis" aria-hidden="true"></span></label>
       </div>
-      <div class="tile" data-tile="vhSeuls">
-        <div class="tile-main"><span class="ti">🥂</span><span class="tt"><b>Invités au vin d'honneur seulement</b><small>23, 28 ou 33 € selon le menu</small><span class="tp" id="pVh"></span></span><span></span></div>
-        <div class="tile-sub"><span>Invités</span><div class="step"><button type="button" data-step="vhSeuls" data-d="-5" aria-label="Moins d'invités au vin d'honneur">−</button><input type="number" data-k="vhSeuls" min="0" max="300" aria-label="Invités au vin d'honneur seulement"><button type="button" data-step="vhSeuls" data-d="5" aria-label="Plus d'invités au vin d'honneur">+</button></div></div>
+      <div class="tile" data-tile="vhPlus">
+        <div class="tile-main"><span class="ti">🥂</span><span class="tt"><b>Invités au vin d'honneur seulement</b><small>23, 28 ou 33 € selon le menu · adultes de la ligne « Cérémonie » en plus du dîner (étape 1)</small><span class="tp" id="pVh"></span></span><span></span></div>
       </div>
     </div>
     <h3 class="sub-title">Les boissons</h3>
@@ -567,27 +592,23 @@ main{display:flex;flex-direction:column}.col{display:contents}#s-plus{order:1}
 
   <!-- 5. Autour du jour J -->
   <section class="card" id="s-autour">
-    <div class="card-h"><span class="num">5</span><div><h2>Autour du jour J</h2><p class="hint">Prix par personne du devis de Laurie (octobre 2026). Modifiez le nombre de personnes.</p></div><span class="sum" id="sumAutour"></span></div>
+    <div class="card-h"><span class="num">5</span><div><h2>Autour du jour J</h2><p class="hint">Prix par personne du devis de Laurie (octobre 2026). Le nombre de personnes et les prix se règlent à l'étape 1, « Qui est là ? ».</p></div><span class="sum" id="sumAutour"></span></div>
     <div class="tiles">
       <div class="tile" data-tile="vendrediSoir">
         <label class="tile-main"><input type="checkbox" data-k="vendrediSoir"><span class="ti">🍕</span>
           <span class="tt"><b>Vendredi soir · bar à pizzas</b><small>25 € par personne, eau incluse (devis)</small><span class="tp" id="pVS"></span></span><span class="sw-vis" aria-hidden="true"></span></label>
-        <div class="tile-sub" data-show="vendrediSoir"><span class="pair"><label>Adultes <input type="number" data-k="vsPers" min="0" max="300" aria-label="Vendredi soir : adultes"></label><label>× <input type="number" data-k="vsPrix" min="0" max="200" step="0.5" aria-label="Vendredi soir : prix par adulte"> €</label></span><span class="pair"><label>Enfants <input type="number" data-k="vsEnf" min="0" max="100" aria-label="Vendredi soir : enfants"></label><label>× <input type="number" data-k="vsPrixEnf" min="0" max="200" step="0.5" aria-label="Vendredi soir : prix par enfant"> €</label></span><span class="pair"><label>Bébés <input type="number" data-k="vsBb" min="0" max="50" aria-label="Vendredi soir : bébés"></label><span class="free">offert</span></span></div>
       </div>
       <div class="tile" data-tile="samMatin">
         <label class="tile-main"><input type="checkbox" data-k="samMatin"><span class="ti">☕</span>
           <span class="tt"><b>Samedi matin · petit-déjeuner</b><small>Buffet continental · 18 € par personne (devis)</small><span class="tp" id="pSM"></span></span><span class="sw-vis" aria-hidden="true"></span></label>
-        <div class="tile-sub" data-show="samMatin"><span class="pair"><label>Adultes <input type="number" data-k="smPers" min="0" max="300" aria-label="Samedi matin : adultes"></label><label>× <input type="number" data-k="smPrix" min="0" max="200" step="0.5" aria-label="Samedi matin : prix par adulte"> €</label></span><span class="pair"><label>Enfants <input type="number" data-k="smEnf" min="0" max="100" aria-label="Samedi matin : enfants"></label><label>× <input type="number" data-k="smPrixEnf" min="0" max="200" step="0.5" aria-label="Samedi matin : prix par enfant"> €</label></span><span class="pair"><label>Bébés <input type="number" data-k="smBb" min="0" max="50" aria-label="Samedi matin : bébés"></label><span class="free">offert</span></span></div>
       </div>
       <div class="tile" data-tile="samMidi">
         <label class="tile-main"><input type="checkbox" data-k="samMidi"><span class="ti">🥗</span>
           <span class="tt"><b>Samedi midi · buffet froid</b><small>Salades, cakes, charcuterie, fromages · 35 € par personne (devis)</small><span class="tp" id="pMD"></span></span><span class="sw-vis" aria-hidden="true"></span></label>
-        <div class="tile-sub" data-show="samMidi"><span class="pair"><label>Adultes <input type="number" data-k="mdPers" min="0" max="300" aria-label="Samedi midi : adultes"></label><label>× <input type="number" data-k="mdPrix" min="0" max="200" step="0.5" aria-label="Samedi midi : prix par adulte"> €</label></span><span class="pair"><label>Enfants <input type="number" data-k="mdEnf" min="0" max="100" aria-label="Samedi midi : enfants"></label><label>× <input type="number" data-k="mdPrixEnf" min="0" max="200" step="0.5" aria-label="Samedi midi : prix par enfant"> €</label></span><span class="pair"><label>Bébés <input type="number" data-k="mdBb" min="0" max="50" aria-label="Samedi midi : bébés"></label><span class="free">offert</span></span></div>
       </div>
       <div class="tile" data-tile="lendemain">
         <div class="tile-main"><span class="ti">🥐</span><span class="tt"><b>Le dimanche matin</b><small>Brunch 39 € par adulte, 19 € par enfant · petit-déjeuner 18 € / 9 €</small><span class="tp" id="pLend"></span></span><span></span></div>
         <div class="tile-sub"><div class="seg" role="radiogroup" aria-label="Le lendemain"><label><input type="radio" name="lendemain" value="aucun" data-k="lendemain"><span>Rien</span></label><label><input type="radio" name="lendemain" value="petitdej" data-k="lendemain"><span>Petit-déjeuner</span></label><label><input type="radio" name="lendemain" value="brunch" data-k="lendemain"><span>Brunch</span></label></div></div>
-        <div class="tile-sub" data-show="lendemainOn"><label>Adultes <input type="number" data-k="brPers" min="0" max="300" aria-label="Dimanche : adultes"></label><label>Enfants <input type="number" data-k="brEnf" min="0" max="100" aria-label="Dimanche : enfants"></label><label>Bébés <input type="number" data-k="brBb" min="0" max="50" aria-label="Dimanche : bébés"></label></div>
       </div>
       <div class="tile" data-tile="taxe">
         <div class="tile-main"><span class="ti">🧾</span><span class="tt"><b>Taxe de séjour</b><small>1,87 € par adulte et par nuit (mail de Laurie) · nuitées = adultes logés × 2 nuits</small><span class="tp" id="pTaxe"></span></span><span></span></div>
@@ -678,29 +699,44 @@ const MENUS = { traditionnelle: "Traditionnelle", inspiration: "Inspiration", re
 const FORMULES = { serenite: "Sérénité", privilege: "Privilège" };
 const TAGS = { pl: "Plaquette", of: "Devis château", hy: "Hypothèse", ng: "Négocié", q: "À demander", inc: "Inclus" };
 const SECS = ["Château", "Traiteur", "Autour du jour J", "Petits plus"];
-const NUM = new Set(["adultes", "enfants", "remiseSupp", "veillePrix", "chambres", "prixChambre", "chapiteaux", "salaries", "heures", "ateliers", "prestataires", "vsPers", "vsPrix", "smPers", "smPrix", "mdPers", "mdPrix", "vsEnf", "vsPrixEnf", "smEnf", "smPrixEnf", "mdEnf", "mdPrixEnf", "brPers", "brEnf", "laiquePers", "bebes", "vsBb", "smBb", "mdBb", "brBb", "taxe", "nuitees", "vhSeuls", "alcool"]);
+// « Qui est là ? » : une ligne par moment ; clés <ligne>A / E / B = adultes, enfants (3-12 ans), bébés (moins de 3 ans, offerts) ; <ligne>PA / PE = prix modifiables
+const QUI = [
+  { id: "vs", on: "vendrediSoir", t: "Vendredi soir", d: "Bar à pizzas · facultatif", prix: true },
+  { id: "sm", on: "samMatin", t: "Samedi matin", d: "Petit-déjeuner · facultatif", prix: true },
+  { id: "md", on: "samMidi", t: "Samedi midi", d: "Buffet froid · facultatif", prix: true },
+  { id: "vh", t: "Cérémonie et vin d'honneur", d: "Toujours là" },
+  { id: "di", t: "Dîner de mariage", d: "Toujours là" },
+  { id: "br", on: "lendemain", t: "Dimanche", d: "Facultatif · prix plaquette" }
+];
+const rowOn = (s, q) => !q.on || (q.on === "lendemain" ? s.lendemain !== "aucun" : !!s[q.on]);
+const NUM = new Set(["remiseSupp", "veillePrix", "chambres", "prixChambre", "chapiteaux", "salaries", "heures", "ateliers", "prestataires", "taxe", "nuitees", "alcool"]
+  .concat(QUI.flatMap(q => [q.id + "A", q.id + "E", q.id + "B"].concat(q.prix ? [q.id + "PA", q.id + "PE"] : []))));
 
 /* Point de départ = la formule seule (rien d'ajouté). « Notre projet » = les ajouts du devis PDF */
 const BASE = {
   couple: "",
-  date: "2027-03-20", formule: "privilege", adultes: 100, enfants: 8, bebes: 9,
+  date: "2027-03-20", formule: "privilege",
   remiseOn: true, remiseSupp: 10,
   veille: false, veillePrix: 3000, laique: false, nuit: false, chambres: 30, prixChambre: 129,
   chapiteaux: 0, menage: false, fermeture: false, housses: false, personnel: false, salaries: 2, heures: 2,
   menu: "traditionnelle", prestige: false, brasero: "aucun", ateliers: 0, dessert: "inclus",
-  enfMenu: "diner", enfCocktail: false, vhSeuls: 0, boissons: "A", vin: "classique", vinUnite: "personne", alcool: 0, prestataires: 0,
-  lendemain: "aucun", vendrediSoir: false, vsPers: 80, vsPrix: 25, samMatin: false, smPers: 80, smPrix: 18,
-  samMidi: false, mdPers: 100, mdPrix: 35, taxe: 1.87, nuitees: 0,
-  vsEnf: 8, vsPrixEnf: 25, smEnf: 8, smPrixEnf: 9, mdEnf: 8, mdPrixEnf: 35, brPers: 100, brEnf: 8, laiquePers: 108,
-  vsBb: 9, smBb: 9, mdBb: 9, brBb: 9,
+  enfMenu: "diner", enfCocktail: false, boissons: "A", vin: "classique", vinUnite: "personne", alcool: 0, prestataires: 0,
+  lendemain: "aucun", vendrediSoir: false, samMatin: false, samMidi: false, taxe: 1.87, nuitees: 0,
+  vsA: 80, vsE: 8, vsB: 9, vsPA: 25, vsPE: 25,
+  smA: 80, smE: 8, smB: 9, smPA: 18, smPE: 9,
+  mdA: 100, mdE: 8, mdB: 9, mdPA: 35, mdPE: 35,
+  vhA: 100, vhE: 8, vhB: 9,
+  diA: 100, diE: 8, diB: 9,
+  brA: 100, brE: 8, brB: 9,
   candy: false, chocolat: false, popcorn: false, fontaine: false,
   chaisesLoc: false, vaisselle: false, weddingCake: false, massage: false, escape: false
 };
-// « Notre version » = devis de Laurie corrigé : 100 adultes, 15 enfants, buffet froid pour 100, brunch, taxe de séjour
+// « Notre version » = devis de Laurie corrigé : 100 adultes, 8 enfants, 9 bébés (80 adultes le vendredi soir et au petit-déjeuner), buffet froid pour 100, brunch, taxe de séjour
 const PROJET = { laique: true, enfCocktail: true, vendrediSoir: true, samMatin: true, samMidi: true, lendemain: "brunch", nuitees: 190 };
-// « Devis reçu » = la proposition BY-2135920 telle quelle (32 930 €)
-const RECU = { adultes: 135, enfants: 15, bebes: 0, vsEnf: 0, smEnf: 0, mdEnf: 0, vsBb: 0, smBb: 0, mdBb: 0, laique: true, enfCocktail: true, vendrediSoir: true, samMatin: true, samMidi: true, mdPers: 150, laiquePers: 150 };
-const STORE_STATE = "valinches.etat.v7", STORE_SCEN = "valinches.scenarios.v1";
+// « Devis reçu » = la proposition BY-2135920 telle quelle (32 930 €) : 135 adultes + 15 enfants au dîner et au vin d'honneur, buffet froid pour 150 adultes, pas de bébés
+const RECU = { diA: 135, diE: 15, diB: 0, vhA: 135, vhE: 15, vhB: 0, vsE: 0, vsB: 0, smE: 0, smB: 0, mdA: 150, mdE: 0, mdB: 0, brA: 135, brE: 15, brB: 0,
+  laique: true, enfCocktail: true, vendrediSoir: true, samMatin: true, samMidi: true };
+const STORE_STATE = "valinches.etat.v8", STORE_OLD = "valinches.etat.v7", STORE_SCEN = "valinches.scenarios.v1";
 function load(k, def) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : def; } catch (e) { return def; } }
 function save(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; } }
 const ENUMS = { formule: FORMULES, menu: MENUS, boissons: { A: 1, B: 1, C: 1 }, vin: { classique: 1, superieure: 1, prestige: 1 }, vinUnite: { personne: 1, bouteille: 1 },
@@ -716,16 +752,30 @@ function clean(o) { // ne garde que les réglages connus, du bon type et avec un
   }
   return r;
 }
-let S = Object.assign({}, BASE, clean(load(STORE_STATE, {})));
+// anciens réglages (avant le tableau « Qui est là ? ») : traduits vers les nouvelles clés
+const OLD = { diA: "adultes", diE: "enfants", diB: "bebes", vhE: "enfants", vhB: "bebes",
+  vsA: "vsPers", vsE: "vsEnf", vsB: "vsBb", vsPA: "vsPrix", vsPE: "vsPrixEnf", smA: "smPers", smE: "smEnf", smB: "smBb", smPA: "smPrix", smPE: "smPrixEnf",
+  mdA: "mdPers", mdE: "mdEnf", mdB: "mdBb", mdPA: "mdPrix", mdPE: "mdPrixEnf", brA: "brPers", brE: "brEnf", brB: "brBb" };
+function upgrade(o) {
+  if (!o || typeof o !== "object" || "diA" in o || !("adultes" in o)) return o;
+  const r = Object.assign({}, o);
+  for (const k in OLD) if (OLD[k] in o) r[k] = o[OLD[k]];
+  if (typeof o.adultes === "number") r.vhA = o.adultes + (typeof o.vhSeuls === "number" ? o.vhSeuls : 0);
+  Object.values(OLD).concat(["vhSeuls", "laiquePers"]).forEach(k => delete r[k]);
+  return r;
+}
+let S = Object.assign({}, BASE, clean(upgrade(load(STORE_STATE, null) || load(STORE_OLD, {}))));
+const SEED_V = 8; // version des modèles : à augmenter quand ils changent
 const SEED = [
-  { name: "Notre version · 19-21 mars (100 adultes, 8 enfants, 9 bébés)", s: Object.assign({}, BASE, PROJET), cmp: true, at: "" },
-  { name: "Devis reçu de Laurie · 19-21 mars", s: Object.assign({}, BASE, RECU), cmp: true, at: "" }
+  { name: "Notre version · 19-21 mars (100 adultes, 8 enfants, 9 bébés)", s: Object.assign({}, BASE, PROJET), cmp: true, at: "", seed: SEED_V },
+  { name: "Devis reçu de Laurie · 19-21 mars", s: Object.assign({}, BASE, RECU), cmp: true, at: "", seed: SEED_V }
 ];
 let scenarios = load(STORE_SCEN, null);
 if (!Array.isArray(scenarios)) scenarios = [];
+scenarios = scenarios.filter(x => x && typeof x.name === "string" && x.s && typeof x.s === "object").map(x => Object.assign({}, x, { s: upgrade(x.s) }));
 // modèles prêts à l'emploi (sans date d'enregistrement) : remplacés en bloc quand ils changent
 const isSeed = x => x.at === "" && /^(Notre projet|Notre version|Devis reçu de Laurie) · /.test(x.name);
-const hadOldSeed = scenarios.some(x => isSeed(x) && !SEED.some(y => y.name === x.name));
+const hadOldSeed = scenarios.some(x => isSeed(x) && (x.seed !== SEED_V || !SEED.some(y => y.name === x.name)));
 if (hadOldSeed) scenarios = scenarios.filter(x => !isSeed(x));
 if (!scenarios.length || hadOldSeed) scenarios = SEED.map(x => Object.assign({}, x, { s: Object.assign({}, x.s) })).concat(scenarios);
 
@@ -753,12 +803,13 @@ function repasDet(na, pa, ne, pe, nb) { // « 80 adultes × 25 € + 5 enfants �
 function compute(s) {
   const L = [], W = [];
   const add = (sec, t, d, a, tag) => L.push({ sec, t, d, a, tag });
-  const conv = s.adultes + s.enfants, di = dateInfo(s.date);
+  const conv = s.diA + s.diE, di = dateInfo(s.date), vhPlus = Math.max(0, s.vhA - s.diA), lend = s.lendemain === "brunch" ? P.brunch : s.lendemain === "petitdej" ? P.petitdej : null;
+  const qa = { vs: s.vsA * s.vsPA + s.vsE * s.vsPE, sm: s.smA * s.smPA + s.smE * s.smPE, md: s.mdA * s.mdPA + s.mdE * s.mdPE, vh: 0, di: 0, br: lend ? s.brA * lend[0] + s.brE * lend[1] : 0 }; // montant de chaque ligne du tableau
   const f = P.forfait[s.formule][di.tarif];
   add("Château", "Formule " + FORMULES[s.formule], (di.tarif === "haute" ? "Haute saison" : "Basse saison") + (di.weekend ? "" : " · tarif semaine"), f, "pl");
   if (s.remiseSupp > 0) add("Château", "Remise sur la formule", s.remiseSupp + " %" + (s.remiseSupp === 10 ? " · accordée dans le devis" : ""), -f * s.remiseSupp / 100, s.remiseSupp === 10 ? "of" : "ng");
   if (s.veille) add("Château", "Salle le vendredi (dès 12h)", s.veillePrix < P.veille ? "Négociée · prix plaquette 3 000 €" : "Prix plaquette", s.veillePrix, s.veillePrix < P.veille ? "ng" : "pl");
-  if (s.laique) add("Château", "Cérémonie laïque", s.laiquePers + " personnes × 6 € (chaises Napoléon)", s.laiquePers * P.laique, "of");
+  if (s.laique) { qa.vh += (s.vhA + s.vhE) * P.laique; add("Château", "Cérémonie laïque", (s.vhA + s.vhE) + " personnes × 6 € (chaises Napoléon)", (s.vhA + s.vhE) * P.laique, "of"); }
   if (s.formule === "privilege") add("Château", "Nuit du vendredi", "Incluse dans Privilège", 0, "inc");
   else if (s.nuit) { const px = s.prixChambre * (1 - P.remiseChambre); add("Château", "Nuit du vendredi", s.chambres + " chambres × " + eur(px) + " (" + eur(s.prixChambre) + " − 20 %)", s.chambres * px, "hy"); }
   if (s.chapiteaux > 0) add("Château", "Plan B pluie", s.chapiteaux + " chapiteau" + (s.chapiteaux > 1 ? "x" : "") + " × 300 €", s.chapiteaux * P.chapiteau, "pl");
@@ -769,23 +820,24 @@ function compute(s) {
   if (s.housses) add("Château", "Housses de chaise", conv + " × 2,80 € + 150 €", conv * P.housse + P.housseInstall, "pl");
   if (s.personnel) add("Château", "Personnel après 1h", s.salaries + " salarié(s) × " + s.heures + " h × 50 €", s.salaries * s.heures * P.personnel, "pl");
 
-  let repas = s.adultes * (P.repas + (s.prestige ? P.prestige : 0));
-  if (s.adultes < 100) { const m = Math.max(repas, P.repasMin); if (m > repas) W.push("Moins de 100 adultes : la plaquette indique un forfait minimum de 8 300 € pour le repas."); repas = m; }
-  add("Traiteur", "Repas " + MENUS[s.menu] + (s.prestige ? " · Prestige" : ""), s.adultes + " adultes × " + (P.repas + (s.prestige ? P.prestige : 0)) + " €", repas, "pl");
+  let repas = s.diA * (P.repas + (s.prestige ? P.prestige : 0));
+  if (s.diA < 100) { const m = Math.max(repas, P.repasMin); if (m > repas) W.push("Moins de 100 adultes : la plaquette indique un forfait minimum de 8 300 € pour le repas."); repas = m; }
+  qa.di = repas;
+  add("Traiteur", "Repas " + MENUS[s.menu] + (s.prestige ? " · Prestige" : ""), s.diA + " adultes × " + (P.repas + (s.prestige ? P.prestige : 0)) + " €", repas, "pl");
   if (s.brasero !== "aucun") {
     if (s.brasero === "classique" && s.menu === "inspiration") add("Traiteur", "Brasero", "Inclus dans Inspiration", 0, "inc");
-    else add("Traiteur", "Brasero " + s.brasero, s.adultes + " × " + P.brasero[s.brasero] + " €", s.adultes * P.brasero[s.brasero], "pl");
+    else add("Traiteur", "Brasero " + s.brasero, s.diA + " × " + P.brasero[s.brasero] + " €", s.diA * P.brasero[s.brasero], "pl");
   }
-  if (s.ateliers > 0) add("Traiteur", "Ateliers en plus", s.ateliers + " × " + s.adultes + " × 5 €", s.ateliers * s.adultes * P.atelier, "pl");
-  if (s.dessert !== "inclus") add("Traiteur", "Pièce montée", (s.dessert === "remplacement" ? "À la place du dessert" : "En plus du dessert") + " · " + s.adultes + " × " + String(P.dessert[s.dessert]).replace(".", ",") + " €", s.adultes * P.dessert[s.dessert], "pl");
+  if (s.ateliers > 0) add("Traiteur", "Ateliers en plus", s.ateliers + " × " + s.diA + " × 5 €", s.ateliers * s.diA * P.atelier, "pl");
+  if (s.dessert !== "inclus") add("Traiteur", "Pièce montée", (s.dessert === "remplacement" ? "À la place du dessert" : "En plus du dessert") + " · " + s.diA + " × " + String(P.dessert[s.dessert]).replace(".", ",") + " €", s.diA * P.dessert[s.dessert], "pl");
   if (s.weddingCake) add("Traiteur", "Wedding cake", "Sur devis : prix à demander au château", 0, "q");
-  if (s.enfMenu !== "aucun" && s.enfants > 0) add("Traiteur", s.enfMenu === "diner" ? "Dîner des enfants" : "Lunch-box des enfants", s.enfants + " × 19 €", s.enfants * P.enfRepas, "pl");
-  if (s.bebes > 0) add("Traiteur", "Bébés (moins de 3 ans)", s.bebes + " au dîner · repas offert, à confirmer", 0, "hy");
-  if (s.enfCocktail && s.enfants > 0) add("Traiteur", "Cocktail des enfants", s.enfants + " × 8 €", s.enfants * P.enfCocktail, "pl");
-  if (s.vhSeuls > 0) add("Traiteur", "Invités au vin d'honneur seulement", s.vhSeuls + " × " + P.vh[s.menu] + " € (menu " + MENUS[s.menu] + ")", s.vhSeuls * P.vh[s.menu], "pl");
+  if (s.enfMenu !== "aucun" && s.diE > 0) { qa.di += s.diE * P.enfRepas; add("Traiteur", s.enfMenu === "diner" ? "Dîner des enfants" : "Lunch-box des enfants", s.diE + " × 19 €", s.diE * P.enfRepas, "pl"); }
+  if (s.diB > 0) add("Traiteur", "Bébés (moins de 3 ans)", s.diB + " au dîner · repas offert, à confirmer", 0, "hy");
+  if (s.enfCocktail && s.vhE > 0) { qa.vh += s.vhE * P.enfCocktail; add("Traiteur", "Cocktail des enfants", s.vhE + " × 8 €", s.vhE * P.enfCocktail, "pl"); }
+  if (vhPlus > 0) { qa.vh += vhPlus * P.vh[s.menu]; add("Traiteur", "Invités au vin d'honneur seulement", vhPlus + " adulte" + (vhPlus > 1 ? "s" : "") + " en plus du dîner × " + P.vh[s.menu] + " € (menu " + MENUS[s.menu] + ")", vhPlus * P.vh[s.menu], "pl"); }
   const bi = bouchonIdx(conv);
   if (s.boissons === "A") {
-    const q = s.adultes;
+    const q = s.diA;
     add("Traiteur", "Vin " + s.vin + " (par adulte)", q + " × " + P.vins[s.vin] + " € · prix par personne confirmé", q * P.vins[s.vin], "of");
     add("Traiteur", "Droit de bouchon champagne", "Fin de soirée · " + conv + " convives", P.bouchonChamp[bi], "pl");
   } else if (s.boissons === "B") add("Traiteur", "Droit de bouchon complet", "Toutes boissons apportées · " + conv + " convives", P.bouchonTout[bi], "pl");
@@ -793,11 +845,10 @@ function compute(s) {
   if (s.alcool > 0) add("Traiteur", "Alcool acheté par nos soins", "Notre budget estimé", s.alcool, "hy");
   if (s.prestataires > 0) add("Traiteur", "Repas des prestataires", s.prestataires + " × 35 €", s.prestataires * P.prestataire, "pl");
 
-  if (s.vendrediSoir) add("Autour du jour J", "Vendredi soir · bar à pizzas", repasDet(s.vsPers, s.vsPrix, s.vsEnf, s.vsPrixEnf, s.vsBb), s.vsPers * s.vsPrix + s.vsEnf * s.vsPrixEnf, s.vsPrix === 25 ? "of" : "hy");
-  if (s.samMatin) add("Autour du jour J", "Samedi matin · petit-déjeuner", repasDet(s.smPers, s.smPrix, s.smEnf, s.smPrixEnf, s.smBb), s.smPers * s.smPrix + s.smEnf * s.smPrixEnf, s.smPrix === 18 ? "of" : "hy");
-  if (s.samMidi) add("Autour du jour J", "Samedi midi · buffet froid", repasDet(s.mdPers, s.mdPrix, s.mdEnf, s.mdPrixEnf, s.mdBb), s.mdPers * s.mdPrix + s.mdEnf * s.mdPrixEnf, s.mdPrix === 35 ? "of" : "hy");
-  if (s.lendemain === "brunch") add("Autour du jour J", "Brunch du dimanche", repasDet(s.brPers, P.brunch[0], s.brEnf, P.brunch[1], s.brBb), s.brPers * P.brunch[0] + s.brEnf * P.brunch[1], "pl");
-  if (s.lendemain === "petitdej") add("Autour du jour J", "Petit-déjeuner du dimanche", repasDet(s.brPers, P.petitdej[0], s.brEnf, P.petitdej[1], s.brBb), s.brPers * P.petitdej[0] + s.brEnf * P.petitdej[1], "pl");
+  if (s.vendrediSoir) add("Autour du jour J", "Vendredi soir · bar à pizzas", repasDet(s.vsA, s.vsPA, s.vsE, s.vsPE, s.vsB), qa.vs, s.vsPA === 25 ? "of" : "hy");
+  if (s.samMatin) add("Autour du jour J", "Samedi matin · petit-déjeuner", repasDet(s.smA, s.smPA, s.smE, s.smPE, s.smB), qa.sm, s.smPA === 18 ? "of" : "hy");
+  if (s.samMidi) add("Autour du jour J", "Samedi midi · buffet froid", repasDet(s.mdA, s.mdPA, s.mdE, s.mdPE, s.mdB), qa.md, s.mdPA === 35 ? "of" : "hy");
+  if (lend) add("Autour du jour J", s.lendemain === "brunch" ? "Brunch du dimanche" : "Petit-déjeuner du dimanche", repasDet(s.brA, lend[0], s.brE, lend[1], s.brB), qa.br, "pl");
   if (s.taxe > 0 && s.nuitees > 0) add("Autour du jour J", "Taxe de séjour", s.nuitees + " nuitées × " + eur(s.taxe) + " · nombre de nuitées estimé", s.taxe * s.nuitees, "hy");
 
   if (s.candy) add("Petits plus", "Candy bar", "", P.candy, "pl");
@@ -809,7 +860,8 @@ function compute(s) {
 
   if (di.annee !== 2027) W.push("Les prix de la plaquette valent pour 2027 seulement.");
   if (!di.weekend) W.push("Ce n'est pas un week-end : la plaquette applique le tarif « basse saison et semaine ».");
-  if (s.bebes > 0) W.push(s.bebes + " bébé(s) de moins de 3 ans comptés gratuits à tous les repas : à confirmer avec le château. Prévoir lits parapluie et chaises hautes.");
+  const bbs = QUI.filter(q => rowOn(s, q)).map(q => s[q.id + "B"]), bbMax = Math.max(0, ...bbs);
+  if (bbMax > 0) W.push(bbMax + " bébé(s) de moins de 3 ans comptés gratuits " + (bbs.every(n => n === bbMax) ? "à tous les repas" : "(au plus, selon le repas)") + " : à confirmer avec le château. Prévoir lits parapluie et chaises hautes.");
   if (conv > P.couchages) W.push((conv - P.couchages) + " invité(s) sans couchage sur place (109 couchages au domaine).");
   if (conv > P.places) W.push("Plus de 200 convives : la salle accueille 200 personnes assises.");
   if (s.formule === "serenite" && s.nuit) W.push("Nuit du vendredi en Sérénité : " + s.chambres + " chambres comptées, pas tout le domaine (Privilège couvre les 109 couchages).");
@@ -820,7 +872,7 @@ function compute(s) {
   const remise = L.filter(l => l.a < 0).reduce((t, l) => t - l.a, 0);
   const sec = {}; SECS.forEach(x => sec[x] = L.filter(l => l.sec === x).reduce((t, l) => t + l.a, 0));
   const formNet = f * (1 - s.remiseSupp / 100);
-  return { L, W, total, remise, di, f, conv, sec, bi, formNet };
+  return { L, W, total, remise, di, f, conv, sec, bi, formNet, qa, vhPlus };
 }
 
 /* ---------- Affichage ---------- */
@@ -830,8 +882,21 @@ function buildDates() {
     return `<label class="dcard"><input type="radio" name="dchip" value="${x.d}"><span class="in"><span class="d">${x.n}</span><span class="m">${x.m}</span><span class="s ${i.saison}">${i.saison === "haute" ? "haute saison" : "basse saison"}</span>${i.remise ? '<span class="rib">−10 %</span>' : ""}</span></label>`;
   }).join("");
 }
-function bindInputs() {
-  document.querySelectorAll("[data-k]").forEach(el => {
+function buildQui() { // lignes du tableau « Qui est là ? »
+  const num = (k, max, lab, step) => `<input type="number" data-k="${k}" min="0" max="${max}"${step ? ' step="0.5" inputmode="decimal"' : ' inputmode="numeric"'} aria-label="${lab}">`;
+  $("quiBody").innerHTML = QUI.map(q => {
+    const name = `<span class="qn"><b>${q.t}</b><small id="qd-${q.id}">${q.d}</small></span>`;
+    const head = q.on === "lendemain" ? `<div class="qh">${name}<select data-k="lendemain" aria-label="Dimanche : repas"><option value="aucun">Rien</option><option value="petitdej">Petit-déjeuner</option><option value="brunch">Brunch</option></select></div>`
+      : q.on ? `<label class="qh qck"><input type="checkbox" data-k="${q.on}">${name}</label>` : `<div class="qh">${name}</div>`;
+    const price = c => q.prix ? `<span class="qeur">${num(q.id + "P" + c, 200, q.t + " : prix par " + (c === "A" ? "adulte" : "enfant"), true)} €</span>` : `<b class="qfix" id="qp-${q.id}${c}"></b><small id="qs-${q.id}${c}"></small>`;
+    return `<tr id="q-${q.id}"${q.on ? "" : ' class="always"'}><th scope="row">${head}<span class="qam" id="qa-${q.id}"></span></th>` +
+      `<td data-l="Adultes">${num(q.id + "A", 400, q.t + " : adultes")}</td><td data-l="Enfants 3-12 ans">${num(q.id + "E", 100, q.t + " : enfants")}</td><td data-l="Bébés · offerts">${num(q.id + "B", 50, q.t + " : bébés (offerts)")}</td>` +
+      `<td data-l="Prix adulte">${price("A")}</td><td data-l="Prix enfant">${price("E")}</td></tr>`;
+  }).join("");
+}
+function bindInputs(only, skip) { // only : une seule clé (ex. la case du tableau et sa carte) ; skip : le champ en cours de saisie
+  document.querySelectorAll(only ? '[data-k="' + only + '"]' : "[data-k]").forEach(el => {
+    if (el === skip) return;
     const v = S[el.dataset.k];
     if (el.type === "checkbox") el.checked = !!v;
     else if (el.type === "radio") el.checked = el.value === String(v);
@@ -894,33 +959,50 @@ function render() {
   const nk = document.querySelector('[data-k="nuit"]'); nk.disabled = priv; nk.checked = priv || S.nuit;
   $("nuitInfo").textContent = priv ? "Déjà comprise dans la formule Privilège" : "Chambres à -20 % la veille (prix de la chambre : notre hypothèse)";
   $("pVeille").textContent = eur(S.veillePrix) + (S.veillePrix < P.veille ? " · négocié" : "");
-  $("pLaique").textContent = eur(S.laiquePers * P.laique);
+  $("pLaique").textContent = eur((S.vhA + S.vhE) * P.laique);
   $("pChaises").textContent = eur(conv * P.chaise + P.chaiseLivr);
   $("pNuit").textContent = priv ? "Incluse" : eur(S.chambres * S.prixChambre * (1 - P.remiseChambre));
   $("pChap").textContent = S.chapiteaux ? eur(S.chapiteaux * P.chapiteau) : "Aucun";
   $("pMenage").textContent = eur(P.menage);
   $("pHousses").textContent = eur(conv * P.housse + P.housseInstall);
   $("pPerso").textContent = eur(S.salaries * S.heures * P.personnel);
-  $("pPrestige").textContent = "+ " + eur(S.adultes * P.prestige);
-  $("pBrasero").textContent = S.brasero === "aucun" ? "Aucun" : (S.brasero === "classique" && S.menu === "inspiration") ? "Inclus" : eur(S.adultes * P.brasero[S.brasero]);
-  $("pAteliers").textContent = S.ateliers ? eur(S.ateliers * S.adultes * P.atelier) : "Aucun";
-  $("pDessert").textContent = S.dessert === "inclus" ? "Inclus" : "+ " + eur(S.adultes * P.dessert[S.dessert]);
-  $("pEnf").textContent = S.enfMenu === "aucun" ? "Aucun" : eur(S.enfants * P.enfRepas);
-  $("pCock").textContent = eur(S.enfants * P.enfCocktail);
+  $("pPrestige").textContent = "+ " + eur(S.diA * P.prestige);
+  $("pBrasero").textContent = S.brasero === "aucun" ? "Aucun" : (S.brasero === "classique" && S.menu === "inspiration") ? "Inclus" : eur(S.diA * P.brasero[S.brasero]);
+  $("pAteliers").textContent = S.ateliers ? eur(S.ateliers * S.diA * P.atelier) : "Aucun";
+  $("pDessert").textContent = S.dessert === "inclus" ? "Inclus" : "+ " + eur(S.diA * P.dessert[S.dessert]);
+  $("pEnf").textContent = S.enfMenu === "aucun" ? "Aucun" : eur(S.diE * P.enfRepas);
+  $("pCock").textContent = eur(S.vhE * P.enfCocktail);
   $("pPresta").textContent = S.prestataires ? eur(S.prestataires * P.prestataire) : "0 €";
-  const qv = S.adultes;
+  const qv = S.diA;
   $("pBA").textContent = eur(qv * P.vins[S.vin] + P.bouchonChamp[r.bi]);
   $("pBB").textContent = eur(P.bouchonTout[r.bi]);
-  $("pVS").textContent = eur(S.vsPers * S.vsPrix + S.vsEnf * S.vsPrixEnf);
-  $("pSM").textContent = eur(S.smPers * S.smPrix + S.smEnf * S.smPrixEnf);
-  $("pMD").textContent = eur(S.mdPers * S.mdPrix + S.mdEnf * S.mdPrixEnf);
-  $("pLend").textContent = S.lendemain === "brunch" ? eur(S.brPers * P.brunch[0] + S.brEnf * P.brunch[1]) : S.lendemain === "petitdej" ? eur(S.brPers * P.petitdej[0] + S.brEnf * P.petitdej[1]) : "Rien";
+  $("pVS").textContent = eur(r.qa.vs);
+  $("pSM").textContent = eur(r.qa.sm);
+  $("pMD").textContent = eur(r.qa.md);
+  $("pLend").textContent = S.lendemain === "aucun" ? "Rien" : eur(r.qa.br);
   $("pTaxe").textContent = S.taxe > 0 && S.nuitees > 0 ? eur(S.taxe * S.nuitees) : "Indiquez le nombre de nuitées";
-  $("pVh").textContent = S.vhSeuls ? eur(S.vhSeuls * P.vh[S.menu]) : P.vh[S.menu] + " € par invité";
+  $("pVh").textContent = r.vhPlus ? eur(r.vhPlus * P.vh[S.menu]) : P.vh[S.menu] + " € par invité";
+  // tableau « Qui est là ? »
+  QUI.forEach(q => {
+    const on = rowOn(S, q);
+    $("q-" + q.id).classList.toggle("off", !on);
+    $("q-" + q.id).querySelectorAll("td input").forEach(i => i.disabled = !on);
+    $("qa-" + q.id).textContent = on ? eur(r.qa[q.id]) : "Pas retenu";
+  });
+  const lend = S.lendemain === "brunch" ? P.brunch : S.lendemain === "petitdej" ? P.petitdej : null;
+  const fix = (id, v, sub) => { $("qp-" + id).textContent = v; $("qs-" + id).textContent = sub; };
+  fix("vhA", eur(P.vh[S.menu]), "seulement au-delà du dîner");
+  fix("vhE", S.enfCocktail ? eur(P.enfCocktail) : "—", S.enfCocktail ? "cocktail enfant" : "sans cocktail");
+  fix("diA", eur(P.repas + (S.prestige ? P.prestige : 0)), S.prestige ? "Prestige compris" : "min. 8 300 € sous 100");
+  fix("diE", S.enfMenu === "aucun" ? "—" : eur(P.enfRepas), S.enfMenu === "aucun" ? "sans repas" : S.enfMenu === "lunch" ? "lunch-box" : "menu enfant");
+  fix("brA", lend ? eur(lend[0]) : "—", lend ? (S.lendemain === "brunch" ? "brunch" : "petit-déjeuner") : "");
+  fix("brE", lend ? eur(lend[1]) : "—", lend ? (S.lendemain === "brunch" ? "brunch" : "petit-déjeuner") : "");
+  $("qd-vh").textContent = (r.vhPlus > 0 ? "+ " + r.vhPlus + " adulte" + (r.vhPlus > 1 ? "s" : "") + " au vin d'honneur seul" : "Vin d'honneur compris") + (S.laique ? " · laïque" : "") + (S.enfCocktail && S.vhE > 0 ? " · cocktail enfants" : "");
+  $("qd-di").textContent = "Toujours là · repas sans le vin";
   $("pAlc").textContent = S.alcool ? eur(S.alcool) : "0 €";
   $("pChoco").textContent = eur(P.chocolat[0] + conv * P.chocolat[1]);
   // tuiles allumées
-  const ON = { chapiteaux: S.chapiteaux > 0, brasero: S.brasero !== "aucun", ateliers: S.ateliers > 0, dessert: S.dessert !== "inclus", enfMenu: S.enfMenu !== "aucun" && S.enfants > 0, lendemain: S.lendemain !== "aucun", prestataires: S.prestataires > 0, taxe: S.taxe > 0 && S.nuitees > 0, nuit: !priv && S.nuit, remiseOn: di.remise && S.remiseOn, remiseSupp: S.remiseSupp > 0, vhSeuls: S.vhSeuls > 0, alcool: S.alcool > 0, enfCocktail: S.enfCocktail && S.enfants > 0 };
+  const ON = { chapiteaux: S.chapiteaux > 0, brasero: S.brasero !== "aucun", ateliers: S.ateliers > 0, dessert: S.dessert !== "inclus", enfMenu: S.enfMenu !== "aucun" && S.diE > 0, lendemain: S.lendemain !== "aucun", prestataires: S.prestataires > 0, taxe: S.taxe > 0 && S.nuitees > 0, nuit: !priv && S.nuit, remiseOn: di.remise && S.remiseOn, remiseSupp: S.remiseSupp > 0, vhPlus: r.vhPlus > 0, alcool: S.alcool > 0, enfCocktail: S.enfCocktail && S.vhE > 0 };
   document.querySelectorAll("[data-tile]").forEach(t => { const k = t.dataset.tile; t.classList.toggle("on", k in ON ? !!ON[k] : !!S[k]); });
   $("tileNuit").classList.toggle("locked", priv);
   $("sumOpt").textContent = eur(r.sec["Château"] - r.formNet);
@@ -929,7 +1011,7 @@ function render() {
   $("sumPlus").textContent = eur(r.sec["Petits plus"]);
   // devis
   $("tFor").textContent = S.couple ? "pour " + S.couple : "";
-  $("tMeta").textContent = FORMULES[S.formule] + " · " + fmtDate(S.date) + " · " + S.adultes + " adultes + " + S.enfants + " enfants" + (S.bebes ? " + " + S.bebes + " bébés" : "");
+  $("tMeta").textContent = FORMULES[S.formule] + " · " + fmtDate(S.date) + " · " + S.diA + " adultes + " + S.diE + " enfants" + (S.diB ? " + " + S.diB + " bébés" : "") + " au dîner";
   const amounts = new Map();
   $("tLines").innerHTML = SECS.map(sec => {
     const ls = r.L.filter(l => l.sec === sec); if (!ls.length) return "";
@@ -1030,7 +1112,7 @@ function handle(el, done) {
   }
   else v = el.value;
   if (S[k] === v) return;
-  S[k] = v; render();
+  S[k] = v; bindInputs(k, el); render();
 }
 document.addEventListener("click", e => {
   const t = e.target.closest("button, td.cell"); if (!t) return;
@@ -1048,6 +1130,7 @@ document.addEventListener("click", e => {
     toast(ok ? "♥ « " + name + " » enregistré" : "Enregistré pour cette visite seulement : pensez à « Exporter »");
     return;
   }
+  if (t.id === "btnCopy") { QUI.forEach(q => { if (q.id !== "di") ["A", "E", "B"].forEach(c => S[q.id + c] = S["di" + c]); }); bindInputs(); render(); toast("Nombres du dîner recopiés sur toutes les lignes"); return; }
   if (t.id === "btnReset") { confirmTwice(t, "Confirmer ?", () => { S = Object.assign({}, BASE, { couple: S.couple }); bindInputs(); render(); toast("Retour à la formule seule"); }); return; }
   if (t.id === "btnPrint") { window.print(); return; }
   if (t.id === "btnExport") {
@@ -1064,7 +1147,7 @@ $("fileImport").addEventListener("change", e => {
     try {
       const arr = JSON.parse(txt); if (!Array.isArray(arr)) throw new Error("format");
       const ok = arr.filter(x => x && typeof x.name === "string" && x.s && clean(x.s).formule && clean(x.s).date)
-        .map(x => ({ name: x.name.slice(0, 60), s: Object.assign({}, BASE, clean(x.s)), cmp: !!x.cmp, at: typeof x.at === "string" ? x.at : "" }));
+        .map(x => ({ name: x.name.slice(0, 60), s: Object.assign({}, BASE, clean(upgrade(x.s))), cmp: !!x.cmp, at: typeof x.at === "string" ? x.at : "" }));
       scenarios = scenarios.concat(ok); save(STORE_SCEN, scenarios); renderScenarios();
       toast(ok.length + " scénario(s) importé(s)");
     } catch (err) { toast("Ce fichier n'est pas un export de scénarios"); }
@@ -1140,6 +1223,7 @@ document.addEventListener("click", e => {
 });
 
 document.querySelectorAll(".ti,.ce,.ci").forEach(e => e.setAttribute("aria-hidden", "true"));
+buildQui();
 setupFolds();
 buildDates();
 bindInputs();
