@@ -157,6 +157,10 @@ input[type=range]{accent-color:var(--bx);width:170px;max-width:100%}
 .seg input:checked + span{background:#fff;color:var(--bx);box-shadow:0 1px 5px rgba(91,30,42,.15)}
 .seg input:focus-visible + span{outline:2px solid var(--or);outline-offset:1px}
 .hide{display:none!important}
+.tile-sub .pair{display:flex;align-items:center;gap:6px;flex-wrap:nowrap;width:100%}
+.tile-sub .pair label{flex-wrap:nowrap;gap:5px}
+.tile-sub .pair label:first-child{min-width:108px;justify-content:space-between}
+.tile-sub .pair input{width:54px;padding:6px 4px;text-align:center}
 .card-h{cursor:pointer}
 .fold{flex:none;width:36px;height:36px;border-radius:50%;border:1.5px solid var(--ligne);background:#fff;color:var(--bx);display:grid;place-items:center;cursor:pointer;transition:border-color .2s,background .2s;margin-top:2px}
 .fold:hover{border-color:var(--or);background:var(--or-soft)}
@@ -565,17 +569,17 @@ main{display:flex;flex-direction:column}.col{display:contents}#s-plus{order:1}
       <div class="tile" data-tile="vendrediSoir">
         <label class="tile-main"><input type="checkbox" data-k="vendrediSoir"><span class="ti">🍕</span>
           <span class="tt"><b>Vendredi soir · bar à pizzas</b><small>25 € par personne, eau incluse (devis)</small><span class="tp" id="pVS"></span></span><span class="sw-vis" aria-hidden="true"></span></label>
-        <div class="tile-sub" data-show="vendrediSoir"><label>Adultes <input type="number" data-k="vsPers" min="0" max="300" aria-label="Vendredi soir : adultes"></label><label>à <input type="number" data-k="vsPrix" min="0" max="200" step="0.5" aria-label="Vendredi soir : prix par adulte"> €</label><label>Enfants <input type="number" data-k="vsEnf" min="0" max="100" aria-label="Vendredi soir : enfants"></label><label>à <input type="number" data-k="vsPrixEnf" min="0" max="200" step="0.5" aria-label="Vendredi soir : prix par enfant"> €</label></div>
+        <div class="tile-sub" data-show="vendrediSoir"><span class="pair"><label>Adultes <input type="number" data-k="vsPers" min="0" max="300" aria-label="Vendredi soir : adultes"></label><label>× <input type="number" data-k="vsPrix" min="0" max="200" step="0.5" aria-label="Vendredi soir : prix par adulte"> €</label></span><span class="pair"><label>Enfants <input type="number" data-k="vsEnf" min="0" max="100" aria-label="Vendredi soir : enfants"></label><label>× <input type="number" data-k="vsPrixEnf" min="0" max="200" step="0.5" aria-label="Vendredi soir : prix par enfant"> €</label></span></div>
       </div>
       <div class="tile" data-tile="samMatin">
         <label class="tile-main"><input type="checkbox" data-k="samMatin"><span class="ti">☕</span>
           <span class="tt"><b>Samedi matin · petit-déjeuner</b><small>Buffet continental · 18 € par personne (devis)</small><span class="tp" id="pSM"></span></span><span class="sw-vis" aria-hidden="true"></span></label>
-        <div class="tile-sub" data-show="samMatin"><label>Adultes <input type="number" data-k="smPers" min="0" max="300" aria-label="Samedi matin : adultes"></label><label>à <input type="number" data-k="smPrix" min="0" max="200" step="0.5" aria-label="Samedi matin : prix par adulte"> €</label><label>Enfants <input type="number" data-k="smEnf" min="0" max="100" aria-label="Samedi matin : enfants"></label><label>à <input type="number" data-k="smPrixEnf" min="0" max="200" step="0.5" aria-label="Samedi matin : prix par enfant"> €</label></div>
+        <div class="tile-sub" data-show="samMatin"><span class="pair"><label>Adultes <input type="number" data-k="smPers" min="0" max="300" aria-label="Samedi matin : adultes"></label><label>× <input type="number" data-k="smPrix" min="0" max="200" step="0.5" aria-label="Samedi matin : prix par adulte"> €</label></span><span class="pair"><label>Enfants <input type="number" data-k="smEnf" min="0" max="100" aria-label="Samedi matin : enfants"></label><label>× <input type="number" data-k="smPrixEnf" min="0" max="200" step="0.5" aria-label="Samedi matin : prix par enfant"> €</label></span></div>
       </div>
       <div class="tile" data-tile="samMidi">
         <label class="tile-main"><input type="checkbox" data-k="samMidi"><span class="ti">🥗</span>
           <span class="tt"><b>Samedi midi · buffet froid</b><small>Salades, cakes, charcuterie, fromages · 35 € par personne (devis)</small><span class="tp" id="pMD"></span></span><span class="sw-vis" aria-hidden="true"></span></label>
-        <div class="tile-sub" data-show="samMidi"><label>Adultes <input type="number" data-k="mdPers" min="0" max="300" aria-label="Samedi midi : adultes"></label><label>à <input type="number" data-k="mdPrix" min="0" max="200" step="0.5" aria-label="Samedi midi : prix par adulte"> €</label><label>Enfants <input type="number" data-k="mdEnf" min="0" max="100" aria-label="Samedi midi : enfants"></label><label>à <input type="number" data-k="mdPrixEnf" min="0" max="200" step="0.5" aria-label="Samedi midi : prix par enfant"> €</label></div>
+        <div class="tile-sub" data-show="samMidi"><span class="pair"><label>Adultes <input type="number" data-k="mdPers" min="0" max="300" aria-label="Samedi midi : adultes"></label><label>× <input type="number" data-k="mdPrix" min="0" max="200" step="0.5" aria-label="Samedi midi : prix par adulte"> €</label></span><span class="pair"><label>Enfants <input type="number" data-k="mdEnf" min="0" max="100" aria-label="Samedi midi : enfants"></label><label>× <input type="number" data-k="mdPrixEnf" min="0" max="200" step="0.5" aria-label="Samedi midi : prix par enfant"> €</label></span></div>
       </div>
       <div class="tile" data-tile="lendemain">
         <div class="tile-main"><span class="ti">🥐</span><span class="tt"><b>Le dimanche matin</b><small>Brunch 39 € par adulte, 19 € par enfant · petit-déjeuner 18 € / 9 €</small><span class="tp" id="pLend"></span></span><span></span></div>
@@ -904,7 +908,7 @@ function render() {
   $("pSM").textContent = eur(S.smPers * S.smPrix + S.smEnf * S.smPrixEnf);
   $("pMD").textContent = eur(S.mdPers * S.mdPrix + S.mdEnf * S.mdPrixEnf);
   $("pLend").textContent = S.lendemain === "brunch" ? eur(S.brPers * P.brunch[0] + S.brEnf * P.brunch[1]) : S.lendemain === "petitdej" ? eur(S.brPers * P.petitdej[0] + S.brEnf * P.petitdej[1]) : "Rien";
-  $("pTaxe").textContent = S.taxe > 0 && S.nuitees > 0 ? eur(S.taxe * S.nuitees) : "À demander";
+  $("pTaxe").textContent = S.taxe > 0 && S.nuitees > 0 ? eur(S.taxe * S.nuitees) : "Indiquez le nombre de nuitées";
   $("pVh").textContent = S.vhSeuls ? eur(S.vhSeuls * P.vh[S.menu]) : P.vh[S.menu] + " € par invité";
   $("pAlc").textContent = S.alcool ? eur(S.alcool) : "0 €";
   $("pChoco").textContent = eur(P.chocolat[0] + conv * P.chocolat[1]);
