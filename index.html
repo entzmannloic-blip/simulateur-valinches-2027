@@ -120,6 +120,24 @@ input:focus-visible,select:focus-visible{outline:2px solid var(--or);outline-off
 .qui tr.off td > *,.qui tr.off .qcount{opacity:.45}
 .qfoot{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin-top:4px}
 .qfoot small{color:var(--gris);font-size:12.5px;flex:1;min-width:200px}
+/* participations des invités : mêmes tableaux que « Qui est là ? » */
+.part col.c-m{width:30%} .part col.c-n{width:15%} .part col.c-p{width:17%} .part col.c-t{width:23%} .part col.c-a{width:12%} .part col.c-t2{width:22%}
+.part td .qfix{color:var(--encre)}
+.qui td.over .qfix{color:#b3261e}
+.qui td.over small{display:inline-block;background:#fdecea;color:#b3261e;font-weight:800;padding:1px 6px;border-radius:999px}
+.ptot{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:12px;padding:10px 14px;border-radius:14px;background:var(--or-soft);border:1.5px solid var(--or-light)}
+.ptot span{font-weight:800;color:var(--bx)}
+.ptot small{display:block;color:var(--gris);font-weight:600;font-size:11.5px}
+.ptot b{font-size:18px;color:var(--bx);white-space:nowrap;font-variant-numeric:lining-nums tabular-nums}
+.hguide{display:block;width:100%;color:var(--gris);font-size:12px}
+.p-part{margin-top:8px;border-radius:14px;border:1.5px solid var(--or-light);background:var(--or-soft);padding:8px 14px}
+.p-part > div{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.p-part .pl{font-size:13px;font-weight:700}
+.p-part .pl b{color:#3f6b3b;white-space:nowrap}
+.p-part .pr{margin-top:5px;padding-top:6px;border-top:1px dashed var(--or-light)}
+.p-part .pr span{white-space:nowrap;font-size:12px;letter-spacing:1px;text-transform:uppercase;font-weight:800;color:var(--bx)}
+.p-part .pr b{font-family:var(--serif);font-size:30px;color:var(--bx);line-height:1;white-space:nowrap;font-variant-numeric:lining-nums tabular-nums}
+.p-addpart{display:block;margin-top:6px;font-size:12.5px;font-weight:800;color:var(--bx);text-decoration:underline;text-underline-offset:2px}
 @media (max-width:820px){
   .qui,.qui tbody,.qui tfoot{display:block}
   .qui thead{display:none}
@@ -139,6 +157,9 @@ input:focus-visible,select:focus-visible{outline:2px solid var(--or);outline-off
   .qui input[type=number]{width:100%;min-width:0}
   .qui .qeur{width:100%}
   .qui select{font-size:16px}
+  .part td.qt{grid-column:1/-1;display:flex;flex-direction:row;align-items:baseline;justify-content:flex-end;gap:8px;border-top:1px dashed var(--ligne);padding-top:8px}
+  .part td.qt::before{margin-right:auto}
+  #p-fr{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 .step{display:inline-flex;align-items:center;border:1.5px solid var(--ligne);border-radius:12px;overflow:hidden;background:#fff;flex:none}
 .step button{border:0;background:var(--bx-soft);color:var(--bx);width:34px;height:34px;font-size:19px;font-weight:800;cursor:pointer;transition:.15s}
@@ -387,7 +408,7 @@ body{font-size:14px}
 @media (min-width:1340px){
   .below{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:0 12px;align-items:start}
 }
-main{display:flex;flex-direction:column}.col{display:contents}#s-plus{order:1}
+main{display:flex;flex-direction:column}.col{display:contents}#s-plus{order:1}#s-part{order:2}
 @media (max-width:1020px){.p-foot{position:static;box-shadow:none;margin:10px 0 0;padding:0}}
 @media (max-width:680px){
   .tile-sub{padding-left:10px}
@@ -422,7 +443,7 @@ main{display:flex;flex-direction:column}.col{display:contents}#s-plus{order:1}
 </div></header>
 
 <nav class="steps" aria-label="Étapes du devis"><div class="in">
-  <a href="#s-date">📅 Date</a><a href="#s-formule">🏰 Formule</a><a href="#s-options">✨ Options</a><a href="#s-traiteur">🍽️ Traiteur</a><a href="#s-autour">🥐 Autour du jour J</a><a href="#s-plus">🍭 Petits plus</a><a href="#s-cmp">⚖️ Comparer</a><a href="#s-scen">💌 Scénarios</a>
+  <a href="#s-date">📅 Date</a><a href="#s-formule">🏰 Formule</a><a href="#s-options">✨ Options</a><a href="#s-traiteur">🍽️ Traiteur</a><a href="#s-autour">🥐 Autour du jour J</a><a href="#s-plus">🍭 Petits plus</a><a href="#s-part">🤝 Participations</a><a href="#s-cmp">⚖️ Comparer</a><a href="#s-scen">💌 Scénarios</a>
 </div></nav>
 
 <div class="wrap">
@@ -626,11 +647,31 @@ main{display:flex;flex-direction:column}.col{display:contents}#s-plus{order:1}
       </div>
       <div class="tile" data-tile="taxe">
         <div class="tile-main"><span class="ti">🧾</span><span class="tt"><b>Taxe de séjour</b><small>1,87 € par adulte et par nuit (mail de Laurie) · nuitées = adultes logés × 2 nuits</small><span class="tp" id="pTaxe"></span></span><span></span></div>
-        <div class="tile-sub"><label><input type="number" data-k="taxe" min="0" max="10" step="0.05" aria-label="Taxe par nuitée"> € par nuitée</label><label>× <input type="number" data-k="nuitees" min="0" max="1000" aria-label="Nombre de nuitées"> nuitées</label></div>
+        <div class="tile-sub"><label><input type="number" data-k="taxe" min="0" max="10" step="0.05" aria-label="Taxe par nuitée"> € par nuitée</label><label>× <input type="number" data-k="nuitees" min="0" max="1000" aria-label="Nombre de nuitées"> nuitées</label><small class="hguide" id="pNuitGuide"></small></div>
       </div>
     </div>
   </section>
 
+
+  <!-- 7. Participations des invités -->
+  <section class="card" id="s-part">
+    <div class="card-h"><span class="num">7</span><div><h2>Les participations des invités</h2><p class="hint">Ce que les invités paient pour dormir sur place et pour les 3 repas. Prix par personne, bébés gratuits. Le devis affiche le total avec et sans ces participations.</p></div><span class="sum" id="sumPart"></span></div>
+    <h3 class="sub-title">Hébergement</h3>
+    <p class="qhint">Places : château 72 couchages (« 2 nuits » et « 1 nuit » ensemble) · 8 roulottes, 19 places (6 roulottes de 2 lits, 1 de 4 lits, 1 avec un lit double et un lit simple) · dortoirs de 10 et 5 places.</p>
+    <table class="qui part">
+      <colgroup><col class="c-m"><col class="c-n"><col class="c-p"><col class="c-n"><col class="c-t"></colgroup>
+      <thead><tr><th scope="col">Hébergement</th><th scope="col">Personnes<small>hors bébés</small></th><th scope="col">Prix par personne<small>tout le séjour</small></th><th scope="col">Places<small>occupées / total</small></th><th scope="col">Total de la ligne</th></tr></thead>
+      <tbody id="partBody"></tbody>
+    </table>
+    <h3 class="sub-title">Forfait repas</h3>
+    <table class="qui part">
+      <colgroup><col class="c-m"><col class="c-a"><col class="c-a"><col class="c-a"><col class="c-a"><col class="c-t2"></colgroup>
+      <thead><tr><th scope="col">Forfait</th><th scope="col">Adultes</th><th scope="col">Enfants<small>2-12 ans</small></th><th scope="col">Prix adulte<small>les 3 repas</small></th><th scope="col">Prix enfant<small>les 3 repas</small></th><th scope="col">Total</th></tr></thead>
+      <tbody id="frBody"></tbody>
+    </table>
+    <div class="qfoot"><button type="button" class="btn" id="btnFrVs">Reprendre les nombres du vendredi soir</button><small>Copie les adultes et les enfants de la ligne « Vendredi soir » de l'étape 1.</small></div>
+    <div class="ptot"><span>Total des participations<small id="pa-totd"></small></span><b id="pa-tot"></b></div>
+  </section>
 
 </div>
 </main>
@@ -657,6 +698,11 @@ main{display:flex;flex-direction:column}.col{display:contents}#s-plus{order:1}
           <div class="vt" id="tTotal">0 €</div>
           <div class="deltas" id="deltas"></div>
         </div>
+        <div class="p-part hide" id="tPart">
+          <div class="pl"><span>Participations des invités</span><b id="tPartV"></b></div>
+          <div class="pr"><span>Reste à notre charge</span><b id="tReste"></b></div>
+        </div>
+        <a class="p-addpart" id="tPartAdd" href="#s-part">＋ Déduire les participations des invités (étape 7)</a>
         <div class="savebox"><input type="text" class="f" id="scenName" maxlength="60" placeholder="Nom du scénario (facultatif)" aria-label="Nom du scénario"><button class="btn primary" id="btnSave" type="button">♥ Enregistrer</button></div>
         <div class="btns"><button class="btn" id="btnReset" type="button">↺ Formule seule</button><button class="btn" id="btnPrint" type="button">🖨 Imprimer</button></div>
       </div>
@@ -723,8 +769,18 @@ const QUI = [
   { id: "br", on: "lendemain", t: "Dimanche", d: "Facultatif · prix plaquette" }
 ];
 const rowOn = (s, q) => !q.on || (q.on === "lendemain" ? s.lendemain !== "aucun" : !!s[q.on]);
+// participations des invités (prix par personne, bébés gratuits) : clés <ligne>N = personnes, <ligne>P = prix ; g = groupe de places partagées
+const HEB = [
+  { id: "hc2", t: "Château", d: "2 nuits", p: 70, n: 2, g: "ch", max: 72 },
+  { id: "hc1", t: "Château", d: "1 nuit", p: 50, n: 1, g: "ch", max: 72 },
+  { id: "hro", t: "Roulottes", d: "2 nuits · 8 roulottes", p: 45, n: 2, g: "hro", max: 19 },
+  { id: "hd10", t: "Dortoir", d: "2 nuits · 10 places", p: 20, n: 2, g: "hd10", max: 10 },
+  { id: "hd5", t: "Dortoir", d: "2 nuits · 5 places", p: 20, n: 2, g: "hd5", max: 5 },
+  { id: "hgi", t: "Gîte (camping)", d: "prix à fixer", p: 0, n: 2 }
+];
+const PLACES = { ch: "Château", hro: "Roulottes", hd10: "Dortoir de 10 places", hd5: "Dortoir de 5 places" };
 const NUM = new Set(["remiseSupp", "veillePrix", "chambres", "prixChambre", "chapiteaux", "salaries", "heures", "ateliers", "prestataires", "taxe", "nuitees", "alcool"]
-  .concat(QUI.flatMap(q => [q.id + "A", q.id + "E", q.id + "B"].concat(q.prix ? [q.id + "PA", q.id + "PE"] : []))));
+  .concat(QUI.flatMap(q => [q.id + "A", q.id + "E", q.id + "B"].concat(q.prix ? [q.id + "PA", q.id + "PE"] : [])), HEB.flatMap(h => [h.id + "N", h.id + "P"]), ["frA", "frE", "frPA", "frPE"]));
 
 /* Point de départ = la formule seule (rien d'ajouté). « Notre projet » = les ajouts du devis PDF */
 const BASE = {
@@ -742,9 +798,11 @@ const BASE = {
   vhA: 100, vhE: 8, vhB: 9,
   diA: 100, diE: 8, diB: 9,
   brA: 100, brE: 8, brB: 9,
+  frA: 0, frE: 0, frPA: 25, frPE: 12,
   candy: false, chocolat: false, popcorn: false, fontaine: false,
   chaisesLoc: false, vaisselle: false, weddingCake: false, massage: false, escape: false
 };
+HEB.forEach(h => { BASE[h.id + "N"] = 0; BASE[h.id + "P"] = h.p; });
 // « Notre version » = devis de Laurie corrigé : 100 adultes, 8 enfants, 9 bébés (80 adultes le vendredi soir et au petit-déjeuner), buffet froid pour 100, brunch, taxe de séjour
 const PROJET = { laique: true, enfCocktail: true, vendrediSoir: true, samMatin: true, samMidi: true, lendemain: "brunch", nuitees: 190 };
 // « Devis reçu » = la proposition BY-2135920 telle quelle (32 930 €) : 135 adultes + 15 enfants au dîner et au vin d'honneur, buffet froid pour 150 adultes, pas de bébés
@@ -880,6 +938,13 @@ function compute(s) {
   if (conv > P.places) W.push("Plus de 200 convives : la salle accueille 200 personnes assises.");
   if (s.formule === "serenite" && s.nuit) W.push("Nuit du vendredi en Sérénité : " + s.chambres + " chambres comptées, pas tout le domaine (Privilège couvre les 109 couchages).");
 
+  // participations des invités : déduites du total à part, jamais mêlées aux lignes du devis
+  const pa = { fr: s.frA * s.frPA + s.frE * s.frPE }, pc = { fr: [s.frA > 0 || !s.frE ? s.frA + " × " + eur(s.frPA) : "", s.frE > 0 ? s.frE + " × " + eur(s.frPE) : ""].filter(Boolean).join(" + ") }, occ = {};
+  let nuitHeb = 0;
+  HEB.forEach(h => { const n = s[h.id + "N"]; pa[h.id] = n * s[h.id + "P"]; pc[h.id] = n + " × " + eur(s[h.id + "P"]); nuitHeb += n * h.n; if (h.g) occ[h.g] = (occ[h.g] || 0) + n; });
+  const part = Object.values(pa).reduce((t, x) => t + x, 0);
+  for (const g in PLACES) { const mx = HEB.find(h => h.g === g).max; if (occ[g] > mx) W.push(PLACES[g] + " : " + occ[g] + " personnes pour " + mx + " places" + (g === "ch" ? " (deux personnes d'une nuit peuvent partager un lit sur deux nuits différentes : à vérifier)." : ".")); }
+
   const nq = L.filter(l => l.tag === "q" && l.a === 0).length;
   if (nq) W.push(nq + " poste(s) sans prix dans le total (sur devis ou à ajouter) : demandez un chiffrage au château.");
   const total = L.reduce((t, l) => t + l.a, 0);
@@ -891,7 +956,7 @@ function compute(s) {
     vh: [s.laique ? "laïque " + fois(s.vhA + s.vhE, P.laique) : "", s.enfCocktail && s.vhE > 0 ? "cocktail " + fois(s.vhE, P.enfCocktail) : "", vhPlus > 0 ? "en plus " + fois(vhPlus, P.vh[s.menu]) : ""].filter(Boolean).join(" + ") || "vin d'honneur compris",
     di: (s.diA < 100 && s.diA * (P.repas + (s.prestige ? P.prestige : 0)) < P.repasMin ? "forfait min. " + eur(P.repasMin) : fois(s.diA, P.repas + (s.prestige ? P.prestige : 0))) + (s.enfMenu !== "aucun" && s.diE > 0 ? " + " + fois(s.diE, P.enfRepas) : ""),
     br: lend ? duo(s.brA, lend[0], s.brE, lend[1]) : "rien de prévu" }; // calcul affiché dans le tableau
-  return { L, W, total, remise, di, f, conv, sec, bi, formNet, qa, qc, vhPlus };
+  return { L, W, total, remise, di, f, conv, sec, bi, formNet, qa, qc, vhPlus, pa, pc, part, reste: total - part, occ, nuitHeb };
 }
 
 /* ---------- Affichage ---------- */
@@ -901,8 +966,19 @@ function buildDates() {
     return `<label class="dcard"><input type="radio" name="dchip" value="${x.d}"><span class="in"><span class="d">${x.n}</span><span class="m">${x.m}</span><span class="s ${i.saison}">${i.saison === "haute" ? "haute saison" : "basse saison"}</span>${i.remise ? '<span class="rib">−10 %</span>' : ""}</span></label>`;
   }).join("");
 }
+const numIn = (k, max, lab, step) => `<input type="number" data-k="${k}" min="0" max="${max}"${step ? ' step="0.5" inputmode="decimal"' : ' inputmode="numeric"'} aria-label="${lab}">`;
+function buildPart() { // lignes des tableaux « Participations des invités »
+  $("partBody").innerHTML = HEB.map(h => `<tr id="p-${h.id}"><th scope="row"><span class="qn"><b>${h.t}</b><small>${h.d}</small></span></th>` +
+    `<td data-l="Personnes">${numIn(h.id + "N", 200, h.t + ", " + h.d + " : personnes")}</td>` +
+    `<td data-l="Prix (séjour)"><span class="qeur">${numIn(h.id + "P", 500, h.t + ", " + h.d + " : prix par personne", true)} €</span></td>` +
+    `<td data-l="Places" id="pp-${h.id}"></td><td class="qt" data-l="Total"><small id="pc-${h.id}"></small><b id="pa-${h.id}"></b></td></tr>`).join("");
+  $("frBody").innerHTML = `<tr id="p-fr"><th scope="row"><span class="qn"><b>3 repas</b><small>vendredi soir, samedi matin, samedi midi</small></span></th>` +
+    `<td data-l="Adultes">${numIn("frA", 400, "Forfait repas : adultes")}</td><td data-l="Enfants 2-12 ans">${numIn("frE", 100, "Forfait repas : enfants")}</td>` +
+    `<td data-l="Prix adulte"><span class="qeur">${numIn("frPA", 200, "Forfait repas : prix adulte", true)} €</span></td><td data-l="Prix enfant"><span class="qeur">${numIn("frPE", 200, "Forfait repas : prix enfant", true)} €</span></td>` +
+    `<td class="qt" data-l="Total"><small id="pc-fr"></small><b id="pa-fr"></b></td></tr>`;
+}
 function buildQui() { // lignes du tableau « Qui est là ? »
-  const num = (k, max, lab, step) => `<input type="number" data-k="${k}" min="0" max="${max}"${step ? ' step="0.5" inputmode="decimal"' : ' inputmode="numeric"'} aria-label="${lab}">`;
+  const num = numIn;
   $("quiBody").innerHTML = QUI.map(q => {
     const name = `<span class="qn"><b>${q.t}</b><small id="qd-${q.id}">${q.d}</small></span>`;
     const head = q.on === "lendemain" ? `<div class="qh">${name}<select data-k="lendemain" aria-label="Dimanche : repas"><option value="aucun">Rien</option><option value="petitdej">Petit-déjeuner</option><option value="brunch">Brunch</option></select></div>`
@@ -1022,6 +1098,22 @@ function render() {
   fix("brE", lend ? eur(lend[1]) : "—", lend ? (S.lendemain === "brunch" ? "brunch" : "petit-déjeuner") : "");
   $("qd-vh").textContent = "Toujours là · " + (r.vhPlus > 0 ? r.vhPlus + " adulte" + (r.vhPlus > 1 ? "s" : "") + " en plus du dîner" : "compris dans le dîner");
   $("qd-di").textContent = "Toujours là · repas sans le vin";
+  // participations des invités
+  HEB.forEach(h => {
+    const n = S[h.id + "N"], aFixer = !S[h.id + "P"]; // prix 0 = pas encore fixé (gîte), pas « gratuit »
+    $("pc-" + h.id).textContent = aFixer ? n + (n > 1 ? " personnes" : " personne") : r.pc[h.id];
+    $("pa-" + h.id).textContent = aFixer ? "prix à fixer" : eur(r.pa[h.id]);
+    const c = $("pp-" + h.id), o = r.occ[h.g], over = !!h.max && o > h.max, autre = HEB.find(x => x.g === h.g && x !== h), trop = o - h.max;
+    c.classList.toggle("over", over);
+    c.innerHTML = h.max ? `<b class="qfix">${o} / ${h.max}</b><small>${over ? "⚠ " + trop + (trop > 1 ? " personnes" : " personne") + " de trop" : o === h.max ? "complet" : autre ? "partagé avec « " + autre.d + " »" : "places"}</small>` : '<b class="qfix">—</b><small>non précisé</small>';
+  });
+  $("pc-fr").textContent = r.pc.fr; $("pa-fr").textContent = eur(r.pa.fr);
+  $("pa-tot").textContent = eur(r.part);
+  $("pa-totd").textContent = "hébergement " + eur(r.part - r.pa.fr) + " + repas " + eur(r.pa.fr) + ", déduits du total estimé";
+  $("sumPart").textContent = r.part ? "− " + eur(r.part) : "Aucune pour l'instant";
+  $("tPart").classList.toggle("hide", !r.part); $("tPartAdd").classList.toggle("hide", !!r.part);
+  $("tPartV").textContent = "− " + eur(Math.round(r.part)); $("tReste").textContent = eur(Math.round(r.total) - Math.round(r.part)); // arrondis comme le total estimé : la soustraction affichée tombe juste
+  $("pNuitGuide").textContent = r.nuitHeb ? "Repère d'après l'hébergement (étape 7) : " + r.nuitHeb + " nuitées, enfants compris ; la taxe ne compte que les adultes." : "";
   $("pAlc").textContent = S.alcool ? eur(S.alcool) : "0 €";
   $("pChoco").textContent = eur(P.chocolat[0] + conv * P.chocolat[1]);
   // tuiles allumées
@@ -1050,7 +1142,7 @@ function render() {
   animateTotal(r.total);
   $("tSave").textContent = r.remise > 0 ? "dont " + eur(r.remise) + " de remises" : "";
   $("tPer").textContent = conv > 0 ? "soit " + eur(Math.round(r.total / conv)) + " par convive" : "";
-  $("mbMeta").textContent = FORMULES[S.formule] + " · " + dateLabel(S.date);
+  $("mbMeta").textContent = r.part ? "Reste à notre charge : " + eur(Math.round(r.total) - Math.round(r.part)) : FORMULES[S.formule] + " · " + dateLabel(S.date);
   $("tWarn").innerHTML = r.W.map(w => `<div>⚠️ ${w}</div>`).join("");
   $("tWarn").classList.toggle("hide", !r.W.length);
   $("tNote").innerHTML = `<b>À la réservation :</b> acompte de 50 % de la formule, soit ${eur(r.formNet / 2)}, et caution de ${eur(P.caution)}.<br>Prix TTC, hors taxe de séjour. Estimation : exiger un devis signé du château.`;
@@ -1078,7 +1170,7 @@ function renderScenarios() {
   list.innerHTML = scenarios.map((sc, i) => {
     const r = compute(Object.assign({}, BASE, sc.s));
     return `<div class="sc"><h5>${escapeHtml(sc.name)}</h5><div class="m">${FORMULES[sc.s.formule]} · ${dateLabel(sc.s.date)} · ${r.conv} convives</div>
-      <div class="tt2">${eur(r.total)}</div><div class="pp">soit ${eur(Math.round(r.total / Math.max(1, r.conv)))} par convive</div>
+      <div class="tt2">${eur(r.total)}</div><div class="pp">soit ${eur(Math.round(r.total / Math.max(1, r.conv)))} par convive</div>${r.part ? `<div class="pp">participations − ${eur(r.part)} · reste à notre charge <b>${eur(r.reste)}</b></div>` : ""}
       <div class="mini">${SECS.filter(x => r.sec[x]).map(x => `<div><span>${x}</span><b>${eur(r.sec[x])}</b></div>`).join("")}</div>
       <div class="a"><button class="btn" data-load="${i}" type="button">Ouvrir</button><button class="btn" data-del="${i}" type="button">Supprimer</button></div>
       <label class="cmpck"><input type="checkbox" data-cmp="${i}" ${sc.cmp ? "checked" : ""}> Comparer</label></div>`;
@@ -1091,7 +1183,8 @@ function renderScenarios() {
     <tr><td>Formule</td>${sel.map(x => `<td>${FORMULES[x.s.formule]}</td>`).join("")}</tr>
     ${SECS.map(sec => `<tr><td>${sec}</td>${rs.map(r => `<td>${eur(r.sec[sec])}</td>`).join("")}</tr>`).join("")}
     <tr><td>Total</td>${rs.map(r => `<td class="${r.total === mn ? "best" : ""}"><b>${r.total === mn ? "🏆 " : ""}${eur(r.total)}</b></td>`).join("")}</tr>
-    <tr><td>Écart avec le moins cher</td>${rs.map(r => `<td>${r.total === mn ? "—" : "+ " + eur(r.total - mn)}</td>`).join("")}</tr></table>`;
+    <tr><td>Écart avec le moins cher</td>${rs.map(r => `<td>${r.total === mn ? "—" : "+ " + eur(r.total - mn)}</td>`).join("")}</tr>
+    ${rs.some(r => r.part) ? `<tr><td>Participations des invités</td>${rs.map(r => `<td>${r.part ? "− " + eur(r.part) : "—"}</td>`).join("")}</tr><tr><td>Reste à notre charge</td>${rs.map(r => `<td><b>${eur(r.reste)}</b></td>`).join("")}</tr>` : ""}</table>`;
 }
 
 /* ---------- Petites joies ---------- */
@@ -1153,6 +1246,7 @@ document.addEventListener("click", e => {
     toast(ok ? "♥ « " + name + " » enregistré" : "Enregistré pour cette visite seulement : pensez à « Exporter »");
     return;
   }
+  if (t.id === "btnFrVs") { S.frA = S.vsA; S.frE = S.vsE; bindInputs(); render(); toast("Forfait repas : " + S.frA + " adultes et " + S.frE + " enfants, comme le vendredi soir"); return; }
   if (t.id === "btnCopy") { QUI.forEach(q => { if (q.id !== "di") ["A", "E", "B"].forEach(c => S[q.id + c] = S["di" + c]); }); bindInputs(); render(); toast("Nombres du dîner recopiés sur toutes les lignes"); return; }
   if (t.id === "btnReset") { confirmTwice(t, "Confirmer ?", () => { S = Object.assign({}, BASE, { couple: S.couple }); bindInputs(); render(); toast("Retour à la formule seule"); }); return; }
   if (t.id === "btnPrint") { window.print(); return; }
@@ -1187,7 +1281,7 @@ if ("IntersectionObserver" in window) {
 }
 
 /* ---------- Sections repliables ---------- */
-const ORDER = ["s-date", "s-formule", "s-options", "s-traiteur", "s-autour", "s-plus", "s-cmp", "s-scen"];
+const ORDER = ["s-date", "s-formule", "s-options", "s-traiteur", "s-autour", "s-plus", "s-part", "s-cmp", "s-scen"];
 const STORE_FOLD = "valinches.replis.v1";
 const savedFold = load(STORE_FOLD, null);
 let folded = new Set(Array.isArray(savedFold) ? savedFold.filter(id => ORDER.includes(id)) : window.matchMedia("(max-width:680px)").matches ? ORDER.slice(1) : []);
@@ -1247,6 +1341,7 @@ document.addEventListener("click", e => {
 
 document.querySelectorAll(".ti,.ce,.ci").forEach(e => e.setAttribute("aria-hidden", "true"));
 buildQui();
+buildPart();
 setupFolds();
 buildDates();
 bindInputs();
