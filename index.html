@@ -121,7 +121,8 @@ input:focus-visible,select:focus-visible{outline:2px solid var(--or);outline-off
 .qfoot{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin-top:4px}
 .qfoot small{color:var(--gris);font-size:12.5px;flex:1;min-width:200px}
 /* participations des invités : mêmes tableaux que « Qui est là ? » */
-.part col.c-m{width:30%} .part col.c-n{width:15%} .part col.c-p{width:17%} .part col.c-t{width:23%} .part col.c-a{width:12%} .part col.c-t2{width:22%}
+.part col.c-m{width:34%} .part col.c-n{width:13%} .part col.c-p{width:16%} .part col.c-t{width:24%} .part col.c-a{width:12%} .part col.c-t2{width:18%}
+.qui .qn small.qx{margin-top:3px;font-size:11.5px;line-height:1.35}
 .part td .qfix{color:var(--encre)}
 .qui td.over .qfix{color:#b3261e}
 .qui td.over small{display:inline-block;background:#fdecea;color:#b3261e;font-weight:800;padding:1px 6px;border-radius:999px}
@@ -408,7 +409,7 @@ body{font-size:14px}
 @media (min-width:1340px){
   .below{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:0 12px;align-items:start}
 }
-main{display:flex;flex-direction:column}.col{display:contents}#s-plus{order:1}#s-part{order:2}
+main{display:flex;flex-direction:column}.col{display:contents}#s-traiteur{order:1}#s-part{order:2}#s-autour{order:3}#s-plus{order:4}
 @media (max-width:1020px){.p-foot{position:static;box-shadow:none;margin:10px 0 0;padding:0}}
 @media (max-width:680px){
   .tile-sub{padding-left:10px}
@@ -433,6 +434,14 @@ main{display:flex;flex-direction:column}.col{display:contents}#s-plus{order:1}#s
   .side{position:static;max-height:none;overflow:visible}
   .paper{box-shadow:none;border:0}.p-foot{position:static;box-shadow:none}
 }
+/* dates : petits boutons (en mars, la date ne change pas le prix) */
+.dates{display:flex;flex-wrap:wrap;gap:6px}
+.dcard .in{display:flex;align-items:baseline;gap:6px;padding:6px 14px;border-radius:999px;transform:none!important;box-shadow:none}
+.dcard .d{font-size:17px}
+.dcard .m{margin:0;font-size:11.5px;letter-spacing:1px}
+.dcard .s{margin:0;font-size:10.5px;padding:1px 7px}
+.dcard input:checked + .in{box-shadow:0 3px 10px rgba(122,46,58,.25)}
+@media (max-width:600px){.dates{gap:5px}.dcard .in{padding:5px 10px;gap:4px}.dcard .d{font-size:15px}.dcard .m{font-size:10.5px;letter-spacing:.5px}}
 </style>
 </head>
 <body>
@@ -443,7 +452,7 @@ main{display:flex;flex-direction:column}.col{display:contents}#s-plus{order:1}#s
 </div></header>
 
 <nav class="steps" aria-label="Étapes du devis"><div class="in">
-  <a href="#s-date">📅 Date</a><a href="#s-formule">🏰 Formule</a><a href="#s-options">✨ Options</a><a href="#s-traiteur">🍽️ Traiteur</a><a href="#s-autour">🥐 Autour du jour J</a><a href="#s-plus">🍭 Petits plus</a><a href="#s-part">🤝 Participations</a><a href="#s-cmp">⚖️ Comparer</a><a href="#s-scen">💌 Scénarios</a>
+  <a href="#s-date">📅 Date</a><a href="#s-formule">🏰 Formule</a><a href="#s-options">✨ Options</a><a href="#s-traiteur">🍽️ Traiteur</a><a href="#s-part">🤝 Participations</a><a href="#s-autour">🥐 Autour du jour J</a><a href="#s-plus">🍭 Petits plus</a><a href="#s-cmp">⚖️ Comparer</a><a href="#s-scen">💌 Scénarios</a>
 </div></nav>
 
 <div class="wrap">
@@ -452,10 +461,8 @@ main{display:flex;flex-direction:column}.col{display:contents}#s-plus{order:1}#s
 <div class="col">
   <!-- 1. Date et invités -->
   <section class="card" id="s-date">
-    <div class="card-h"><span class="num">1</span><div><h2>La date et les invités</h2><p class="hint">Choisissez un week-end de mars (la saison se calcule toute seule), puis qui vient à chaque moment.</p></div><span class="sum" id="sumDate"></span></div>
+    <div class="card-h"><span class="num">1</span><div><h2>La date et les invités</h2><p class="hint">Choisissez le week-end, puis qui vient à chaque moment.</p></div><span class="sum" id="sumDate"></span></div>
     <div class="dates" id="dateCards"></div>
-    <div class="other"><label>Ou une autre date en 2027 <input type="date" id="dateInput" min="2027-01-01" max="2027-12-31"></label></div>
-    <div class="badges" id="dateBadges"></div>
     <h3 class="sub-title">Qui est là ?</h3>
     <p class="qhint">Une ligne par moment du week-end. Cochez les repas en plus ; le vin d'honneur et le dîner sont toujours là. Les bébés de moins de 2 ans sont comptés partout mais jamais facturés : offert (à confirmer avec le château).</p>
     <table class="qui">
@@ -545,7 +552,7 @@ main{display:flex;flex-direction:column}.col{display:contents}#s-plus{order:1}#s
 
   <!-- 6. Petits plus -->
   <section class="card" id="s-plus">
-    <div class="card-h"><span class="num">6</span><div><h2>Les petits plus</h2><p class="hint">Pour le plaisir des yeux et des papilles.</p></div><span class="sum" id="sumPlus"></span></div>
+    <div class="card-h"><span class="num">7</span><div><h2>Les petits plus</h2><p class="hint">Pour le plaisir des yeux et des papilles.</p></div><span class="sum" id="sumPlus"></span></div>
     <div class="tiles">
       <div class="tile" data-tile="candy"><label class="tile-main"><input type="checkbox" data-k="candy"><span class="ti">🍭</span><span class="tt"><b>Candy bar</b><small>8 bonbonnes gourmandes</small><span class="tp">300 €</span></span><span class="sw-vis" aria-hidden="true"></span></label></div>
       <div class="tile" data-tile="chocolat"><label class="tile-main"><input type="checkbox" data-k="chocolat"><span class="ti">🍫</span><span class="tt"><b>Fontaine à chocolat</b><small>105 € + 3 € par convive</small><span class="tp" id="pChoco"></span></span><span class="sw-vis" aria-hidden="true"></span></label></div>
@@ -627,7 +634,7 @@ main{display:flex;flex-direction:column}.col{display:contents}#s-plus{order:1}#s
 
   <!-- 5. Autour du jour J -->
   <section class="card" id="s-autour">
-    <div class="card-h"><span class="num">5</span><div><h2>Autour du jour J</h2><p class="hint">Prix par personne du devis de Laurie (octobre 2026). Le nombre de personnes et les prix se règlent à l'étape 1, « Qui est là ? ».</p></div><span class="sum" id="sumAutour"></span></div>
+    <div class="card-h"><span class="num">6</span><div><h2>Autour du jour J</h2><p class="hint">Prix par personne du devis de Laurie (octobre 2026). Le nombre de personnes et les prix se règlent à l'étape 1, « Qui est là ? ».</p></div><span class="sum" id="sumAutour"></span></div>
     <div class="tiles">
       <div class="tile" data-tile="vendrediSoir">
         <label class="tile-main"><input type="checkbox" data-k="vendrediSoir"><span class="ti">🍕</span>
@@ -653,11 +660,10 @@ main{display:flex;flex-direction:column}.col{display:contents}#s-plus{order:1}#s
   </section>
 
 
-  <!-- 7. Participations des invités -->
+  <!-- 5. Participations des invités (affichées après le traiteur) -->
   <section class="card" id="s-part">
-    <div class="card-h"><span class="num">7</span><div><h2>Les participations des invités</h2><p class="hint">Ce que les invités paient pour dormir sur place et pour les 3 repas. Prix par personne, bébés gratuits. Le devis affiche le total avec et sans ces participations.</p></div><span class="sum" id="sumPart"></span></div>
+    <div class="card-h"><span class="num">5</span><div><h2>Les participations des invités</h2><p class="hint">Ce que les invités paient pour dormir sur place et pour les 3 repas. Prix par personne, bébés gratuits. Le devis affiche le total avec et sans ces participations.</p></div><span class="sum" id="sumPart"></span></div>
     <h3 class="sub-title">Hébergement</h3>
-    <p class="qhint">Places : château 72 couchages (« 2 nuits » et « 1 nuit » ensemble) · 8 roulottes, 19 places (6 roulottes de 2 lits, 1 de 4 lits, 1 avec un lit double et un lit simple) · dortoirs de 10 et 5 places.</p>
     <table class="qui part">
       <colgroup><col class="c-m"><col class="c-n"><col class="c-p"><col class="c-n"><col class="c-t"></colgroup>
       <thead><tr><th scope="col">Hébergement</th><th scope="col">Personnes<small>hors bébés</small></th><th scope="col">Prix par personne<small>tout le séjour</small></th><th scope="col">Places<small>occupées / total</small></th><th scope="col">Total de la ligne</th></tr></thead>
@@ -702,7 +708,7 @@ main{display:flex;flex-direction:column}.col{display:contents}#s-plus{order:1}#s
           <div class="pl"><span>Participations des invités</span><b id="tPartV"></b></div>
           <div class="pr"><span>Reste à notre charge</span><b id="tReste"></b></div>
         </div>
-        <a class="p-addpart" id="tPartAdd" href="#s-part">＋ Déduire les participations des invités (étape 7)</a>
+        <a class="p-addpart" id="tPartAdd" href="#s-part">＋ Déduire les participations des invités (étape 5)</a>
         <div class="savebox"><input type="text" class="f" id="scenName" maxlength="60" placeholder="Nom du scénario (facultatif)" aria-label="Nom du scénario"><button class="btn primary" id="btnSave" type="button">♥ Enregistrer</button></div>
         <div class="btns"><button class="btn" id="btnReset" type="button">↺ Formule seule</button><button class="btn" id="btnPrint" type="button">🖨 Imprimer</button></div>
       </div>
@@ -773,12 +779,11 @@ const rowOn = (s, q) => !q.on || (q.on === "lendemain" ? s.lendemain !== "aucun"
 const HEB = [
   { id: "hc2", t: "Château", d: "2 nuits", p: 70, n: 2, g: "ch", max: 72 },
   { id: "hc1", t: "Château", d: "1 nuit", p: 50, n: 1, g: "ch", max: 72 },
-  { id: "hro", t: "Roulottes", d: "2 nuits · 8 roulottes", p: 45, n: 2, g: "hro", max: 19 },
-  { id: "hd10", t: "Dortoir", d: "2 nuits · 10 places", p: 20, n: 2, g: "hd10", max: 10 },
-  { id: "hd5", t: "Dortoir", d: "2 nuits · 5 places", p: 20, n: 2, g: "hd5", max: 5 },
-  { id: "hgi", t: "Gîte (camping)", d: "prix à fixer", p: 0, n: 2 }
+  { id: "hro", t: "Roulottes", d: "2 nuits · 8 roulottes", p: 45, n: 2, g: "hro", max: 22,
+    x: "6 roulottes de 2 lits d'une place · 1 roulotte d'une chambre à 4 lits d'une place · 1 roulotte de 2 chambres, chacune avec un lit de 2 places et un lit d'une place" },
+  { id: "hdo", t: "Dortoirs", d: "2 nuits · 2 dortoirs de 10 et 5 places", p: 20, n: 2, g: "hdo", max: 15 }
 ];
-const PLACES = { ch: "Château", hro: "Roulottes", hd10: "Dortoir de 10 places", hd5: "Dortoir de 5 places" };
+const PLACES = { ch: "Château", hro: "Roulottes", hdo: "Dortoirs" };
 const NUM = new Set(["remiseSupp", "veillePrix", "chambres", "prixChambre", "chapiteaux", "salaries", "heures", "ateliers", "prestataires", "taxe", "nuitees", "alcool"]
   .concat(QUI.flatMap(q => [q.id + "A", q.id + "E", q.id + "B"].concat(q.prix ? [q.id + "PA", q.id + "PE"] : [])), HEB.flatMap(h => [h.id + "N", h.id + "P"]), ["frA", "frE", "frPA", "frPE"]));
 
@@ -829,6 +834,7 @@ const OLD = { diA: "adultes", diE: "enfants", diB: "bebes", vhE: "enfants", vhB:
   vsA: "vsPers", vsE: "vsEnf", vsB: "vsBb", vsPA: "vsPrix", vsPE: "vsPrixEnf", smA: "smPers", smE: "smEnf", smB: "smBb", smPA: "smPrix", smPE: "smPrixEnf",
   mdA: "mdPers", mdE: "mdEnf", mdB: "mdBb", mdPA: "mdPrix", mdPE: "mdPrixEnf", brA: "brPers", brE: "brEnf", brB: "brBb" };
 function upgrade(o) {
+  if (o && typeof o === "object" && !("hdoN" in o) && ("hd10N" in o || "hd5N" in o)) o = Object.assign({}, o, { hdoN: (+o.hd10N || 0) + (+o.hd5N || 0) }); // deux dortoirs → une ligne
   if (!o || typeof o !== "object" || "diA" in o || !("adultes" in o)) return o;
   const r = Object.assign({}, o);
   for (const k in OLD) if (OLD[k] in o) r[k] = o[OLD[k]];
@@ -963,12 +969,12 @@ function compute(s) {
 function buildDates() {
   $("dateCards").innerHTML = DATES.map(x => {
     const i = dateInfo(x.d);
-    return `<label class="dcard"><input type="radio" name="dchip" value="${x.d}"><span class="in"><span class="d">${x.n}</span><span class="m">${x.m}</span><span class="s ${i.saison}">${i.saison === "haute" ? "haute saison" : "basse saison"}</span>${i.remise ? '<span class="rib">−10 %</span>' : ""}</span></label>`;
+    return `<label class="dcard"><input type="radio" name="dchip" value="${x.d}"><span class="in"><span class="d">${x.n}</span><span class="m">${x.m}</span>${i.saison === "haute" ? '<span class="s haute">haute saison</span>' : ""}${i.remise ? '<span class="rib">−10 %</span>' : ""}</span></label>`;
   }).join("");
 }
 const numIn = (k, max, lab, step) => `<input type="number" data-k="${k}" min="0" max="${max}"${step ? ' step="0.5" inputmode="decimal"' : ' inputmode="numeric"'} aria-label="${lab}">`;
 function buildPart() { // lignes des tableaux « Participations des invités »
-  $("partBody").innerHTML = HEB.map(h => `<tr id="p-${h.id}"><th scope="row"><span class="qn"><b>${h.t}</b><small>${h.d}</small></span></th>` +
+  $("partBody").innerHTML = HEB.map(h => `<tr id="p-${h.id}"><th scope="row"><span class="qn"><b>${h.t}</b><small>${h.d}</small>${h.x ? `<small class="qx">${h.x}</small>` : ""}</span></th>` +
     `<td data-l="Personnes">${numIn(h.id + "N", 200, h.t + ", " + h.d + " : personnes")}</td>` +
     `<td data-l="Prix (séjour)"><span class="qeur">${numIn(h.id + "P", 500, h.t + ", " + h.d + " : prix par personne", true)} €</span></td>` +
     `<td data-l="Places" id="pp-${h.id}"></td><td class="qt" data-l="Total"><small id="pc-${h.id}"></small><b id="pa-${h.id}"></b></td></tr>`).join("");
@@ -1039,8 +1045,6 @@ function render() {
   const r = compute(S), di = r.di, conv = r.conv;
   // date
   document.querySelectorAll('input[name="dchip"]').forEach(i => i.checked = i.value === S.date);
-  $("dateInput").value = S.date;
-  $("dateBadges").innerHTML = `<span class="badge b-info">${fmtDate(S.date)}</span><span class="badge ${di.tarif === "haute" ? "b-haute" : "b-basse"}">${di.tarif === "haute" ? "Haute saison" : "Basse saison"}${di.weekend ? "" : " · tarif semaine"}</span>${di.remise ? '<span class="badge b-remise">🎁 Remise 10 % sur la formule</span>' : ""}`;
   $("sumDate").textContent = dateLabel(S.date) + " · " + conv + " convives";
   // formules
   ["serenite", "privilege"].forEach(fm => {
@@ -1105,7 +1109,7 @@ function render() {
     $("pa-" + h.id).textContent = aFixer ? "prix à fixer" : eur(r.pa[h.id]);
     const c = $("pp-" + h.id), o = r.occ[h.g], over = !!h.max && o > h.max, autre = HEB.find(x => x.g === h.g && x !== h), trop = o - h.max;
     c.classList.toggle("over", over);
-    c.innerHTML = h.max ? `<b class="qfix">${o} / ${h.max}</b><small>${over ? "⚠ " + trop + (trop > 1 ? " personnes" : " personne") + " de trop" : o === h.max ? "complet" : autre ? "partagé avec « " + autre.d + " »" : "places"}</small>` : '<b class="qfix">—</b><small>non précisé</small>';
+    c.innerHTML = h.max ? `<b class="qfix">${o} / ${h.max}</b><small>${over ? "⚠ " + trop + (trop > 1 ? " personnes" : " personne") + " de trop" : o === h.max ? "complet" : autre ? "avec « " + autre.d + " »" : "places"}</small>` : '<b class="qfix">—</b><small>non précisé</small>';
   });
   $("pc-fr").textContent = r.pc.fr; $("pa-fr").textContent = eur(r.pa.fr);
   $("pa-tot").textContent = eur(r.part);
@@ -1113,7 +1117,7 @@ function render() {
   $("sumPart").textContent = r.part ? "− " + eur(r.part) : "Aucune pour l'instant";
   $("tPart").classList.toggle("hide", !r.part); $("tPartAdd").classList.toggle("hide", !!r.part);
   $("tPartV").textContent = "− " + eur(Math.round(r.part)); $("tReste").textContent = eur(Math.round(r.total) - Math.round(r.part)); // arrondis comme le total estimé : la soustraction affichée tombe juste
-  $("pNuitGuide").textContent = r.nuitHeb ? "Repère d'après l'hébergement (étape 7) : " + r.nuitHeb + " nuitées, enfants compris ; la taxe ne compte que les adultes." : "";
+  $("pNuitGuide").textContent = r.nuitHeb ? "Repère d'après l'hébergement (étape 5) : " + r.nuitHeb + " nuitées, enfants compris ; la taxe ne compte que les adultes." : "";
   $("pAlc").textContent = S.alcool ? eur(S.alcool) : "0 €";
   $("pChoco").textContent = eur(P.chocolat[0] + conv * P.chocolat[1]);
   // tuiles allumées
@@ -1214,7 +1218,6 @@ document.addEventListener("change", e => handle(e.target, true));
 function handle(el, done) {
   if (!el || !el.dataset) return;
   if (el.name === "dchip") { if (el.checked && S.date !== el.value) { S.date = el.value; render(); } return; }
-  if (el.id === "dateInput") { if (el.value && el.value !== S.date) { S.date = el.value; render(); } return; }
   if (el.dataset.cmp !== undefined) { scenarios[+el.dataset.cmp].cmp = el.checked; save(STORE_SCEN, scenarios); renderScenarios(); return; }
   const k = el.dataset.k; if (!k) return;
   let v;
@@ -1281,7 +1284,7 @@ if ("IntersectionObserver" in window) {
 }
 
 /* ---------- Sections repliables ---------- */
-const ORDER = ["s-date", "s-formule", "s-options", "s-traiteur", "s-autour", "s-plus", "s-part", "s-cmp", "s-scen"];
+const ORDER = ["s-date", "s-formule", "s-options", "s-traiteur", "s-part", "s-autour", "s-plus", "s-cmp", "s-scen"];
 const STORE_FOLD = "valinches.replis.v1";
 const savedFold = load(STORE_FOLD, null);
 let folded = new Set(Array.isArray(savedFold) ? savedFold.filter(id => ORDER.includes(id)) : window.matchMedia("(max-width:680px)").matches ? ORDER.slice(1) : []);
